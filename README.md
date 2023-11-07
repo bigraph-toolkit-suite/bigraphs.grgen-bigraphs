@@ -1,6 +1,6 @@
 # BiGGer: A Model Transformation Tool for Bigraph Rewriting with GrGen.NET
 
-**Version:** 0.9-SNAPSHOT
+**Version:** 1.0-SNAPSHOT
 
 ----
 
