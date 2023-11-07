@@ -48,7 +48,7 @@ The tool implements a unidirectional transformation from bigraphs to GrGen.NET m
 ## Getting Started
 
 Before using the tool or library you have to build the project, or use the pre-compiled JAR, which includes all
-dependencies (refer also to [Development](#Development-Build-Configuration)).
+dependencies (refer also to [Development](#Development)).
 
 **Requirements**
 
@@ -59,13 +59,13 @@ dependencies (refer also to [Development](#Development-Build-Configuration)).
 - Java 17 and Maven >=3.8.3
 - Bigraph Framework and Ecore Metamodel (for creating bigraph models that BiGGer understands)
   - Are specified as external dependencies
-  - See [Bigraph Ecore Metamodel](https://bigraphs.org/) or [Bigraph Framework](https://bigraphs.org/products/bigraph-framework/) on how to create bigraphs practically
-  - See [here](ZENODO) for the bare _Bigraph Ecore Specification_
+  - See [Bigraph Ecore Metamodel](https://github.com/bigraph-toolkit-suite/bigraphs.bigraph-ecore-metamodel) or [Bigraph Framework](https://bigraphs.org/products/bigraph-framework/) on how to create bigraphs practically
+  - See [here](https://zenodo.org/doi/10.5281/zenodo.10043062) for the bare _Bigraph Ecore Specification_ on Zenodo
   - See [[KeTG16]](https://doi.org/10.4204/EPTCS.231.2) for theoretical details
 
 ### Basic Usage via the Command-line:
 
-This projects provides a CLI to access the transformation functionality.
+This projects provides a CLI tool to access the transformation functionality.
 
 > **Note:** An executable JAR of biGGer can be found in the directory `./bin/` after building the project or can be found on the [Releases](https://github.com/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/releases) page.
 
@@ -81,7 +81,7 @@ java -jar bigger.jar \
   --tracking=/path/map.json
 ```
 
-Therefore, bigraph instance models in the Ecore XMI format `*.xmi` (XML files) have to be provided as arguments, and
+Bigraph instance models in the Ecore XMI format `*.xmi` (XML files) have to be provided as arguments, and
 their metamodels in the Ecore format `*.ecore`.
 See [Bigraph Ecore Metamodel](https://bigraphs.org/) or [Bigraph Framework](https://bigraphs.org/products/bigraph-framework/) on how
 to create bigraphs in this format.
@@ -98,7 +98,7 @@ This option is _optional_.
 
 The output directory, where BiGGer shall write all generated transformation files.
 These can be used and executed by GrGen.NET.
-Refer to section [Output](#output).
+Refer to section [Output](#output-of-the-tool).
 
 ##### **--host**
 
@@ -202,7 +202,7 @@ Note that `li` can also be empty (i.e., node addition).
 A graph element can be a node or a link (edge or outer name).
 Additionally, each mapped link has to be explicitly specified under the object `"links"` in each rule JSON object.
 
-The map must contain all tracking maps for all rules.
+This file must contain all tracking maps for all rules.
 
 Example: `--tracking=sample/petrinet-simple/map.json`
 
@@ -283,18 +283,18 @@ Additionally, a tracking map is supplied for each rule.
 
 ```shell
 java -jar bigger.jar --verbose \
-  --basepath=../sample/petrinet-simple/
+  --basepath=../sample/petrinet-simple/ \
   --output=foo \
   --sig=sig.xmi --sigM=signatureBaseModel.ecore \
-  --host=host.xmi --metamodel=bigraphBaseModel.ecore \ 
-  --rule=fireRule:r1-lhs.xmi,r1-rhs.xmi \
+  --metamodel=bigraphBaseModel.ecore --host=host.xmi \
+  --rule=rule1:r1-lhs.xmi,r1-rhs.xmi \
   --tracking=map.json
 ```
 
 It is assumed that the tool is started from the `./bin/` folder from the root of this project.
 So all paths inside the options as shown above are relative.
 
-Since `../sample/petrinet-simple/` is set as the base path, the file paths of all other options is reduced and more readable.
+Since `../sample/petrinet-simple/` is set as the base path, the file paths of all other options is shortened and more readable.
 The base path argument affects all other options.
 
 The host graph is located in `./sample/petrinet-simple/host.xmi`, etc.
@@ -306,13 +306,13 @@ The output is generated in the folder `./sample/petrinet-simple/foo/`.
 
 - `./bin/`: Contains an executable binary (`*.jar`) of the command-line tool
 - `./sample/`: Contains several demo scenarios. Each scenario includes a bigraphical host graph and signature (meta-)model, and some rules.
-  - These files were generated using [Bigraph Framework](www.bigraphs.org).
+  - These files were generated using [Bigraph Framework](https://www.bigraphs.org/products/bigraph-framework/).
 - `./src/`: The complete source code of this project including unit tests.
 - `./libs/`: Additional Java libraries required for the development. Must be installed in the local Maven repository first.
 
 ### Pre-Build Binary
 
-An executable tool in form of a `*.jar` is provided within the `./bin/` directory of this project.
+An executable tool in form of a `*.jar` is provided within the `./bin/` directory of this project after [building](#build-configuration).
 
 To start the application, issue the following command in the terminal:
 
@@ -322,31 +322,40 @@ java -jar bigger.jar -h
 
 ### Build Configuration
 
-#### Initialize
+[//]: # (#### Initialize)
 
-For this project, Maven is used as the build management tool.
-See also [Requirements](#Getting-Started) in section "Getting Started".
-The recommendation here is to build it with the regular `mvn` command. 
-You will need [Maven v3.8.3 or above](https://maven.apache.org/install.html).
+[//]: # ()
+[//]: # (For this project, Maven is used as the build management tool.)
 
-> **Note:** This project requires Java 17 and Maven >=3.8.3.
+[//]: # (See also [Requirements]&#40;#Getting-Started&#41; in section "Getting Started".)
 
-The following command has to be run once:
-```shell
-mvn initialize
-```
-It installs some dependencies located in the `./libs/` folder in the local Maven repository.
-Usually, in `~/.m2/`.
-These are required for the development and include the various modules of [Bigraph Framework](https://bigraphs.org/products/bigraph-framework/) (core, simulation, converter, visualization). 
+[//]: # (The recommendation here is to build it with the regular `mvn` command. )
 
-**Build**
+[//]: # (You will need [Maven v3.8.3 or above]&#40;https://maven.apache.org/install.html&#41;.)
 
-Then, you can issue the following command to build the project and start developing:
-```shell
-mvn clean package
-```
+[//]: # ()
+[//]: # (> **Note:** This project requires Java 17 and Maven >=3.8.3.)
+
+[//]: # ()
+[//]: # (The following command has to be run once:)
+
+[//]: # (```shell)
+
+[//]: # (mvn initialize)
+
+[//]: # (```)
+
+[//]: # (It installs some dependencies located in the `./libs/` folder in the local Maven repository.)
+
+[//]: # (Usually, in `~/.m2/`.)
+
+[//]: # (These are required for the development and include the various modules of [Bigraph Framework]&#40;https://bigraphs.org/products/bigraph-framework/&#41; &#40;core, simulation, converter, visualization&#41;. )
+
+[//]: # (**Build**)
 
 There are also three other options for building this project from source as described next.
+
+The recommended one is the Fat-JAR approach.
 
 #### Create a Fat-JAR / Uber-JAR
 
