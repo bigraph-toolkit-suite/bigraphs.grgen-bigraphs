@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<signatureBaseModel:BDynamicSignature xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:signatureBaseModel="http://org.bigraphs.model" xsi:schemaLocation="http://org.bigraphs.model signatureBaseModel.ecore">
+  <bControls xsi:type="signatureBaseModel:Place" name="Place" arity="1"/>
+  <bControls xsi:type="signatureBaseModel:Transition" name="Transition" arity="2"/>
+  <bControls xsi:type="signatureBaseModel:Token" name="Token"/>
+  <bKindPlaceSorts xsi:type="signatureBaseModel:PlaceSort" bContainedBy="//@bKindPlaceSorts.0 //@bKindPlaceSorts.1 //@bKindPlaceSorts.2" bCanContain="//@bKindPlaceSorts.0 //@bKindPlaceSorts.1 //@bKindPlaceSorts.2"/>
+  <bKindPlaceSorts xsi:type="signatureBaseModel:TransitionSort" bContainedBy="//@bKindPlaceSorts.0 //@bKindPlaceSorts.1 //@bKindPlaceSorts.2" bCanContain="//@bKindPlaceSorts.0 //@bKindPlaceSorts.1 //@bKindPlaceSorts.2"/>
+  <bKindPlaceSorts xsi:type="signatureBaseModel:TokenSort" bContainedBy="//@bKindPlaceSorts.0 //@bKindPlaceSorts.1 //@bKindPlaceSorts.2" bCanContain="//@bKindPlaceSorts.0 //@bKindPlaceSorts.1 //@bKindPlaceSorts.2"/>
+</signatureBaseModel:BDynamicSignature>

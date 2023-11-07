@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bigraphBaseModel:BBigraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bigraphBaseModel="http://de.tudresden.inf.st.bigraphs.models" xsi:schemaLocation="http://de.tudresden.inf.st.bigraphs.models bigraphBaseModel.ecore">
+  <bRoots>
+    <bChild xsi:type="bigraphBaseModel:Transition" name="N_7B">
+      <bPorts bLink="//@bEdges.0" index="1"/>
+      <bPorts bLink="//@bEdges.1"/>
+    </bChild>
+    <bChild xsi:type="bigraphBaseModel:Place" name="v0">
+      <bChild xsi:type="bigraphBaseModel:Token" name="v1"/>
+      <bChild xsi:type="bigraphBaseModel:Token" name="N_80"/>
+      <bPorts bLink="//@bEdges.0"/>
+    </bChild>
+    <bChild xsi:type="bigraphBaseModel:Place" name="N_79">
+      <bChild xsi:type="bigraphBaseModel:Token" name="N_7E"/>
+      <bChild xsi:type="bigraphBaseModel:Token" name="N_7F"/>
+      <bPorts bLink="//@bEdges.1"/>
+    </bChild>
+  </bRoots>
+  <bEdges name="E_74" bPoints="//@bRoots.0/@bChild.1/@bPorts.0 //@bRoots.0/@bChild.0/@bPorts.0"/>
+  <bEdges name="E_7A" bPoints="//@bRoots.0/@bChild.2/@bPorts.0 //@bRoots.0/@bChild.0/@bPorts.1"/>
+</bigraphBaseModel:BBigraph>
