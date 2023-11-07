@@ -63,27 +63,6 @@ public class DemoRuleProvider {
         return new ParametricReactionRule<>(b1.createBigraph(), b2.createBigraph()).withLabel("petriNetFireRule_withOuterNames");
     }
 
-    //TODO design a correct parallel rule
-    public synchronized ReactionRule<PureBigraph> petriNetParallelRule(DefaultDynamicSignature signature) throws InvalidConnectionException, TypeNotExistsException, InvalidReactionRuleException {
-        PureBigraphBuilder<DefaultDynamicSignature> b1 = pureBuilder(signature);
-        PureBigraphBuilder<DefaultDynamicSignature> b2 = pureBuilder(signature);
-
-        b1.createRoot()
-                .addChild("Place").down().addSite().top()
-        ;
-        b1.createRoot()
-                .addChild("Token").top();
-
-
-        b2.createRoot()
-                .addChild("Place").down().addSite().addChild("Token").top()
-        ;
-        b2.createRoot()
-                .addChild("Token").top();
-
-        return new ParametricReactionRule<>(b1.createBigraph(), b2.createBigraph()).withLabel("petriNetFireRule2");
-    }
-
     public synchronized ReactionRule<PureBigraph> petriNetAddRule(DefaultDynamicSignature signature) throws InvalidConnectionException, InvalidReactionRuleException {
         PureBigraphBuilder<DefaultDynamicSignature> b1 = pureBuilder(signature);
         PureBigraphBuilder<DefaultDynamicSignature> b2 = pureBuilder(signature);

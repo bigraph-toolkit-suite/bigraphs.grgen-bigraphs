@@ -185,15 +185,13 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
             sb.append(createVarTypeDeclWithComma(idleLink.getName(), CLASS_OUTERNAME)).append(LINE_SEP);
         });
 
-//        sb.append(openRuleModifierBlock());
         sb.append(openRuleReplaceBlock());
         sb.append(LINE_SEP);
         // We cannot use the reactum's node/edges directly. They might have different identifiers.
         // Use the map to resolve names of the reactum that are coming from the redex
         // Elements not mapped get deleted (when not "mapped/specified" in the rule's rewrite part -> automatic deletion in the replace mode in GrGen)
 
-        // add all nodes in the tracking map without image
-        // (also add root node mappings, rINDEX -> r0 always)(?)
+        // We add all nodes in the tracking map without image (reactum |-> redex is empty)
 
 //        System.out.println(trackingMap.size());
 //        System.out.println(redex.getNodes().size());
@@ -211,7 +209,7 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
 
             if (trackingMap.isLink(redexId) || trackingMap.isLink(reactumId)) continue;
 
-            // Handle here the addition of new nodes
+            // Handle here the addition of new nodes, the mapping has no image
             if (redexId == null || redexId.isEmpty()) {
                 BigraphEntity.NodeEntity<DefaultDynamicControl> rhsNode = getNodeById(reactumId, reactum).get();
                 newNodesAdded.add(rhsNode);
@@ -248,7 +246,7 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
                 continue;
             }
 
-            //TODO these could be empty when the tracking map is ill-formed
+            // TODO These could be empty when the tracking map is ill-formed
             BigraphEntity.NodeEntity<DefaultDynamicControl> lhsNode = getNodeById(redexId, redex).get();
             BigraphEntity.NodeEntity<DefaultDynamicControl> rhsNode = getNodeById(reactumId, reactum).get();
             String lhsParentId = getParentId(lhsNode, redex, false);

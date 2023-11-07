@@ -24,6 +24,7 @@ import org.example.impl.PureParametrizedRuleTransformer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Supplier;
@@ -36,10 +37,10 @@ import java.util.stream.Collectors;
  *
  * @author Dominik Grzelak
  */
-//TODO für jede Regel ein exec command
 public class Main {
     static boolean verbose = false;
 
+    // Some possible arguments for testing:
     // --host=bla --output=foo --rule=rule1:a,a --rule=:path,path
     // --host=bla --output=foo --rule=rule1:lhs,rhs --rule=:foobar
     // --host=bla --output=foo --rule=rule1:sample/petrinet-simple/r1-lhs.xmi,sample/petrinet-simple/r1-rhs.xmi --rule=:path,path
@@ -47,7 +48,19 @@ public class Main {
     // --verbose --host=sample/petrinet-simple/host.xmi --output=foo --sig=sample/petrinet-simple/sig.xmi --sigM=sample/petrinet-simple/signatureBaseModel.ecore --metamodel=sample/petrinet-simple/bigraphBaseModel.ecore --rule=rule1:sample/petrinet-simple/r1-lhs.xmi,sample/petrinet-simple/r1-rhs.xmi --rule=:sample/petrinet-simple/r1-lhs.xmi,sample/petrinet-simple/r1-rhs.xmi
     // --verbose --host=sample/petrinet-simple/host.xmi --output=foo --sig=sample/petrinet-simple/sig.xmi --sigM=sample/petrinet-simple/signatureBaseModel.ecore --metamodel=sample/petrinet-simple/bigraphBaseModel.ecore --rule=rule1:sample/petrinet-simple/r1-lhs.xmi,sample/petrinet-simple/r1-rhs.xmi --tracking=sample/petrinet-simple/map.json
     public static void main(String[] args) throws InvalidConnectionException, InvalidReactionRuleException, IncompatibleInterfaceException, IOException {
-        String APP_NAME = "BiGGer v0.1";
+        String DEFAULT_VERSION = "(DRAFT)";
+        String version = DEFAULT_VERSION;
+        try (InputStream is = Main.class.getResourceAsStream("/META-INF/maven/org.example/grgen-bigraphs/pom.properties")) {
+            Properties properties = new Properties();
+            properties.load(is);
+            version = properties.getProperty("version");
+            if(version == null || version.isEmpty()) {
+                version = DEFAULT_VERSION;
+            }
+        } catch (Exception e) {
+            version = DEFAULT_VERSION;
+        }
+        String APP_NAME = "biGGer " + version;
 
         // Define command-line options
         Options options = new Options();
@@ -394,7 +407,6 @@ public class Main {
             String redexFileXMI = matcher.group(2);     // Extract <REDEX_FILE_XMI>
             String reactumFileXMI = matcher.group(3);   // Extract <REACTUM_FILE_XMI>
 
-//            print(() -> System.out.println("Extracting rule parts of option --rule"));
             verbose(() -> System.out.println("\tRULE_NAME: " + ruleName));
             verbose(() -> System.out.println("\tREDEX_FILE_XMI: " + redexFileXMI));
             verbose(() -> System.out.println("\tREACTUM_FILE_XMI: " + reactumFileXMI));

@@ -37,7 +37,8 @@ public class PureBigraphTransformer extends BigraphTransformer {
     @Override
     public String toString(Bigraph bigraph) {
         assertCorrectClassType(PureBigraph.class, bigraph);
-        // TODO: only prime and ground bigraphs: assert method
+        assertPrimeAndGround((PureBigraph) bigraph);
+
         StringBuilder sb = new StringBuilder();
         PureBigraph pureBigraph = (PureBigraph) bigraph;
         DefaultDynamicSignature sig = pureBigraph.getSignature();

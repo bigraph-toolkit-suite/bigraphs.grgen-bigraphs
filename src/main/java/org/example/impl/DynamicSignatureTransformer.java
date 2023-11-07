@@ -40,10 +40,10 @@ public class DynamicSignatureTransformer extends SignatureTransformer {
 
         // Create rest of the node classes extending the respective abstract ones
         // Place Graph
-        sb.append(closeClassDefinitionWithAttributes(extendClass(createNodeClass(CLASS_ROOT), CLASS_PLACE), INDEX_ATTRIBUTE)).append(LINE_SEP);//TODO: add attribute
-        sb.append(closeClassDefinitionWithAttributes(extendClass(createNodeClass(CLASS_SITE), CLASS_PLACE), INDEX_ATTRIBUTE)).append(LINE_SEP);//TODO: add attribute
+        sb.append(closeClassDefinitionWithAttributes(extendClass(createNodeClass(CLASS_ROOT), CLASS_PLACE), INDEX_ATTRIBUTE)).append(LINE_SEP);
+        sb.append(closeClassDefinitionWithAttributes(extendClass(createNodeClass(CLASS_SITE), CLASS_PLACE), INDEX_ATTRIBUTE)).append(LINE_SEP);
         // Link Graph
-        sb.append(closeClassDefinitionWithAttributes(extendClass(createNodeClass(CLASS_PORT), CLASS_POINT), INDEX_ATTRIBUTE)).append(LINE_SEP);//TODO: add attribute
+        sb.append(closeClassDefinitionWithAttributes(extendClass(createNodeClass(CLASS_PORT), CLASS_POINT), INDEX_ATTRIBUTE)).append(LINE_SEP);
         sb.append(closeClassDefinition(extendClass(createNodeClass(CLASS_INNERNAME), CLASS_POINT))).append(LINE_SEP);
         sb.append(closeClassDefinition(extendClass(createNodeClass(CLASS_EDGE), CLASS_LINK))).append(LINE_SEP);
         sb.append(closeClassDefinition(extendClass(createNodeClass(CLASS_OUTERNAME), CLASS_LINK))).append(LINE_SEP);

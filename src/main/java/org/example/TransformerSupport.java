@@ -1,6 +1,9 @@
 package org.example;
 
 import org.bigraphs.framework.core.Control;
+import org.bigraphs.framework.core.exceptions.BigraphIsNotGroundException;
+import org.bigraphs.framework.core.exceptions.BigraphIsNotPrimeException;
+import org.bigraphs.framework.core.impl.pure.PureBigraph;
 
 /**
  * Abstract support class that provides support to other transformer-related classes
@@ -19,6 +22,15 @@ public abstract class TransformerSupport {
     public void assertCorrectClassType(Class classType, Object instance) throws RuntimeException {
         if (!instance.getClass().isAssignableFrom(classType)) {
             throw new RuntimeException("The transformer " + this.getClass() + "cannot be applied on class " + instance.getClass());
+        }
+    }
+
+    public void assertPrimeAndGround(PureBigraph bigraph) throws RuntimeException {
+        if (!bigraph.isGround()) {
+            throw new BigraphIsNotGroundException();
+        }
+        if (!bigraph.isPrime()) {
+            throw new BigraphIsNotPrimeException();
         }
     }
 
