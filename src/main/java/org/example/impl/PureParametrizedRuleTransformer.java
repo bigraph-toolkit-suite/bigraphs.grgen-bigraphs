@@ -55,9 +55,10 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
 
         // Create a list of variables for the root, every control in the redex, and node ports
         redex.getRoots().forEach(x -> {
-            if (!varMap.containsKey("r0")) {
+            String varName = "r" + x.getIndex();
+            if (!varMap.containsKey(varName)) {
                 // For multiary interfaces in bigraphs (multiple roots): every child of r1,r2,... is mapped to the r0 node.
-                String varName = "r0";
+//                String varName = "r0";
 //            String variableFor = createVarTypeDeclWithComma(varName, CLASS_ROOT);
 //            String variableFor = createVarTypeDeclWithComma(varName, CLASS_NODE);
                 // "Node" is a generic GrGen class type
@@ -98,7 +99,8 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
             String nodeVar = "";
             if (BigraphEntityType.isRoot(x)) {
                 // Having multiple roots in a bigraph rule is default in GrGen.
-                nodeVar = "r0"; // Use always r0 since the agent is always prime
+//                nodeVar = "r0"; // Use always r0 since the agent is always prime
+                nodeVar = "r" + ((BigraphEntity.RootEntity)x).getIndex();
             }
             if (BigraphEntityType.isNode(x)) {
                 BigraphEntity.NodeEntity nodeEntity = (BigraphEntity.NodeEntity) x;
@@ -413,7 +415,7 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
         return String.format("def ref indexMap:map<Node,Node> = map<Node,Node>{%s%s};", LINE_SEP, sb);
     }
 
-    public Optional<BigraphEntity.NodeEntity<DefaultDynamicControl>> getNodeById(String nodeId, PureBigraph bigraph) {
+    protected Optional<BigraphEntity.NodeEntity<DefaultDynamicControl>> getNodeById(String nodeId, PureBigraph bigraph) {
         return bigraph.getNodes().stream().filter(x -> x.getName().equals(nodeId)).findFirst();
     }
 
@@ -425,7 +427,7 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
      * @param withTrackingMap resolve node identifier with the help of the tracking map or not (for the reactum only)
      * @return the identifier of the parent
      */
-    public String getParentId(BigraphEntity.NodeEntity<DefaultDynamicControl> node, PureBigraph bigraph, boolean withTrackingMap) {
+    protected String getParentId(BigraphEntity.NodeEntity<DefaultDynamicControl> node, PureBigraph bigraph, boolean withTrackingMap) {
         BigraphEntity<?> parent = bigraph.getParent(node);
         String lbl;
         if (BigraphEntityType.isRoot(parent)) {
