@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 
-public class BigraphTransformationTest extends TestSupport {
+public class BigraphTransformationTest implements BigraphUnitTestSupport {
     public static final String TARGET_DUMP_PATH = "src/test/resources/dump/smarthome/";
 
     @Test
