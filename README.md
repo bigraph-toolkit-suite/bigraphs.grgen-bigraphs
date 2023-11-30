@@ -67,7 +67,7 @@ dependencies (refer also to [Development](#Development)).
 
 This projects provides a CLI tool to access the transformation functionality.
 
-> **Note:** An executable JAR of biGGer can be found in the directory `./bin/` after building the project or can be found on the [Releases](https://github.com/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/releases) page.
+> **Note:** An executable JAR of biGGer can be found in the directory `./bin/` after [building the project](#build-configuration) or can be found on the [Releases](https://github.com/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/releases) page.
 
 **Example:**
 
