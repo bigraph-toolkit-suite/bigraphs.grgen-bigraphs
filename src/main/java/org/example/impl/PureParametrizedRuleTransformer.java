@@ -5,7 +5,6 @@ import org.bigraphs.framework.core.BigraphEntityType;
 import org.bigraphs.framework.core.impl.BigraphEntity;
 import org.bigraphs.framework.core.impl.pure.PureBigraph;
 import org.bigraphs.framework.core.impl.signature.DefaultDynamicControl;
-import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
 import org.bigraphs.framework.core.reactivesystem.HasLabel;
 import org.bigraphs.framework.core.reactivesystem.ReactionRule;
 import org.example.RuleTransformer;
@@ -171,7 +170,7 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
             BigraphEntity.Link link = each.getKey();
             // we have to use this generic type, since for bigraph matching an outer name in a rule can mean anything. coule also be an edge.
             // So if it is explicitly an edge, then use the edge class, but if its an outername use the generic type BLink
-            String nodeType = BigraphEntityType.isEdge(link) ? CLASS_EDGE : CLASS_LINK; //CLASS_OUTERNAME;
+            String nodeType = BigraphEntityType.isEdge(link) ? CLASS_EDGE : CLASS_LINK;
             String variableForLink = createVarTypeDeclWithComma(link.getName(), nodeType);
             sb.append(variableForLink).append(LINE_SEP);
             for (BigraphEntity.Port eachPort : ports) {
@@ -218,12 +217,15 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
                 String rhsParentId = getParentId(rhsNode, reactum, true);
                 String edgePrefix = createVarTypeDecl("", REFERENCE_PARENT);
                 // Since this node is new; we need to declare it first
-                sb.append(createVarTypeDeclWithComma(reactumId, rhsNode.getControl())).append(LINE_SEP);
-                sb.append(createGraphlet(reactumId, edgePrefix, rhsParentId));
+                // We use the mapped reactum Id, which might be "new" but has same ID as some node in the redex -> we must use a new temporary identifier
+                String rectifiedReactumId = trackIdentityOf(reactumId);
+//                varMap.put(rectifiedReactumId, rhsNode);//TODO NECESSARY?
+                sb.append(createVarTypeDeclWithComma(rectifiedReactumId, rhsNode.getControl())).append(LINE_SEP);
+                sb.append(createGraphlet(rectifiedReactumId, edgePrefix, rhsParentId));
                 sb.append(LINE_SEP);
                 // Also the new node's ports
                 reactum.getPorts(rhsNode).forEach(p -> {
-                    String varNameOfPort = reactumId + "_p" + p.getIndex();
+                    String varNameOfPort = rectifiedReactumId + "_p" + p.getIndex();
                     String variableForPort = createVarTypeDeclWithComma(varNameOfPort, CLASS_PORT);
                     sb.append(variableForPort).append(LINE_SEP);
                     String edgePrefix2 = edgeSupplier.get();
@@ -232,7 +234,7 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
                     String portNodeRel = createGraphlet(
                             varNameOfPort,
                             edgeVar,
-                            reactumId
+                            rectifiedReactumId
                     );
                     sb.append(portNodeRel).append(LINE_SEP);
 //                    portAttributeChecks.append(String.format("if { %s.ix == %d; }", varNameOfPort, p.getIndex())).append(LINE_SEP);
@@ -289,20 +291,17 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
         for (Map.Entry<BigraphEntity.Link, LinkedHashSet<BigraphEntity.Port>> each : entriesRewrite) {
             LinkedHashSet<BigraphEntity.Port> ports = each.getValue();
             BigraphEntity.Link link = each.getKey();
+            String newLinkName = trackIdentityOf(link.getName());
+            if(trackingMap.containsKey(link.getName()) && (trackingMap.get(link.getName()) == null || trackingMap.get(link.getName()).isEmpty())) {
+                // we have a new edge: we need do declare a edge variable
+                String nodeType = BigraphEntityType.isEdge(link) ? CLASS_EDGE : CLASS_LINK; //CLASS_OUTERNAME;
+                String variableForLink = createVarTypeDeclWithComma(newLinkName, nodeType);
+                sb.append(variableForLink).append(LINE_SEP);
+            }
             for (BigraphEntity.Port eachPort : ports) {
                 BigraphEntity.NodeEntity<DefaultDynamicControl> nodeOfPort = reactum.getNodeOfPort(eachPort);
                 String portVarName;
-                if (newNodesAdded.contains(nodeOfPort)) { // A new node might be added in the reactum
-                    portVarName = nodeOfPort.getName() + "_p" + eachPort.getIndex();
-                } else {
-                    if (trackingMap.get(nodeOfPort.getName()) != null && !trackingMap.get(nodeOfPort.getName()).isEmpty()) {
-                        portVarName = trackingMap.get(nodeOfPort.getName()) + "_p" + eachPort.getIndex();
-                    } else {
-                        // Throw an exception that trackingMap entry is missing which must be provided if the current node is not a newly created one in the rule's reactum
-                        throw new RuntimeException("There was no mapping in the tracking map specified for the node " + nodeOfPort.getName() + ", and it was not newly created in the reactum of the rule.");
-                    }
-                }
-                String newLinkName = Optional.of(trackingMap.get(link.getName())).orElse(link.getName());
+                portVarName = trackIdentityOf(nodeOfPort.getName()) + "_p" + eachPort.getIndex();
                 String portLinkRel = createGraphlet(portVarName, createVarTypeDecl("", REFERENCE_LINK), newLinkName); //
                 sb.append(portLinkRel);
                 sb.append(LINE_SEP);
@@ -311,12 +310,12 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
 
         //Idle outer names in the reactum
         reactum.getOuterNames().stream().filter(x -> reactum.getPointsFromLink(x).isEmpty()).forEach(idleLink -> {
-            String newLinkName = Optional.of(trackingMap.get(idleLink.getName())).orElse(idleLink.getName());
+            String newLinkName = trackIdentityOf(idleLink.getName());
             sb.append(createVarTypeDeclWithComma(newLinkName, CLASS_OUTERNAME)).append(LINE_SEP);
         });
 
 
-        // Now append the generic code template that handle the copy of substructures determined by the sites
+        // Now append the generic code template that handles the copying of substructures determined by the sites
         // Create the necessary map to build the indexMap
         redex.getSites().forEach(s -> {
             BigraphEntity<?> parent = redex.getParent(s);
@@ -327,7 +326,7 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
         reactum.getSites().forEach(s -> {
             BigraphEntity<?> parent = reactum.getParent(s);
             if (BigraphEntityType.isNode(parent)) {
-                String trueName = trackingMap.getOrDefault(((BigraphEntity.NodeEntity) parent).getName(), ((BigraphEntity.NodeEntity) parent).getName());
+                String trueName = trackIdentityOf(((BigraphEntity.NodeEntity) parent).getName());
                 redexSiteToReactumSite.keySet()
                         .forEach(nodeId -> {
                             Optional<BigraphEntity.NodeEntity<DefaultDynamicControl>> nodeById = getNodeById(nodeId, redex);
@@ -431,19 +430,13 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
         BigraphEntity<?> parent = bigraph.getParent(node);
         String lbl;
         if (BigraphEntityType.isRoot(parent)) {
-            lbl = "r0";
+            lbl = "r" + ((BigraphEntity.RootEntity)parent).getIndex();
         } else {
             assert BigraphEntityType.isNode(parent);
             lbl = ((BigraphEntity.NodeEntity) parent).getName();
-            if (trackingMap.containsKey(lbl) && withTrackingMap) {
-                lbl = trackingMap.get(lbl);
+            if (withTrackingMap) {
+                lbl = trackIdentityOf(lbl);
             }
-//            String parentId = ((BigraphEntity.NodeEntity) parent).getName();
-//            if (trackingMap.containsKey(parentId) && withTrackingMap) {
-//                lbl = trackingMap.get(parentId);
-//            } else {
-//                lbl = parentId;
-//            }
         }
         return lbl;
     }

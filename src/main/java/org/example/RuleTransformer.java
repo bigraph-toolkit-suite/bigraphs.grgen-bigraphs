@@ -2,12 +2,19 @@ package org.example;
 
 import org.bigraphs.framework.core.reactivesystem.ReactionRule;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 /**
  * @author Dominik Grzelak
  */
 public abstract class RuleTransformer extends TransformerSupport implements BaseTransformer<ReactionRule<?>> {
 
     protected TrackingMap trackingMap = createMap();
+
+    // in case the reactum node id as no "image" (Value is empty) but the redex has a node with the same id
+    // then, the reactum node/edge id needs the be temporarily substituted but keeping the reference to trackingMap
+    private HashMap<String, String> trackingSubstitutionMap = new HashMap<>();
 
     boolean printNACPattern = true;
 
@@ -45,6 +52,21 @@ public abstract class RuleTransformer extends TransformerSupport implements Base
 
     @Override
     public abstract String toString(ReactionRule<?> element);
+
+    public String trackIdentityOf(String nodeId) {
+        if (trackingMap.containsKey(nodeId)) {
+            if (trackingMap.get(nodeId) == null || trackingMap.get(nodeId).isEmpty()) {
+                if (!trackingSubstitutionMap.containsKey(nodeId)) {
+                    String newNodeId = nodeId + "_" + UUID.randomUUID().toString().split("-")[1]+Math.round(Math.random()*1000);
+                    trackingSubstitutionMap.put(nodeId, newNodeId);
+                }
+                return trackingSubstitutionMap.get(nodeId);
+            }
+            return trackingMap.get(nodeId);
+        }
+        throw new RuntimeException("Error");
+    }
+
 
     /**
      * A GrGen.NET pattern specifying a NAC (for atomic controls, or nodes in the rule not containing a site).
