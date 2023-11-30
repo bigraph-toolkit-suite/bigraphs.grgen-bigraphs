@@ -86,7 +86,7 @@ their metamodels in the Ecore format `*.ecore`.
 See [Bigraph Ecore Metamodel](https://bigraphs.org/) or [Bigraph Framework](https://bigraphs.org/products/bigraph-framework/) on how
 to create bigraphs in this format.
 This topic is also briefly covered in section ["Basic usage in Java"](#Basic-usage-in-Java) and ["How to model bigraphs?"](#How-to-model-bigraphs)
-The bare Bigraph Ecore Specification is also available [here](ZENODO).
+The bare Bigraph Ecore Specification is also available [here](https://zenodo.org/records/10043063).
 
 > **Note:** Check out the `./sample` folder that includes ready-to-use bigraph model files (signature, host bigraph, and rules).
 
