@@ -11,7 +11,7 @@ java --version
 (From the `bin/` directory of this project)
 
 
-java -jar bigger.jar --verbose --basepath=../sample/petrinet-simple/ --host=host.xmi --output=foo --sig=sig.xmi --sigM=signatureBaseModel.ecore --metamodel=bigraphBaseModel.ecore --rule=rule1:r1-lhs.xmi,r1-rhs.xmi --tracking=map.json
+java -jar bigger.jar --verbose --basepath=../sample/concurrent-append/ --host=host.xmi --output=foo --sig=sig.xmi --sigM=signatureMetaModel.ecore --metamodel=bigraphMetaModel.ecore --rule=nextRule:nextRule-lhs.xmi,nextRule-rhs.xmi --rule=appendRule:appendRule-lhs.xmi,appendRule-rhs.xmi --rule=returnRule:returnRule-lhs.xmi,returnRule-rhs.xmi --tracking=map.json
 
 
 == Execute GrGen.NET:

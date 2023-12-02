@@ -36,6 +36,7 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,9 +47,10 @@ import static org.bigraphs.framework.core.factory.BigraphFactory.*;
 import static org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptions.transitionOpts;
 
 /**
- * The concurrent append problem from the Groove paper in bigraphs
+ * The concurrent append problem from the GROOVE paper [ReSV04] in bigraphs.
  *
  * @author Dominik Grzelak
+ * @see "[ReSV04] Rensink, Arend; Schmidt, Ákos; Varró, Dániel: Model Checking Graph Transformations: A Comparison of Two Approaches. In: Ehrig, H. ; Engels, G. ; Parisi-Presicce, F. ; Rozenberg, G. (Hrsg.): Graph Transformations, Lecture Notes in Computer Science. Berlin, Heidelberg : Springer, 2004 — ISBN 978-3-540-30203-2, S. 226–241"
  */
 @State(Scope.Benchmark)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -58,6 +60,8 @@ import static org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptio
 @Measurement(iterations = 30, time = 5, timeUnit = TimeUnit.SECONDS)
 public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
     private final static String TARGET_DUMP_PATH = "src/test/resources/dump/append/";
+    private final static String TARGET_SAMPLE_PATH = "sample/concurrent-append/";
+
     private final static boolean AUTO_CLEAN_BEFORE = true;
     private final static boolean EXPORT = true;
 
@@ -81,14 +85,17 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
     }
 
     @Test
-    void grgen_encoding() throws Exception {
+    void test_GrGen_Encoding() throws Exception {
         // Instantiate transformers
         DynamicSignatureTransformer signatureTransformer = new DynamicSignatureTransformer();
 
-
         // Instantiate bigraph models
         DefaultDynamicSignature sig = createSignature();
+        BigraphFileModelManagement.Store.exportAsInstanceModel(sig, new FileOutputStream(TARGET_SAMPLE_PATH + "sig.xmi"), "signatureMetaModel.ecore");
+        BigraphFileModelManagement.Store.exportAsMetaModel(sig, new FileOutputStream(TARGET_SAMPLE_PATH + "signatureMetaModel.ecore"));
         PureBigraph agent = createAgent(); //specify the number of processes here
+        BigraphFileModelManagement.Store.exportAsInstanceModel(agent, new FileOutputStream(TARGET_SAMPLE_PATH + "host.xmi"), "bigraphMetaModel.ecore");
+        BigraphFileModelManagement.Store.exportAsMetaModel(agent, new FileOutputStream(TARGET_SAMPLE_PATH + "bigraphMetaModel.ecore"));
 
         // Translate everything
         // Graph metamodel
@@ -115,6 +122,8 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         t.withMap(trackAppend);
         String appendRREnc = t.toString(appendRR());
         System.out.println(appendRREnc);
+        BigraphFileModelManagement.Store.exportAsInstanceModel(appendRR().getRedex(), new FileOutputStream(TARGET_SAMPLE_PATH + "appendRule-lhs.xmi"), "bigraphMetaModel.ecore");
+        BigraphFileModelManagement.Store.exportAsInstanceModel(appendRR().getReactum(), new FileOutputStream(TARGET_SAMPLE_PATH + "appendRule-rhs.xmi"), "bigraphMetaModel.ecore");
 
 
         PureParametrizedRuleTransformer t2 = new PureParametrizedRuleTransformer();
@@ -134,6 +143,8 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         t2.withMap(trackNext);
         String nextRREnc = t2.toString(nextRR());
         System.out.println(nextRREnc);
+        BigraphFileModelManagement.Store.exportAsInstanceModel(nextRR().getRedex(), new FileOutputStream(TARGET_SAMPLE_PATH + "nextRule-lhs.xmi"), "bigraphMetaModel.ecore");
+        BigraphFileModelManagement.Store.exportAsInstanceModel(nextRR().getReactum(), new FileOutputStream(TARGET_SAMPLE_PATH + "nextRule-rhs.xmi"), "bigraphMetaModel.ecore");
 
 
         PureParametrizedRuleTransformer t3 = new PureParametrizedRuleTransformer();
@@ -142,6 +153,8 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         t3.withMap(trackReturn);
         String returnRREnc = t3.toString(returnRR());
         System.out.println(returnRREnc);
+        BigraphFileModelManagement.Store.exportAsInstanceModel(returnRR().getRedex(), new FileOutputStream(TARGET_SAMPLE_PATH + "returnRule-lhs.xmi"), "bigraphMetaModel.ecore");
+        BigraphFileModelManagement.Store.exportAsInstanceModel(returnRR().getReactum(), new FileOutputStream(TARGET_SAMPLE_PATH + "returnRule-rhs.xmi"), "bigraphMetaModel.ecore");
     }
 
     @Test
@@ -193,10 +206,10 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
                 )
                 .doMeasureTime(true)
                 .and(ModelCheckingOptions.exportOpts()
-                                .setReactionGraphFile(new File(completePath.toUri()))
-                                .setPrintCanonicalStateLabel(false)
+                        .setReactionGraphFile(new File(completePath.toUri()))
+                        .setPrintCanonicalStateLabel(false)
                         .setOutputStatesFolder(new File(TARGET_DUMP_PATH + "states/"))
-                                .create()
+                        .create()
                 )
         ;
         return opts;
@@ -432,19 +445,18 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         return rr;
     }
 
-    //TODO change control names, Node not possible in GrGen and i1 -> Ni
     private DefaultDynamicSignature createSignature() {
         DynamicSignatureBuilder defaultBuilder = pureSignatureBuilder();
         defaultBuilder
-                .addControl("append", 1)
-                .newControl().identifier(StringTypedName.of("main")).arity(FiniteOrdinal.ofInteger(0)).assign() // as much as we callers have
+                .addControl("append", 1) // as much as we callers have
+                .newControl().identifier(StringTypedName.of("main")).arity(FiniteOrdinal.ofInteger(0)).assign()
                 .newControl().identifier(StringTypedName.of("list")).arity(FiniteOrdinal.ofInteger(0)).assign()
-                .newControl().identifier(StringTypedName.of("this")).arity(FiniteOrdinal.ofInteger(0)).assign() // as much as we callers have
-                .newControl().identifier(StringTypedName.of("thisRef")).arity(FiniteOrdinal.ofInteger(1)).assign()
+                .newControl().identifier(StringTypedName.of("this")).arity(FiniteOrdinal.ofInteger(0)).assign()
+                .newControl().identifier(StringTypedName.of("thisRef")).arity(FiniteOrdinal.ofInteger(1)).assign() // as much as we callers have
                 .newControl().identifier(StringTypedName.of("Cell")).arity(FiniteOrdinal.ofInteger(0)).assign()
                 .newControl().identifier(StringTypedName.of("Void")).arity(FiniteOrdinal.ofInteger(0)).assign()
                 .newControl().identifier(StringTypedName.of("val")).arity(FiniteOrdinal.ofInteger(0)).assign()
-                .newControl().identifier(StringTypedName.of("N1")).arity(FiniteOrdinal.ofInteger(0)).assign()
+                .newControl().identifier(StringTypedName.of("N1")).arity(FiniteOrdinal.ofInteger(0)).assign() // parameterized control
                 .newControl().identifier(StringTypedName.of("N2")).arity(FiniteOrdinal.ofInteger(0)).assign()
                 .newControl().identifier(StringTypedName.of("N3")).arity(FiniteOrdinal.ofInteger(0)).assign()
                 .newControl().identifier(StringTypedName.of("N4")).arity(FiniteOrdinal.ofInteger(0)).assign()
