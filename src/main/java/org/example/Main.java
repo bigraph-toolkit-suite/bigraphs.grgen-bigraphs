@@ -157,7 +157,11 @@ public class Main {
                 System.out.println("Some of the rule specifications are invalid:");
                 invalidSpecs.forEach(x -> {
                     int ruleIx = collect.indexOf(x) + 1;
-                    System.out.println("\tRule at position = " + ruleIx + ": " + x);
+                    String s = x.getRuleName();
+                    if(s.isEmpty()) s = x.getRedexFilePath();
+                    if(s.isEmpty()) s = x.getReactumFilePath();
+                    if(s.isEmpty()) s = x.toString();
+                    System.out.println("\tRule at position = " + ruleIx + ": " + s);
                 });
                 System.exit(1);
             }
@@ -168,7 +172,11 @@ public class Main {
                 System.out.println("Some of the rule specifications have invalid files specified:");
                 invalidSpecs.forEach(x -> {
                     int ruleIx = collect.indexOf(x) + 1;
-                    System.out.println("\tRule at position = " + ruleIx + ": " + x);
+                    String s = x.getRuleName();
+                    if(s.isEmpty()) s = x.getRedexFilePath();
+                    if(s.isEmpty()) s = x.getReactumFilePath();
+                    if(s.isEmpty()) s = x.toString();
+                    System.out.println("\tRule at position = " + ruleIx + ": " + s);
                 });
                 System.exit(1);
             }
