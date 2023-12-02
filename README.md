@@ -4,7 +4,7 @@
 
 ----
 
-This project provides a conversion tool called **BiGGer** that translates bigraphs and bigraphical reactive systems
+This project provides a model transformation tool called **BiGGer** that translates bigraphs and bigraphical reactive systems
 (BRS) to several [GrGen.NET](https://grgen.de/)-compatible model files that can be executed.
 Effectively, this transformation enables bigraph rewriting in GrGen.NET.
 
@@ -12,7 +12,7 @@ Effectively, this transformation enables bigraph rewriting in GrGen.NET.
 It is primarily used for rule-based graph processing, which is especially useful in various applications related to
 modeling, code generation, and graph transformation.
 
-The functionality of this project is offered via a CLI and a Java API.
+The functionality of this project is offered via a command-line interface (CLI) and a Java API.
 The tool implements a unidirectional transformation from bigraphs to GrGen.NET models.
 
 **Which file formats are generated?**
@@ -25,12 +25,12 @@ The tool implements a unidirectional transformation from bigraphs to GrGen.NET m
 **What is translated?**
 
 - Signatures
-- Place-Sorts
 - Bigraphs
-- Rules
+- Rules and Tracking Map
 
 **What is not translated?**
 
+- Place-Sorts
 - Link-sorts
 - Rule control instructions (however, a default one is provided and can be customized)
 - Instantiation map of a rule
@@ -43,7 +43,7 @@ The tool implements a unidirectional transformation from bigraphs to GrGen.NET m
 
 **Future Work**
 
-- attribute evaluation (not possible in standard bigraph rewriting)
+- Attribute evaluation (not possible in standard bigraph rewriting)
 
 ## Getting Started
 
@@ -67,7 +67,7 @@ dependencies (refer also to [Development](#Development)).
 
 This projects provides a CLI tool to access the transformation functionality.
 
-> **Note:** An executable JAR of biGGer can be found in the directory `./bin/` after [building the project](#build-configuration) or can be found on the [Releases](https://github.com/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/releases) page.
+> **Note:** An executable JAR of BiGGer can be found in the directory `./bin/` after [building the project](#build-configuration) or can be found on the [Releases](https://github.com/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/releases) page.
 
 **Example:**
 
@@ -321,37 +321,6 @@ java -jar bigger.jar -h
 ```
 
 ### Build Configuration
-
-[//]: # (#### Initialize)
-
-[//]: # ()
-[//]: # (For this project, Maven is used as the build management tool.)
-
-[//]: # (See also [Requirements]&#40;#Getting-Started&#41; in section "Getting Started".)
-
-[//]: # (The recommendation here is to build it with the regular `mvn` command. )
-
-[//]: # (You will need [Maven v3.8.3 or above]&#40;https://maven.apache.org/install.html&#41;.)
-
-[//]: # ()
-[//]: # (> **Note:** This project requires Java 17 and Maven >=3.8.3.)
-
-[//]: # ()
-[//]: # (The following command has to be run once:)
-
-[//]: # (```shell)
-
-[//]: # (mvn initialize)
-
-[//]: # (```)
-
-[//]: # (It installs some dependencies located in the `./libs/` folder in the local Maven repository.)
-
-[//]: # (Usually, in `~/.m2/`.)
-
-[//]: # (These are required for the development and include the various modules of [Bigraph Framework]&#40;https://bigraphs.org/products/bigraph-framework/&#41; &#40;core, simulation, converter, visualization&#41;. )
-
-[//]: # (**Build**)
 
 There are also three other options for building this project from source as described next.
 
