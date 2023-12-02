@@ -15,7 +15,7 @@ java -jar bigger.jar --verbose --basepath=../sample/petrinet-simple/ --host=host
 
 
 == Execute GrGen.NET:
-(from `sample/foo/` directory of this project)
+(from `sample/petrinet-simple/foo/` directory of this project)
 
 
 GrShell script.grs

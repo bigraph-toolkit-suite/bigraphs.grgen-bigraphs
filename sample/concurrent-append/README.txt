@@ -15,7 +15,7 @@ java -jar bigger.jar --verbose --basepath=../sample/concurrent-append/ --host=ho
 
 
 == Execute GrGen.NET:
-(from `sample/foo/` directory of this project)
+(from `sample/concurrent-append/foo/` directory of this project)
 
 
 GrShell script.grs
