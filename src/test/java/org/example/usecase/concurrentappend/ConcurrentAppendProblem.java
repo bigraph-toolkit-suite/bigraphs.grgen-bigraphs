@@ -14,16 +14,13 @@ import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
 import org.bigraphs.framework.core.impl.signature.DynamicSignatureBuilder;
 import org.bigraphs.framework.core.reactivesystem.ParametricReactionRule;
 import org.bigraphs.framework.core.reactivesystem.ReactionRule;
-import org.bigraphs.framework.simulation.encoding.BigraphCanonicalForm;
 import org.bigraphs.framework.simulation.matching.pure.PureReactiveSystem;
 import org.bigraphs.framework.simulation.modelchecking.BigraphModelChecker;
 import org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptions;
 import org.bigraphs.framework.simulation.modelchecking.PureBigraphModelChecker;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
 import org.example.BigraphUnitTestSupport;
 import org.example.RuleTransformer;
-import org.example.TrackingMap;
+import org.bigraphs.framework.core.reactivesystem.TrackingMap;
 import org.example.impl.DynamicSignatureTransformer;
 import org.example.impl.PureBigraphTransformer;
 import org.example.impl.PureParametrizedRuleTransformer;
@@ -40,10 +37,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.bigraphs.framework.core.factory.BigraphFactory.*;
+import static org.bigraphs.framework.core.factory.BigraphFactory.pureBuilder;
+import static org.bigraphs.framework.core.factory.BigraphFactory.pureSignatureBuilder;
 import static org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptions.transitionOpts;
 
 /**

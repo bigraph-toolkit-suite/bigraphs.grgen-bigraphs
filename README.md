@@ -13,20 +13,20 @@ It is primarily used for rule-based graph processing, which is especially useful
 The functionality of this project is offered via a command-line interface (CLI) and a Java API.
 The tool implements a unidirectional transformation from bigraphs to GrGen.NET models.
 
-**Which file formats are generated?**
+**Which GrGen.NET file formats are generated?**
 
 - `*.gm` (graph metamodel)
 - `*.grs` (graph model)
 - `*.grg` (rules)
 - `*.grs` (script that defines a simple rule control strategy)
 
-**What is translated?**
+**What parts of the bigraph specification are translated?**
 
-- Signatures
-- Bigraphs
+- Signatures (instance and metamodel)
+- Bigraphs (instance and metamodel)
 - Rules and Tracking Map
 
-**What is not translated?**
+**What is not translated yet?**
 
 - Place-Sorts
 - Link-sorts
@@ -36,7 +36,7 @@ The tool implements a unidirectional transformation from bigraphs to GrGen.NET m
 
 **Additional Features**
 
-- GrGen.NET approach allows for tracking rules in bigraphs (enables model synchronization and causal reasoning)
+- The GrGen.NET approach for bigraphs allows for tracking rules in bigraphs (enables model synchronization and causal reasoning)
 - Outer names of an agent in a BRS can be renamed now (not possible in standard bigraph rewriting)
 
 **Future Work**
@@ -54,9 +54,12 @@ dependencies (refer also to [Development](#Development)).
     - Needs to be installed on the host system 
     - View the project website: https://grgen.de/
     - View the manual: https://grgen.de/GrGenNET-Manual.pdf
-- Java 17 and Maven >=3.8.3 (for development), Java 11 for execution
-- Bigraph Framework and Ecore Metamodel (for creating bigraph models that BiGGer understands)
-  - These external dependencies are automatically fetched
+- Java 17 and Maven >=3.8.3 (for development)
+- Mono and Java 11 (for yComp) for execution of GrGen.NET
+
+**Dependencies**
+- Bigraph Framework and Bigraph Ecore Metamodel (BEM) (for creating bigraph models that BiGGer understands)
+  - These external dependencies are automatically fetched from Maven Central
   - See [Bigraph Ecore Metamodel](https://github.com/bigraph-toolkit-suite/bigraphs.bigraph-ecore-metamodel) or [Bigraph Framework](https://bigraphs.org/products/bigraph-framework/) on how to create bigraphs practically
   - See [here](https://zenodo.org/doi/10.5281/zenodo.10043062) for the bare _Bigraph Ecore Specification_ on Zenodo
   - See [[KeTG16]](https://doi.org/10.4204/EPTCS.231.2) for theoretical details of the abstract syntax tree of bigraphs
@@ -272,10 +275,15 @@ All approaches allow to export bigraphs and rules as `*.ecore` and `*.xmi` files
 ## Examples
 
 The folder `./sample/` contains several demo scenarios.
-Each scenario contains a signature and a bigraph (meta-)model, and also reaction rule models in the `*.ecore` and `*.xmi` format. 
-Additionally, a tracking map is supplied for each rule.
+Each scenario contains a signature, a bigraph meta- and instance model, and reaction rule models, all in the `*.ecore` and `*.xmi` format. 
+Additionally, a tracking map is supplied for each rule in JSON format.
+A README is also supplied explaining the execution.
+
+In the following it is assumed that **BiGGer** is executed from the `bin/` directory of this project.
 
 ### Petri net Simple
+
+A transition is fired.
 
 ```shell
 java -jar bigger.jar --verbose \
@@ -291,10 +299,28 @@ It is assumed that the tool is started from the `./bin/` folder from the root of
 So all paths inside the options as shown above are relative.
 
 Since `../sample/petrinet-simple/` is set as the base path, the file paths of all other options is shortened and more readable.
-*(!) The base path argument affects all other options. (!)*
+
+> **Note:** The `--basepath` argument affects all other options.
 
 The host graph is located in `./sample/petrinet-simple/host.xmi`, etc.
 The output is generated in the folder `./sample/petrinet-simple/foo/`.
+
+### Concurrent Append Problem
+
+_n_ processes want to add an integer to a list concurrently.
+Three rules are involved.
+
+```shell
+java -jar bigger.jar --verbose \
+  --basepath=../sample/concurrent-append/ \
+  --output=foo \
+  --sig=sig.xmi --sigM=signatureMetaModel.ecore \
+  --metamodel=bigraphMetaModel.ecore --host=host.xmi \
+  --rule=nextRule:nextRule-lhs.xmi,nextRule-rhs.xmi \
+  --rule=appendRule:appendRule-lhs.xmi,appendRule-rhs.xmi \
+  --rule=returnRule:returnRule-lhs.xmi,returnRule-rhs.xmi \
+  --tracking=map.json
+```
 
 ## Development
 

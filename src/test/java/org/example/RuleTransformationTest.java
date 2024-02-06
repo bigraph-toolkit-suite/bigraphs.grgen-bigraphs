@@ -7,6 +7,7 @@ import org.bigraphs.framework.core.exceptions.builder.TypeNotExistsException;
 import org.bigraphs.framework.core.impl.pure.PureBigraph;
 import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
 import org.bigraphs.framework.core.reactivesystem.ReactionRule;
+import org.bigraphs.framework.core.reactivesystem.TrackingMap;
 import org.example.demo.DemoRuleProvider;
 import org.example.demo.DemoSignatureProvider;
 import org.example.impl.PureParametrizedRuleTransformer;
