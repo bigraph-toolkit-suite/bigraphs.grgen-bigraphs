@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+//TODO use tracking map from BigraphFramework
 public class TrackingMap extends HashMap<String, String> {
 
     private String ruleName;

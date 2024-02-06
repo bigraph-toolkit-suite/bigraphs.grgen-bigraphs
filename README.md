@@ -4,13 +4,11 @@
 
 ----
 
-This project provides a model transformation tool called **BiGGer** that translates bigraphs and bigraphical reactive systems
-(BRS) to several [GrGen.NET](https://grgen.de/)-compatible model files that can be executed.
+This project provides a model transformation tool called **BiGGer** that translates bigraphs and bigraphical reactive systems (BRS) to several [GrGen.NET](https://grgen.de/)-compatible model files that can be executed.
 Effectively, this transformation enables bigraph rewriting in GrGen.NET.
 
 [GrGen.NET](https://grgen.de/) is a framework for graph-based pattern matching and transformation.
-It is primarily used for rule-based graph processing, which is especially useful in various applications related to
-modeling, code generation, and graph transformation.
+It is primarily used for rule-based graph processing, which is especially useful in various applications related to modeling, code generation, and graph transformation.
 
 The functionality of this project is offered via a command-line interface (CLI) and a Java API.
 The tool implements a unidirectional transformation from bigraphs to GrGen.NET models.
@@ -56,12 +54,12 @@ dependencies (refer also to [Development](#Development)).
     - Needs to be installed on the host system 
     - View the project website: https://grgen.de/
     - View the manual: https://grgen.de/GrGenNET-Manual.pdf
-- Java 17 and Maven >=3.8.3
+- Java 17 and Maven >=3.8.3 (for development), Java 11 for execution
 - Bigraph Framework and Ecore Metamodel (for creating bigraph models that BiGGer understands)
-  - Are specified as external dependencies
+  - These external dependencies are automatically fetched
   - See [Bigraph Ecore Metamodel](https://github.com/bigraph-toolkit-suite/bigraphs.bigraph-ecore-metamodel) or [Bigraph Framework](https://bigraphs.org/products/bigraph-framework/) on how to create bigraphs practically
   - See [here](https://zenodo.org/doi/10.5281/zenodo.10043062) for the bare _Bigraph Ecore Specification_ on Zenodo
-  - See [[KeTG16]](https://doi.org/10.4204/EPTCS.231.2) for theoretical details
+  - See [[KeTG16]](https://doi.org/10.4204/EPTCS.231.2) for theoretical details of the abstract syntax tree of bigraphs
 
 ### Basic Usage via the Command-line:
 
@@ -81,10 +79,8 @@ java -jar bigger.jar \
   --tracking=/path/map.json
 ```
 
-Bigraph instance models in the Ecore XMI format `*.xmi` (XML files) have to be provided as arguments, and
-their metamodels in the Ecore format `*.ecore`.
-See [Bigraph Ecore Metamodel](https://bigraphs.org/) or [Bigraph Framework](https://bigraphs.org/products/bigraph-framework/) on how
-to create bigraphs in this format.
+Bigraph instance models in the Ecore XMI format `*.xmi` (XML files) have to be provided as arguments, and their metamodels in the Ecore format `*.ecore`.
+See [Bigraph Ecore Metamodel](https://bigraphs.org/) or [Bigraph Framework](https://bigraphs.org/products/bigraph-framework/) on how to create bigraphs in this format.
 This topic is also briefly covered in section ["Basic usage in Java"](#Basic-usage-in-Java) and ["How to model bigraphs?"](#How-to-model-bigraphs)
 The bare Bigraph Ecore Specification is also available [here](https://zenodo.org/records/10043063).
 
@@ -126,7 +122,7 @@ If the argument `--metamodel` is not supplied, the default behavior is to use th
 at `./bigraphBaseModel.ecore` relative to the current XMI file.
 See the following example of an XMI file (excerpt) that is used to specify a host bigraph, redex or reactum of a rule:
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <bigraphBaseModel:BBigraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bigraphBaseModel="http://de.tudresden.inf.st.bigraphs.models" xsi:schemaLocation="http://de.tudresden.inf.st.bigraphs.models ./bigraphBaseModel.ecore">
 <!-- content of a bigraph -->
@@ -295,7 +291,7 @@ It is assumed that the tool is started from the `./bin/` folder from the root of
 So all paths inside the options as shown above are relative.
 
 Since `../sample/petrinet-simple/` is set as the base path, the file paths of all other options is shortened and more readable.
-The base path argument affects all other options.
+*(!) The base path argument affects all other options. (!)*
 
 The host graph is located in `./sample/petrinet-simple/host.xmi`, etc.
 The output is generated in the folder `./sample/petrinet-simple/foo/`.
@@ -324,7 +320,7 @@ java -jar bigger.jar -h
 
 There are also three other options for building this project from source as described next.
 
-The recommended one is the Fat-JAR approach.
+The recommended one is the Fat-JAR approach designed for portability.
 
 #### Create a Fat-JAR / Uber-JAR
 
@@ -338,7 +334,7 @@ java -jar ./target/fatJar-<NAME>-<VERSION>.jar
 java -jar ./bin/bigger.jar # the tool is also copied to the `bin/` folder
 ```
 
-> **Note:** When executing the Maven goal, a ready to use tool is deployed using the Fat-JAR approach inside the `./bin/` folder.
+> **Note:** When executing this Maven goal, a ready to use tool is deployed using the Fat-JAR approach inside the `./bin/` folder.
 
 #### Classpath-Approach (1): Relative Libs-Folder
 
@@ -365,6 +361,90 @@ mvn clean install -PlocalM2
 # Execute the application
 java -jar ./target/localM2-<NAME>-<VERSION>.jar
 ```
+
+# Troubleshooting
+
+If you get errors while using **BiGGer**, GrGen.NET or yComp, this section provides some help.
+
+### **Error Description**: JDK Missing Library
+
+This or similar errors occur when the Java installation misses a required library. This might be the case when the headless version of an OpenJDK package under Ubuntu was installed.
+
+Error Message:
+```shell
+/opt/grgen/bin$ java -jar yComp.jar ./sample/concurrent-append/foo/host_graph.grs
+Exception in thread "main" java.lang.UnsatisfiedLinkError: Can't load library: /usr/lib/jvm/java-11-openjdk-amd64/lib/libawt_xawt.so
+	at java.base/java.lang.ClassLoader.loadLibrary(ClassLoader.java:2638)
+	at java.base/java.lang.Runtime.load0(Runtime.java:768)
+	at java.base/java.lang.System.load(System.java:1850)
+	at java.base/java.lang.ClassLoader$NativeLibrary.load0(Native Method)
+	at java.base/java.lang.ClassLoader$NativeLibrary.load(ClassLoader.java:2450)
+	at java.base/java.lang.ClassLoader$NativeLibrary.loadLibrary(ClassLoader.java:2506)
+	at java.base/java.lang.ClassLoader.loadLibrary0(ClassLoader.java:2705)
+	at java.base/java.lang.ClassLoader.loadLibrary(ClassLoader.java:2656)
+	at java.base/java.lang.Runtime.loadLibrary0(Runtime.java:830)
+	at java.base/java.lang.System.loadLibrary(System.java:1886)
+	at java.desktop/java.awt.Toolkit$3.run(Toolkit.java:1395)
+	at java.desktop/java.awt.Toolkit$3.run(Toolkit.java:1393)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at java.desktop/java.awt.Toolkit.loadLibraries(Toolkit.java:1392)
+	at java.desktop/java.awt.Toolkit.<clinit>(Toolkit.java:1425)
+	at java.desktop/java.awt.Component.<clinit>(Component.java:621)
+	at de.unika.ipd.ycomp.YComp.main(YComp.java:114) 
+```
+
+**Solution**
+
+On Ubuntu 20.04/22.04: `sudo apt install openjdk-11-jdk`
+
+### **Error Description**: yComp's Swing UI cannot be created (wrong JDK)
+
+You are not using Java 11 when running GrGen.NET-tools (e.g., GrShell), or GrGen.NET does not find the path to your JDK 11 installation.
+
+Error Message:
+```shell
+Exception in thread "main" Exception in thread "main" java.lang.IllegalAccessError: superclass access check failed: class de.unika.ipd.ycomp.tooltip.YCompToolTipManager$Actions (in unnamed module @0x5a6d67c3) cannot access class sun.swing.UIAction (in module java.desktop) because module java.desktop does not export sun.swing to unnamed module @0x5a6d67c3
+java.lang.IllegalAccessError: superclass access check failed: class de.unika.ipd.ycomp.tooltip.YCompToolTipManager$Actions (in unnamed module @0x5a6d67c3) cannot access class sun.swing.UIAction (in module java.desktop) because module java.desktop does not export sun.swing to unnamed module @0x5a6d67c3
+	at java.base/java.lang.ClassLoader.defineClass1(Native Method)
+	at java.base/java.lang.ClassLoader.defineClass1(Native Method)
+	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1017)
+	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:150)
+	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1017)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:862)
+	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:150)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassOnClassPathOrNull(BuiltinClassLoader.java:760)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:681)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:862)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:639)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassOnClassPathOrNull(BuiltinClassLoader.java:760)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:681)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at de.unika.ipd.ycomp.tooltip.YCompToolTipManager.<init>(YCompToolTipManager.java:107)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:639)
+	at de.unika.ipd.ycomp.tooltip.YCompToolTipManager.<clinit>(YCompToolTipManager.java:76)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at de.unika.ipd.ycomp.view.YCompView.createGraph2DView(YCompView.java:2022)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at de.unika.ipd.ycomp.view.YCompView.init(YCompView.java:1724)
+	at de.unika.ipd.ycomp.tooltip.YCompToolTipManager.<init>(YCompToolTipManager.java:107)
+	at de.unika.ipd.ycomp.tooltip.YCompToolTipManager.<clinit>(YCompToolTipManager.java:76)
+	at de.unika.ipd.ycomp.view.YCompView.<init>(YCompView.java:1630)
+	at de.unika.ipd.ycomp.view.YCompView.createGraph2DView(YCompView.java:2022)
+	at de.unika.ipd.ycomp.YComp.main(YComp.java:114)
+	at de.unika.ipd.ycomp.view.YCompView.init(YCompView.java:1724)
+	at de.unika.ipd.ycomp.view.YCompView.<init>(YCompView.java:1630)
+	at de.unika.ipd.ycomp.YComp.main(YComp.java:114)
+
+```
+
+**Solution**
+
+Two solutions exist:
+
+- A: Install Java 11. If multiple installations are present switch to Java 11: `sudo update-alternatives --config java`
+- B: Locate the GrGen.NET installation folder (e.g., `/opt/grgen/bin/`) and modify the yComp execution scripts (`ycomp`or `ycomp.bat`) as follows:
+  - `java --add-exports=java.desktop/sun.swing=ALL-UNNAMED -Xmx640m -jar "$YCOMP_HOME/yComp.jar" $*` (similar for the `*.bat` file). Since we have control over the Java 11 yComp's startup (GrGen.NET is calling yComp internally), we basically add a JVM option that exports the `sun.swing` module and allow any unnamed module to access this package.
 
 ## License
 

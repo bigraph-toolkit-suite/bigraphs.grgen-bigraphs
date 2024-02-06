@@ -16,6 +16,8 @@ import static org.bigraphs.framework.core.BigraphMetaModelConstants.*;
 
 //TODO extend from GroundRuleTransformer - hook method for NACs
 
+//TODO use trackingmap from rule
+
 /**
  * A concrete transformer implementation for parametrized rules that take pure bigraphs as redex and reactum.
  * A rule is parametrized if it has sites specified.
