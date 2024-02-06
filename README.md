@@ -322,6 +322,20 @@ java -jar bigger.jar --verbose \
   --tracking=map.json
 ```
 
+Output after executing the command (without `--verbose`):
+
+```shell
+Rules recognized successfully (3): [nextRule, appendRule, returnRule]
+Loading now: /grgen-bigraphs/sample/concurrent-append/signatureMetaModel.ecore
+Loading now: /grgen-bigraphs/sample/concurrent-append/sig.xmi
+Signature loaded successfully.
+Loading now: /grgen-bigraphs/sample/concurrent-append/bigraphMetaModel.ecore
+Loading now: /grgen-bigraphs/sample/concurrent-append/host.xmi
+Bigraph metamodel loaded successfully.
+Host bigraph loaded successfully.
+Conversion finished successfully. All model files are created in the folder /grgen-bigraphs/sample/concurrent-append/foo
+```
+
 ## Development
 
 ### Folder Structure
