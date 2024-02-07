@@ -11,8 +11,8 @@
     </description>
     <url>https://github.com/bigraph-toolkit-suite/bigraphs.grgen-bigraphs</url>
 
-    <groupId>org.example</groupId>
-    <artifactId>grgen-bigraphs</artifactId>
+    <groupId>org.bigraphs.grgen</groupId>
+    <artifactId>bigraphs-grgen-converter</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <licenses>
@@ -44,7 +44,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
-        <start-class>org.example.Main</start-class>
+        <start-class>org.bigraphs.grgen.converter.Main</start-class>
         <bigraph.version>1.1.0</bigraph.version>
         <bigraph.metamodel.version>1.6.1</bigraph.metamodel.version>
     </properties>
@@ -57,15 +57,15 @@
         <tag>HEAD</tag>
     </scm>
 
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-    </repositories>
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--            </snapshots>-->
+<!--            <id>ossrh</id>-->
+<!--            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 
     <profiles>
         <profile>
