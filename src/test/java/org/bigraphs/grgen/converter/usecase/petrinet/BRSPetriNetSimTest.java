@@ -7,13 +7,16 @@ import org.bigraphs.framework.core.exceptions.ReactiveSystemException;
 import org.bigraphs.framework.core.exceptions.builder.TypeNotExistsException;
 import org.bigraphs.framework.core.impl.pure.PureBigraph;
 import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
+import org.bigraphs.framework.core.reactivesystem.ParametricReactionRule;
 import org.bigraphs.framework.core.reactivesystem.ReactionRule;
+import org.bigraphs.framework.core.reactivesystem.TrackingMap;
 import org.bigraphs.framework.simulation.exceptions.BigraphSimulationException;
 import org.bigraphs.framework.simulation.matching.pure.PureReactiveSystem;
 import org.bigraphs.framework.simulation.modelchecking.BigraphModelChecker;
 import org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptions;
 import org.bigraphs.framework.simulation.modelchecking.PureBigraphModelChecker;
 import org.bigraphs.grgen.converter.BigraphUnitTestSupport;
+import org.bigraphs.grgen.converter.RuleTransformer;
 import org.bigraphs.grgen.converter.demo.DemoBigraphProvider;
 import org.bigraphs.grgen.converter.demo.DemoRuleProvider;
 import org.bigraphs.grgen.converter.demo.DemoSignatureProvider;
@@ -65,9 +68,19 @@ public class BRSPetriNetSimTest implements BigraphUnitTestSupport {
         eb(bigraph, "agent", TARGET_DUMP_PATH, true);
 
         DemoRuleProvider ruleProvider = DemoRuleProvider.getInstance();
-//        ReactionRule<PureBigraph> rr = ruleProvider.petriNetFireRule(sig);
+        ReactionRule<PureBigraph> rr = ruleProvider.petriNetFireRule(sig);
+        TrackingMap trackingMap = RuleTransformer.createMap(); // for the fire rule only
+        trackingMap.put("v0", "v0"); // left-place of transition in redex
+        trackingMap.put("v3", "v1"); // left token of left-place in redex
+        trackingMap.put("v1", "v2"); // transition in redex
+        trackingMap.put("v2", "v3"); // right-place of transition in redex
+        trackingMap.put("e0", "e0"); // edge from left-place to transition
+        trackingMap.put("e1", "e1"); // edges from transition to right-place
+        trackingMap.addLinkNames("e0", "e1"); // and possible outer names
+        ((ParametricReactionRule<PureBigraph>)rr).withTrackingMap(trackingMap);
+
 //        ReactionRule<PureBigraph> rr = ruleProvider.petriNetParallelRule(sig);
-        ReactionRule<PureBigraph> rr = ruleProvider.petriNetAddRule(sig);
+//        ReactionRule<PureBigraph> rr = ruleProvider.petriNetAddRule(sig);
         BigraphFileModelManagement.Store.exportAsInstanceModel(rr.getRedex(), System.out);
         BigraphFileModelManagement.Store.exportAsInstanceModel(rr.getReactum(), System.out);
         eb(rr.getRedex(), "redex", TARGET_DUMP_PATH, true);
