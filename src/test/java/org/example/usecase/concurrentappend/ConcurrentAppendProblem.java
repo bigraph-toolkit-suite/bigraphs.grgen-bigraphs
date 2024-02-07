@@ -44,7 +44,9 @@ import static org.bigraphs.framework.core.factory.BigraphFactory.pureSignatureBu
 import static org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptions.transitionOpts;
 
 /**
- * The concurrent append problem from the GROOVE paper [ReSV04] in bigraphs.
+ * The concurrent append problem from the GROOVE paper [ReSV04] in bigraphs is modelled here.
+ * It is used to perform also some benchmark.
+ * The output is intended for comparison with the results of GrGen.NET.
  *
  * @author Dominik Grzelak
  * @see "[ReSV04] Rensink, Arend; Schmidt, Ákos; Varró, Dániel: Model Checking Graph Transformations: A Comparison of Two Approaches. In: Ehrig, H. ; Engels, G. ; Parisi-Presicce, F. ; Rozenberg, G. (Hrsg.): Graph Transformations, Lecture Notes in Computer Science. Berlin, Heidelberg : Springer, 2004 — ISBN 978-3-540-30203-2, S. 226–241"

@@ -17,7 +17,12 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 
-public class RuleTransformationTest extends TestSupport {
+/**
+ * This class tests the rule transformation capabilities.
+ *
+ * @author Dominik Grzelak
+ */
+public class RuleTransformationTest implements BigraphUnitTestSupport {
 
 //    private final static String TARGET_DUMP_PATH = "src/test/resources/dump/petrinet/";
     private final static String TARGET_DUMP_PATH2 = "src/test/resources/dump/smarthome/";

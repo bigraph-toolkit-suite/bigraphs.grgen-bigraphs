@@ -14,6 +14,13 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * This class tests the "host graph" transformation capabilities.
+ * The host graph is a model instance conforming to its metamodel.
+ * (The signature represents the graph metamodel of GrGen.NET.)
+ *
+ * @author Dominik Grzelak
+ */
 public class BigraphTransformationTest implements BigraphUnitTestSupport {
     public static final String TARGET_DUMP_PATH = "src/test/resources/dump/smarthome/";
 

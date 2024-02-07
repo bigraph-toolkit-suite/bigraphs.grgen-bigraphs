@@ -8,6 +8,12 @@ import org.bigraphs.framework.visualization.BigraphGraphvizExporter;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Support interface for all unit tests.
+ * Provides convenience methods.
+ *
+ * @author Dominik Grzelak
+ */
 public interface BigraphUnitTestSupport {
 
     default void eb(Bigraph<?> bigraph, String name, String basePath) {
