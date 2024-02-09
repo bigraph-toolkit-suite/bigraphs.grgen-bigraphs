@@ -1,5 +1,6 @@
 package org.bigraphs.grgen.converter;
 
+import org.apache.commons.io.FileUtils;
 import org.bigraphs.framework.core.BigraphFileModelManagement;
 import org.bigraphs.framework.core.exceptions.InvalidConnectionException;
 import org.bigraphs.framework.core.exceptions.InvalidReactionRuleException;
@@ -24,14 +25,18 @@ import java.io.IOException;
  */
 public class RuleTransformationTest implements BigraphUnitTestSupport {
 
-//    private final static String TARGET_DUMP_PATH = "src/test/resources/dump/petrinet/";
+    private final static String TARGET_DUMP_PATH = "src/test/resources/dump/petrinet/";
     private final static String TARGET_DUMP_PATH2 = "src/test/resources/dump/smarthome/";
 //
     @BeforeClass
     static void setUp() throws IOException {
-        File dump = new File(TARGET_DUMP_PATH2);
+        File dump = new File(TARGET_DUMP_PATH);
         dump.mkdirs();
-//        FileUtils.cleanDirectory(new File(TARGET_DUMP_PATH));
+        File dump2 = new File(TARGET_DUMP_PATH2);
+        dump2.mkdirs();
+        FileUtils.cleanDirectory(new File(TARGET_DUMP_PATH));
+        FileUtils.cleanDirectory(new File(TARGET_DUMP_PATH2));
+        new File(TARGET_DUMP_PATH + "states/").mkdir();
         new File(TARGET_DUMP_PATH2 + "states/").mkdir();
     }
 

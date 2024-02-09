@@ -181,7 +181,7 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         modelChecker.execute();
         long diff = System.nanoTime() - start;
         System.out.println(diff);
-
+        System.out.println("Output wrtiten to " + TARGET_DUMP_PATH);
 
         //states=51, transitions=80
         System.out.println("Edges: " + modelChecker.getReactionGraph().getGraph().edgeSet().size());

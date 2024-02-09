@@ -8,9 +8,6 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-// 16.2.2 Graph Query by Types MANUAL
-// Validation Rule that checks opposite edges of the model etc.
-
 /**
  * This class tests the signature transformation capabilities.
  * The signature represents the graph metamodel of GrGen.NET.
