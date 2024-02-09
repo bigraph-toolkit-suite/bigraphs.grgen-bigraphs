@@ -48,18 +48,31 @@ The tool implements a unidirectional transformation from bigraphs to GrGen.NET m
 Before using the tool or library you have to build the project, or use the pre-compiled JAR, which includes all
 dependencies (refer also to [Development](#Development)).
 
-**Requirements**
+### Requirements
 
+**GrGen.NET**
+- Mono for execution of GrGen.NET
+  - See on how to install Mono on macOS, Linux or Windows: https://www.mono-project.com/download/stable/#download-lin
+- Java 11
+  - For executing GrGen.NET's visualization (is done via yComp)
+  - See also [Troubleshooting](#Troubleshooting)
 - GrGen.NET Release 6.7
-    - Needs to be installed on the host system 
+    - Requires Mono and Java 11
+    - Needs to be installed on the host system
     - View the project website: https://grgen.de/
     - View the manual: https://grgen.de/GrGenNET-Manual.pdf
-- Java 17 and Maven >=3.8.3 (for development)
-- Mono and Java 11 (for yComp) for execution of GrGen.NET
 
-**Dependencies**
-- Bigraph Framework and Bigraph Ecore Metamodel (BEM) (for creating bigraph models that BiGGer understands)
-  - These external dependencies are automatically fetched from Maven Central
+**BiGGer**
+- Java 17 and Maven >=3.8.3 
+  - For development, building and execution of BiGGer
+
+
+
+### Dependencies
+- [Maven](https://maven.apache.org/) is used as build and package management tool
+- All external dependencies are automatically fetched via Maven from the Central Repository
+- Central dependencies:
+  - 'Bigraph Framework' and 'Bigraph Ecore Metamodel (BEM)' (for creating bigraph models that BiGGer understands)
   - See [Bigraph Ecore Metamodel](https://github.com/bigraph-toolkit-suite/bigraphs.bigraph-ecore-metamodel) or [Bigraph Framework](https://bigraphs.org/products/bigraph-framework/) on how to create bigraphs practically
   - See [here](https://zenodo.org/doi/10.5281/zenodo.10043062) for the bare _Bigraph Ecore Specification_ on Zenodo
   - See [[KeTG16]](https://doi.org/10.4204/EPTCS.231.2) for theoretical details of the abstract syntax tree of bigraphs
@@ -235,13 +248,29 @@ The following example shows how to instantiate a `BigraphTransformer` that
 translates a pure bigraph into GrGen.NET's graph model format (`*.grs`):
 
 ```java
+// Create a demo bigraph
 DemoSignatureProvider signatureProvider = DemoSignatureProvider.getInstance();
 DefaultDynamicSignature sig = signatureProvider.petriNet();
 DemoBigraphProvider bigraphProvider = DemoBigraphProvider.getInstance();
 PureBigraph bigraph = bigraphProvider.petriNet(sig);
+
+// Start the bigraph2GrGen transformation for the host bigraph
 PureBigraphTransformer transformer = new PureBigraphTransformer().withOppositeEdges(false);
 String grgenGraphModel = transformer.toString(bigraph);
 System.out.println(grgenGraphModel);
+
+// Transform a rule
+DemoRuleProvider ruleProvider = DemoRuleProvider.getInstance();
+ReactionRule<PureBigraph> rr = ruleProvider.petriNetFireRule(sig);
+PureParametrizedRuleTransformer t = new PureParametrizedRuleTransformer();
+// Tracking map from reactum to redex elements (right to left of a rule)
+TrackingMap trackingMap = RuleTransformer.createMap();
+trackingMap.put("v0", "v0");
+trackingMap.put("v2", "v3");
+trackingMap.put("e1", "e1");
+trackingMap.addLinkNames("e1");
+t.withMap(trackingMap);
+String grgenRule = t.toString(rr);
 
 // Export the bigraph as *.xmi
 // BigraphFileModelManagement.Store.exportAsInstanceModel(bigraph, System.out);
