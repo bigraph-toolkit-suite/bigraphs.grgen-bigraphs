@@ -13,7 +13,7 @@
 
     <groupId>org.bigraphs.grgen</groupId>
     <artifactId>bigraphs-grgen-converter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <licenses>
         <license>
