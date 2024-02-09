@@ -38,7 +38,7 @@ Grounding bigraphs on metamodels facilitate its construction via a universal and
 
 Ultimately, this library transforms EMOF-complaint bigraphs into multigraphs that GrGen.NET can visualize and execute.
 Furthermore, BiGGer is also shipped as a command-line tool for using the functionality also via the terminal for experimentation.
-The most challenging aspect was the accurate translation of bigraphical rules to SPO-based rules, given that bigraphs and GrGen.NET employ distinct approaches regarding graph rewriting (refer to Section ["Background"](#Background)).[^3]
+The most challenging aspect was the accurate translation of bigraphical rules to SPO-based rules, given that bigraphs and GrGen.NET employ distinct approaches regarding graph rewriting (refer to Section "Background").[^3]
 
 [^3]: For a comprehensive analysis of the interrelated aspects of these approaches, readers can refer to the works of [@milner_EmbeddingsContextsLink_2005] and [@ehrig_BigraphsMeetDouble_2004].
 
@@ -57,11 +57,11 @@ Until now, it is unknown whether the test for graph isomorphism can be solved in
 Subgraph isomorphism is computationally more complex than graph isomorphism and is known to be NP-complete due to the combinatorial nature of finding subpatterns in graphs.
 Thus, graph rewriting is NP-complete [@bacci_FindingForestTree_2014].
 
-However, bigraphs require the matching and rewriting of two substructures (refer to Section ["Background"](#Background)).
+However, bigraphs require the matching and rewriting of two substructures; refer to Section "Background".
 Specifically, one substructure of a bigraph is a *forest*, which is relevant to the problem of locating forests in trees [@bacci_FindingForestTree_2014], while the other substructure is a *hypergraph*, which is associated with the subhypergraph matching problem.
-To date, practical bigraph matching primarily exists as a CSP implementation [@miculan_CSPImplementationBigraph_2014] or SAT-based algorithm [@sevegnani_SATBasedAlgorithm_2010] in the literature (refer also to Section ["State of the Field"](#State-of-the-Field)).
+To date, practical bigraph matching primarily exists as a CSP implementation [@miculan_CSPImplementationBigraph_2014] or SAT-based algorithm [@sevegnani_SATBasedAlgorithm_2010] in the literature (refer also to Section "State of the Field").
 
-However, GrGen.NET provides a universal framework written in C# implementing the so-called Single-Pushout (SPO) approach of graph rewriting for multigraphs (see, for example, [@ehrig_FundamentalsAlgebraicGraph_2006; @jakumeit_GrGenNETUser_2023] and Section ["Background"](#Background)).
+However, GrGen.NET provides a universal framework written in C# implementing the so-called Single-Pushout (SPO) approach of graph rewriting for multigraphs (see, for example, [@ehrig_FundamentalsAlgebraicGraph_2006; @jakumeit_GrGenNETUser_2023] and Section "Background").
 The choice to use GrGen.NET instead of other common graph rewrite systems in the software domain (e.g., AGG, PROGRES, FUJABA) is its execution performance with respect to matching and rewriting (refer to the benchmark described in [@geiss_ImprovementsVarroBenchmark_2007], which was introduced in [@varro_BenchmarkingGraphTransformation_2005] first).
 Specifically, GrGen.NET's pattern matching engine employs some techniques that increase the practical execution performance of subgraph matching, which is an NP-complete problem but is at least one order of magnitude faster than comparable candidates [@jakumeit_GrGenNETUser_2023].
 GrGen.NET employs custom-tailored data structures and a dynamically optimized strategy for subgraph matching, which compiles the pattern matchers into machine code to take full advantage of the structure of the current host graph. 
@@ -75,12 +75,12 @@ The functionality of BiGGer is offered via different interfaces suited for users
 
 Moreover, BiGGer is shipped with sample bigraphs and rules and detailed instructions, which are essential in facilitating a better understanding of BiGGer's capabilities and usage.
 
-# State of the Field
+# [State of the Field\label{sec:StateoftheField}]()
 
 There are few practical solutions concerned with the bigraph matching problem for various kinds of bigraphs; a non-exhaustive presentation is the following. 
 For *binding bigraphs* (i.e., links have local scopes) by an inductive characterization of matching [@birkedal_MatchingBigraphs_2007; @damgaard_InductiveCharacterizationMatching_2013]; for *directed bigraphs* (which subsume *pure bigraphs*) [@bacci_DBtkToolkitDirected_2009]; for \emph{bigraphs with sharing} (i.e., the place graph is a directed acyclic graph) by using a SAT-based algorithm [@sevegnani_BigraphERRewritingAnalysis_2016]; for the pure case by [@miculan_CSPImplementationBigraph_2014] as a CSP, and further an adapted reduction of the problem for directed bigraphs to a CSP [@chiapperini_ComputingEmbeddingsDirected_2020]; and the work in [@gassara_ExecutingBigraphicalReactive_2019], which proposes a toolchain for bigraph matching that is conceptually most similar to our approach but not actively developed anymore and not as efficient as GrGen.NET.
 
-# Background
+# [Background\label{sec:background}]()
 
 ## Graphs and Graph Rewriting in Software Engineering
 
