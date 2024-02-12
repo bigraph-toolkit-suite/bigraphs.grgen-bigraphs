@@ -148,7 +148,8 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
 
         PureParametrizedRuleTransformer t3 = new PureParametrizedRuleTransformer();
         TrackingMap trackReturn = RuleTransformer.createMap();
-        trackReturn.put("v0", "");
+        trackReturn.put("v0", "v0");
+        trackReturn.put("v1", "v3");
         t3.withMap(trackReturn);
         String returnRREnc = t3.toString(returnRR());
         System.out.println(returnRREnc);
@@ -405,7 +406,7 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
 
         BigraphEntity.InnerName tmp1 = builderRedex.createInnerName("tmp");
         builderRedex.createRoot()
-                .addChild("thisRef").linkToInner(tmp1)
+                .addChild("this").down().addChild("thisRef").linkToInner(tmp1).addSite()
         ;
         //
         builderRedex.createRoot()
@@ -418,6 +419,7 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
 
         builderReactum.createRoot()
 //                .addChild("thisRef")
+                .addChild("this").down().addSite()
         ;
         //
         builderReactum.createRoot()
