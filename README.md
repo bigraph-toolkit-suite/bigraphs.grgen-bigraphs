@@ -2,6 +2,8 @@
 
 **Version:** 1.1
 
+[![DOI](https://zenodo.org/badge/715108447.svg)](https://zenodo.org/doi/10.5281/zenodo.10803175)
+
 ----
 
 This project provides a model transformation tool called **BiGGer** that translates bigraphs and bigraphical reactive systems (BRS) to several [GrGen.NET](https://grgen.de/)-compatible model files that can be executed.
@@ -432,7 +434,7 @@ mvn clean install -PlocalM2
 java -jar ./target/localM2-<NAME>-<VERSION>.jar
 ```
 
-# Troubleshooting
+## Troubleshooting
 
 If you get errors while using **BiGGer**, GrGen.NET or yComp, this section provides some help.
 
@@ -515,6 +517,40 @@ Two solutions exist:
 - A: Install Java 11. If multiple installations are present switch to Java 11: `sudo update-alternatives --config java`
 - B: Locate the GrGen.NET installation folder (e.g., `/opt/grgen/bin/`) and modify the yComp execution scripts (`ycomp`or `ycomp.bat`) as follows:
   - `java --add-exports=java.desktop/sun.swing=ALL-UNNAMED -Xmx640m -jar "$YCOMP_HOME/yComp.jar" $*` (similar for the `*.bat` file). Since we have control over the Java 11 yComp's startup (GrGen.NET is calling yComp internally), we basically add a JVM option that exports the `sun.swing` module and allow any unnamed module to access this package.
+
+## How to cite this tool
+
+[![DOI](https://zenodo.org/badge/715108447.svg)](https://zenodo.org/doi/10.5281/zenodo.10803175)
+
+<small>This badge points to the latest released version of this repository.</small>
+
+APA Style
+
+```text
+Dominik Grzelak. (2024). bigraph-toolkit-suite/bigraphs.grgen-bigraphs: BiGGer v1.1.0 (v1.1.0). Zenodo. https://doi.org/10.5281/zenodo.10803176
+```
+
+IEEE Style
+
+```text
+Dominik Grzelak, “bigraph-toolkit-suite/bigraphs.grgen-bigraphs: BiGGer v1.1.0”. Zenodo, Mar. 11, 2024. doi: 10.5281/zenodo.10803176.
+```
+
+BibTex:
+
+```bibtex
+@software{dominik_grzelak_2024_10803176,
+  author       = {Dominik Grzelak},
+  title        = {{bigraph-toolkit-suite/bigraphs.grgen-bigraphs: 
+                   BiGGer v1.1.0}},
+  month        = mar,
+  year         = 2024,
+  publisher    = {Zenodo},
+  version      = {v1.1.0},
+  doi          = {10.5281/zenodo.10803176},
+  url          = {https://doi.org/10.5281/zenodo.10803176}
+}
+```
 
 ## License
 
