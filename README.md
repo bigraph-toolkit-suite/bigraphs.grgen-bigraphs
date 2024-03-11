@@ -1,6 +1,6 @@
 # BiGGer: A Model Transformation Tool for Bigraph Rewriting with GrGen.NET
 
-**Version:** 1.0
+**Version:** 1.1
 
 ----
 
@@ -398,6 +398,7 @@ All the dependencies are included in the generated JAR.
 ```shell
 # Create the executable JAR
 mvn clean package -PfatJar
+mvn clean package -PfatJar -DskipTests #without running tests
 # Execute the application
 java -jar ./target/fatJar-<NAME>-<VERSION>.jar
 java -jar ./bin/bigger.jar # the tool is also copied to the `bin/` folder
