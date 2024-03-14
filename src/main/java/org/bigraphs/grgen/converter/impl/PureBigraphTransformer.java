@@ -43,7 +43,7 @@ public class PureBigraphTransformer extends BigraphTransformer {
         PureBigraph pureBigraph = (PureBigraph) bigraph;
 
         // (1) Loop through the node hierarchy using a BFS
-        // Create all node instances first and ports.
+        // Create all node and port elements of the graph first.
         // Also establish parent-child relations
         // Inner names/sites are not important and forbidden anyway here
         // Store in a map: edge/outer -> port of node (for the second run)
@@ -189,12 +189,12 @@ public class PureBigraphTransformer extends BigraphTransformer {
             }
         }
 
+        // Last: idle edges and idle outer names
         List<BigraphEntity.OuterName> ol = new ArrayList<>(pureBigraph.getOuterNames());
         ol.removeAll(entries.stream().map(x -> x.getKey()).collect(Collectors.toList()));
         for (BigraphEntity.OuterName each : ol) {
             sb.append(createNodeInstance(CLASS_OUTERNAME, each.getName(), each.getName())).append(LINE_SEP);
         }
-        // Last: idle edges and idle outer names
 
         return sb.toString();
     }
