@@ -41,7 +41,6 @@ public class PureBigraphTransformer extends BigraphTransformer {
 
         StringBuilder sb = new StringBuilder();
         PureBigraph pureBigraph = (PureBigraph) bigraph;
-        DefaultDynamicSignature sig = pureBigraph.getSignature();
 
         // (1) Loop through the node hierarchy using a BFS
         // Create all node instances first and ports.
