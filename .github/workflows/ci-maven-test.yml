@@ -44,7 +44,9 @@ jobs:
       - name: Zip test results
         run: |
           mkdir -p artifacts
-          zip -r artifacts/test-results.zip src/test/resources/dump
+          pwd
+          ls
+          zip -r artifacts/test-results.zip src/test/resources/dump/*
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
