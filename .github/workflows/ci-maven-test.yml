@@ -25,7 +25,9 @@ jobs:
           distribution: 'temurin'
 
       - name: Install Graphviz
-        run: sudo apt-get install -y graphviz
+        run: |
+          sudo apt-get install -y graphviz
+          sudo apt-get install tree
 
       - name: Cache local Maven repository
         uses: actions/cache@v4
@@ -45,8 +47,8 @@ jobs:
         run: |
           mkdir -p artifacts
           pwd
-          ls ./src/test/resources/dump
-          ls ./src/test/resources/dump/
+          tree src
+          ls src
           zip -r artifacts/test-results.zip ./src/test/resources/dump
 
       - name: Upload test results
