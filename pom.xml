@@ -6,7 +6,8 @@
 
     <name>GrGen.NET for Bigraphs</name>
     <description>
-        BiGGer is a transformation tool and library that translates bigraphical models and rules to GrGen.NET-compatible files.
+        BiGGer is a transformation tool and library that translates bigraphical models and rules to GrGen.NET-compatible
+        files.
         It enables bigraph rewriting using GrGen.NET.
     </description>
     <url>https://github.com/bigraph-toolkit-suite/bigraphs.grgen-bigraphs</url>
@@ -139,17 +140,45 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>docs</id>
+            <build>
+                <plugins>
+                    <!-- JavaDoc API -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                            <source>${java.version}</source>
+                            <failOnError>false</failOnError>
+                            <show>package</show>
+                            <doctitle>BiGGer - Java API Documentation (Version: ${project.version}).</doctitle>
+                            <bottom>
+                                <![CDATA[
+                        <div style="text-align: center;">
+                            &copy; 2024 Dominik Grzelak. All rights reserved. BiGGer v${project.version}.
+                        </div>
+                        ]]>
+                            </bottom>
+                            <!--<outputDirectory>${project.build.directory}/apidocs</outputDirectory>-->
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-            </plugin>
             <!-- CLEAN -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -163,6 +192,19 @@
                             </includes>
                         </fileset>
                     </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
@@ -244,6 +286,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.3.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.2.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>

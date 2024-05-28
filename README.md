@@ -1,8 +1,13 @@
 # BiGGer: A Model Transformation Tool for Bigraph Rewriting with GrGen.NET
 
-**Version:** 1.1
+**Stable Version:** 1.1.0
+**Development Version:** 2.0-SNAPSHOT
 
 [![DOI](https://zenodo.org/badge/715108447.svg)](https://zenodo.org/doi/10.5281/zenodo.10803175)
+
+<a href='https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/latest/introduction.html'>
+<img src='https://docshoster.org/pstatic/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/latest/badge.svg'/>
+</a>
 
 ----
 
@@ -379,7 +384,7 @@ Conversion finished successfully. All model files are created in the folder /grg
 - `./src/`: The complete source code of this project including unit tests.
 - `./libs/`: Additional Java libraries required for the development. Must be installed in the local Maven repository first.
 
-### Pre-Build Binary
+### Executing the Binary
 
 An executable tool in form of a `*.jar` is provided within the `./bin/` directory of this project after [building](#build-configuration).
 
@@ -391,7 +396,7 @@ java -jar bigger.jar -h
 
 ### Build Configuration
 
-There are also three other options for building this project from source as described next.
+There are three options for building this project from source as described next.
 
 The recommended one is the Fat-JAR approach designed for portability.
 
@@ -436,6 +441,25 @@ mvn clean install -PlocalM2
 # Execute the application
 java -jar ./target/localM2-<NAME>-<VERSION>.jar
 ```
+
+### Building the Documentation
+
+The Java API Documentation for all versions (stable releases, SNAPSHOT releases, ...)
+of **BiGGer** is available [here](https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/latest/introduction.html). 
+
+To manually generate the Java API documentation with javadoc, the `JAVA_HOME` environment variable must be configured.
+Under Linux this can be achieved as follows: `export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:bin/javac::")`.
+Check that Java matches the [Requirements](#requirements).
+
+Finally, run this command to build the API documentation:
+```shell
+mvn javadoc:javadoc -Pdocs
+```
+
+A dedicated profile `docs` is available that can be combined with other profiles and Maven goals
+(refer also to [Build Configuration](#build-configuration)).
+
+The generated API documentation can be found at `target/apidocs/` from the root of this project.
 
 ## Troubleshooting
 
