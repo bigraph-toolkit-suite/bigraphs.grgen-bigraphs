@@ -56,7 +56,7 @@ public class BRSPetriNetSimTest implements BigraphUnitTestSupport {
     // because of the canonical encoding of bigraphs and without sorts, the transition graph has length 2 instead of three.
     // (or introduce a pre-place and post-place, or set allowReducibleClasses = false)
     @Test
-    @Disabled
+//    @Disabled
     public void testSimulatePetriNet() throws InvalidConnectionException, TypeNotExistsException, IOException, InvalidReactionRuleException, ReactiveSystemException, BigraphSimulationException {
         DemoSignatureProvider signatureProvider = DemoSignatureProvider.getInstance();
         DefaultDynamicSignature sig = signatureProvider.petriNet();
@@ -99,7 +99,7 @@ public class BRSPetriNetSimTest implements BigraphUnitTestSupport {
     }
 
     @Test
-    @Disabled
+//    @Disabled
     public void testSimulateSmartHome() throws Exception {
         DemoSignatureProvider signatureProvider = DemoSignatureProvider.getInstance();
         DefaultDynamicSignature sig = signatureProvider.smartHome();

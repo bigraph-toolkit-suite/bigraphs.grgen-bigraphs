@@ -42,17 +42,3 @@ jobs:
 
       - name: Run tests
         run: mvn test
-
-      - name: Zip test results
-        run: |
-          mkdir -p artifacts
-          pwd
-          tree src
-          ls src
-          zip -r artifacts/test-results.zip ./src/test/resources/dump
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: artifacts/test-results.zip
