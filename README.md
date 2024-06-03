@@ -385,6 +385,7 @@ Conversion finished successfully. All model files are created in the folder /grg
 ### Executing the Binary
 
 An executable tool in form of a `*.jar` is provided within the `./bin/` directory of this project after [building](#build-configuration).
+Another way is to use the Docker image within the `docker/` folder (see section [Docker](#docker-container-setup)).
 
 To start the application, issue the following command in the terminal:
 
@@ -459,6 +460,41 @@ A dedicated profile `docs` is available that can be combined with other profiles
 
 The generated API documentation can be found at `target/apidocs/` from the root of this project.
 The respective javadoc `*.jar` is located in the `target/` folder.
+
+## Docker Container Setup
+
+This project is shipped also with a Dockerfile.
+The container comes with Mono, GrGen.NET, and BiGGer already installed.
+To build the Docker image and to run the interactive shell of the Docker container, execute the following commands:
+
+```shell
+cd docker
+docker build -t bigger-setup .
+docker run -it bigger-setup /bin/bash
+```
+
+Building can take some time, also more than X min.
+
+To run a demo, issue the following commands inside the running Docker container:
+```shell
+# Change directory if you are not in /bigraphs.grgen-bigraphs/bin/
+cd /bigraphs.grgen-bigraphs/bin/
+
+# Execute BiGGer for the example use case 'concurrent-append'
+java -jar bigger.jar --verbose --basepath=../sample/concurrent-append/ --host=host.xmi --output=foo --sig=sig.xmi --sigM=signatureMetaModel.ecore --metamodel=bigraphMetaModel.ecore --rule=nextRule:nextRule-lhs.xmi,nextRule-rhs.xmi --rule=appendRule:appendRule-lhs.xmi,appendRule-rhs.xmi --rule=returnRule:returnRule-lhs.xmi,returnRule-rhs.xmi --tracking=map.json
+
+# Observe the resulting files
+cd ../sample/concurrent-append/foo
+GrShell script.grs
+```
+
+Note that you will not see GrGen.NET's graph visualization window (via yComp). You will probably see an exception.
+However, the transformation of BiGGer and the execution of GrGen.NET rewriting can still be tested.
+
+To remove the Docker image:
+```shell
+docker rmi -f $(docker images --filter=reference="bigger-setup" -q)
+```
 
 ## Troubleshooting
 
