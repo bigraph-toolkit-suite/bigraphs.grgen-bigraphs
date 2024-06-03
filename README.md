@@ -473,7 +473,7 @@ docker build -t bigger-setup .
 docker run -it bigger-setup /bin/bash
 ```
 
-Building can take some time, also more than X min.
+Building can take some time, also more than 5 min.
 
 To run a demo, issue the following commands inside the running Docker container:
 ```shell
