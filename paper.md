@@ -61,15 +61,15 @@ However, bigraphs require the matching and rewriting of two substructures.
 Specifically, one substructure of a bigraph is a *forest*, which is relevant to the problem of locating forests in trees [@bacci_FindingForestTree_2014], while the other substructure is a *hypergraph*, which is associated with the subhypergraph matching problem.
 To date, practical bigraph matching primarily exists as a CSP implementation [@miculan_CSPImplementationBigraph_2014], or SAT-based algorithm [@sevegnani_SATBasedAlgorithm_2010] in the literature.
 
-GrGen.NET provides a universal framework written in C# implementing the so-called Single-Pushout (SPO) approach of graph rewriting for multigraphs (see, for example, [@ehrig_FundamentalsAlgebraicGraph_2006; @jakumeit_GrGenNETUser_2023]).
-The choice to use GrGen.NET instead of other common graph rewrite systems in the software domain (e.g., AGG, PROGRES, FUJABA) is its execution performance with respect to matching and rewriting (refer to the benchmark described in [@geiss_ImprovementsVarroBenchmark_2007], which was introduced in [@varro_BenchmarkingGraphTransformation_2005] first).
+GrGen.NET provides a universal framework, written in C#, that implements the so-called Single-Pushout (SPO) approach of graph rewriting for multigraphs (see, for example, @ehrig_FundamentalsAlgebraicGraph_2006 and @jakumeit_GrGenNETUser_2023].
+The choice to use GrGen.NET instead of other common graph rewrite systems in the software domain (e.g., AGG, PROGRES, FUJABA) is its execution performance with respect to matching and rewriting (refer to the benchmark described in @geiss_ImprovementsVarroBenchmark_2007, which was first introduced in @varro_BenchmarkingGraphTransformation_2005.)
 Specifically, GrGen.NET's pattern matching engine employs some techniques that increase the practical execution performance of subgraph matching, which is an NP-complete problem but is at least one order of magnitude faster than comparable candidates [@jakumeit_GrGenNETUser_2023].
 
 # Key Features
 
-The tool implements a unidirectional transformation from bigraph models to GrGen.NET models, and generates several files that GrGen.NET can execute and visualize. 
+The tool implements a unidirectional transformation from bigraph models to GrGen.NET models and generates several files that GrGen.NET can execute and visualize. 
 These include GrGen.NET's graph metamodel (`*.gm`), the graph model conforming to the metamodel (`*.grs`), rules (`*.grg`), and a script that configures the initial graph state and defines a simple rule execution strategy (`*.grs`). 
-In turn this means that BiGGer is able to process the signature, bigraph, rules and tracking maps specified in the Eclipse EMF Ecore format [@steinberg_EMFEclipseModeling_2008], which implements the EMOF standard [@ISO19508_2014]. 
+In turn this means that BiGGer is able to process the signature, bigraph, rules, and tracking maps specified in the Eclipse EMF Ecore format [@steinberg_EMFEclipseModeling_2008], which implements the EMOF standard [@ISO19508_2014]. 
 Refer to [www.bigraphs.org](www.bigraphs.org) on how to model EMOF-compliant bigraphs in Java, visually or via the dedicated domain-specific language [@grzelak_BigraphicalDomainspecificLanguage_2021]. 
 
 The functionality of BiGGer is offered via different interfaces suited for users of different backgrounds: programmatically in Java via the API, or by using the command-line tool.
@@ -81,10 +81,10 @@ Moreover, BiGGer is shipped with sample bigraphs and rules and detailed instruct
 # [State of the Field\label{sec:StateoftheField}]()
 
 There are few practical solutions concerned with the bigraph matching problem for various kinds of bigraphs; a non-exhaustive presentation is the following. 
-For *binding bigraphs* (i.e., links have local scopes) by an inductive characterization of matching [@birkedal_MatchingBigraphs_2007; @damgaard_InductiveCharacterizationMatching_2013]; for *directed bigraphs* (which subsume *pure bigraphs*) [@bacci_DBtkToolkitDirected_2009]; for \emph{bigraphs with sharing} (i.e., the place graph is a directed acyclic graph) by using a SAT-based algorithm [@sevegnani_BigraphERRewritingAnalysis_2016]; for the pure case by [@miculan_CSPImplementationBigraph_2014] as a CSP, and further an adapted reduction of the problem for directed bigraphs to a CSP [@chiapperini_ComputingEmbeddingsDirected_2020]; and the work in [@gassara_ExecutingBigraphicalReactive_2019], which proposes a toolchain for bigraph matching that is conceptually most similar to our approach but not actively developed anymore and not as efficient as GrGen.NET.
+For *binding bigraphs* (i.e., links have local scopes) by an inductive characterization of matching [@birkedal_MatchingBigraphs_2007; @damgaard_InductiveCharacterizationMatching_2013]; for *directed bigraphs* (which subsume *pure bigraphs*) [@bacci_DBtkToolkitDirected_2009]; for \emph{bigraphs with sharing} (i.e., the place graph is a directed acyclic graph) by using a SAT-based algorithm [@sevegnani_BigraphERRewritingAnalysis_2016]; for the pure case by [@miculan_CSPImplementationBigraph_2014] as a CSP, and further an adapted reduction of the problem for directed bigraphs to a CSP [@chiapperini_ComputingEmbeddingsDirected_2020]; and the work in @gassara_ExecutingBigraphicalReactive_2019, which proposes a toolchain for bigraph matching that is conceptually most similar to our approach but not actively developed anymore and not as efficient as GrGen.NET.
 
 # Acknowledgements
 
-Funded by the German Research Foundation (DFG, Deutsche  Forschungsgemeinschaft) as part of Germany’s Excellence Strategy – EXC  2050/1 – Project ID 390696704 – Cluster of Excellence "Centre for Tactile Internet with Human-in-the-Loop" (CeTI) of Technische  Universität Dresden.
+The work was funded by the German Research Foundation (DFG, Deutsche  Forschungsgemeinschaft) as part of Germany’s Excellence Strategy – EXC  2050/1 – Project ID 390696704 – Cluster of Excellence "Centre for Tactile Internet with Human-in-the-Loop" (CeTI) of Technische  Universität Dresden.
 
 # References
