@@ -6,7 +6,7 @@
 **Development Version (Latest):** 2.0-SNAPSHOT <a href='https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/2.0-SNAPSHOT/introduction.html'><img src='https://docshoster.org/pstatic/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/2.0-SNAPSHOT/badge.svg'/>
 </a>
 
-[![DOI](https://zenodo.org/badge/715108447.svg)](https://zenodo.org/doi/10.5281/zenodo.10803175)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.06491/status.svg)](https://doi.org/10.21105/joss.06491)
 
 ----
 
@@ -582,23 +582,22 @@ Two solutions exist:
 
 ## How to cite this tool
 
-[![DOI](https://zenodo.org/badge/715108447.svg)](https://zenodo.org/doi/10.5281/zenodo.10803175)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.06491/status.svg)](https://doi.org/10.21105/joss.06491)
 
-<small>This badge points to the latest released version of this repository.</small>
-
-BibTex:
+BibTeX:
 
 ```bibtex
-@software{dominik_grzelak_2024_11565998,
-  author       = {Dominik Grzelak},
-  title        = {{bigraph-toolkit-suite/bigraphs.grgen-bigraphs:
-  BiGGer v1.2.0}},
-  month        = jun,
-  year         = 2024,
-  publisher    = {Zenodo},
-  version      = {v1.2.0},
-  doi          = {10.5281/zenodo.11565998},
-  url          = {https://doi.org/10.5281/zenodo.11565998}
+@article{Grzelak_BiGGer_A_Model_2024,
+  author = {Grzelak, Dominik},
+  doi = {10.21105/joss.06491},
+  journal = {Journal of Open Source Software},
+  month = jun,
+  number = {98},
+  pages = {6491},
+  title = {{BiGGer: A Model Transformation Tool written in Java for Bigraph Rewriting in GrGen.NET}},
+  url = {https://joss.theoj.org/papers/10.21105/joss.06491},
+  volume = {9},
+  year = {2024}
 }
 ```
 
