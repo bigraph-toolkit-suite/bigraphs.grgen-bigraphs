@@ -1,6 +1,6 @@
 # BiGGer: A Model Transformation Tool for Bigraph Rewriting with GrGen.NET
 
-**Stable Version:** 1.1.0 <a href='https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.1.0/introduction.html'><img src='https://docshoster.org/pstatic/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.1.0/badge.svg'/>
+**Stable Version:** 1.2.0 <a href='https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.2.0/introduction.html'><img src='https://docshoster.org/pstatic/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.2.0/badge.svg'/>
 </a>
 
 **Development Version (Latest):** 2.0-SNAPSHOT <a href='https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/2.0-SNAPSHOT/introduction.html'><img src='https://docshoster.org/pstatic/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/2.0-SNAPSHOT/badge.svg'/>
@@ -586,31 +586,19 @@ Two solutions exist:
 
 <small>This badge points to the latest released version of this repository.</small>
 
-APA Style
-
-```text
-Dominik Grzelak. (2024). bigraph-toolkit-suite/bigraphs.grgen-bigraphs: BiGGer v1.1.0 (v1.1.0). Zenodo. https://doi.org/10.5281/zenodo.10803176
-```
-
-IEEE Style
-
-```text
-Dominik Grzelak, “bigraph-toolkit-suite/bigraphs.grgen-bigraphs: BiGGer v1.1.0”. Zenodo, Mar. 11, 2024. doi: 10.5281/zenodo.10803176.
-```
-
 BibTex:
 
 ```bibtex
-@software{dominik_grzelak_2024_10803176,
+@software{dominik_grzelak_2024_11565998,
   author       = {Dominik Grzelak},
-  title        = {{bigraph-toolkit-suite/bigraphs.grgen-bigraphs: 
-                   BiGGer v1.1.0}},
-  month        = mar,
+  title        = {{bigraph-toolkit-suite/bigraphs.grgen-bigraphs:
+  BiGGer v1.2.0}},
+  month        = jun,
   year         = 2024,
   publisher    = {Zenodo},
-  version      = {v1.1.0},
-  doi          = {10.5281/zenodo.10803176},
-  url          = {https://doi.org/10.5281/zenodo.10803176}
+  version      = {v1.2.0},
+  doi          = {10.5281/zenodo.11565998},
+  url          = {https://doi.org/10.5281/zenodo.11565998}
 }
 ```
 

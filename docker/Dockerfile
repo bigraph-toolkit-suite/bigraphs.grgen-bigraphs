@@ -65,7 +65,7 @@ RUN apt update && apt install -y ca-certificates gnupg \
 # Clone repository, check out latest version tag, and build the tool
 RUN git clone https://github.com/bigraph-toolkit-suite/bigraphs.grgen-bigraphs.git \
     && cd bigraphs.grgen-bigraphs \
-    && git checkout tags/v1.1.0 \
+    && git checkout tags/v1.2.0 \
     && /bin/bash -c "source ~/.bashrc && jenv local 17" \
     && /bin/bash -c "source ~/.bashrc && mvn clean package -PfatJar -DskipTests" \
 RUN /bin/bash -c "source ~/.bashrc && echo 'chmod +x /bigraphs.grgen-bigraphs/bin/bigger.jar' >> ~/.bashrc"
