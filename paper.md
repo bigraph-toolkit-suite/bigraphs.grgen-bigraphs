@@ -22,7 +22,7 @@ bibliography: paper.bib
 
 # Summary
 
-Graphs are well-studied mathematical structures that have diverse applications in fields such as computer science, chemistry, biology and social sciences.
+Graphs are well-studied mathematical structures that have diverse applications in fields such as computer science, chemistry, biology, and social sciences.
 In this respect, graph rewriting is a powerful technique that allows for the manipulation of graph structures through the application of so-called *graph transformation rules*.[^1]
 In other words, graph rewriting techniques elevate static graphs to the concept of time-varying graphs.
 
@@ -40,7 +40,7 @@ Ultimately, this library transforms EMOF-complaint bigraphs into multigraphs tha
 Furthermore, BiGGer is also shipped as a command-line tool for using the functionality via the terminal for experimentation.
 The most challenging aspect was the accurate translation of bigraphical rules to SPO-based rules, given that bigraphs and GrGen.NET employ distinct approaches regarding graph rewriting.[^3]
 
-[^3]: For an analysis of the interrelated aspects of these approaches, refer to [@milner_EmbeddingsContextsLink_2005; @ehrig_BigraphsMeetDouble_2004].
+[^3]: For an analysis of the interrelated aspects of these approaches, refer to @milner_EmbeddingsContextsLink_2005 and @ehrig_BigraphsMeetDouble_2004.
 
 
 # Statement of Need
@@ -53,7 +53,7 @@ The tool is built upon the formal principles of bigraphs, allowing for the intui
 
 When considering the manipulation of bigraphs through rules, the central elements that require implementation are bigraph matching and rewriting.
 This issue is mathematically known as the *subgraph isomorphism problem*, a general variant of the graph isomorphism problem.
-Until now, it is unknown whether the test for graph isomorphism can be solved in polynomial time or whether it is NP-complete.
+It is currently not known if the test for graph isomorphism can be solved in polynomial time or if it is NP-complete.
 Subgraph isomorphism is computationally more complex than graph isomorphism and is known to be NP-complete due to the combinatorial nature of finding subpatterns in graphs.
 Thus, graph rewriting is NP-complete [@bacci_FindingForestTree_2014].
 
