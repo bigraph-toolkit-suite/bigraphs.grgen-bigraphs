@@ -61,7 +61,7 @@ However, bigraphs require the matching and rewriting of two substructures.
 Specifically, one substructure of a bigraph is a *forest*, which is relevant to the problem of locating forests in trees [@bacci_FindingForestTree_2014], while the other substructure is a *hypergraph*, which is associated with the subhypergraph matching problem.
 To date, practical bigraph matching primarily exists as a CSP implementation [@miculan_CSPImplementationBigraph_2014], or SAT-based algorithm [@sevegnani_SATBasedAlgorithm_2010] in the literature.
 
-GrGen.NET provides a universal framework, written in C#, that implements the so-called Single-Pushout (SPO) approach of graph rewriting for multigraphs (see, for example, @ehrig_FundamentalsAlgebraicGraph_2006 and @jakumeit_GrGenNETUser_2023].
+GrGen.NET provides a universal framework, written in C#, that implements the so-called Single-Pushout (SPO) approach of graph rewriting for multigraphs (see, for example, @ehrig_FundamentalsAlgebraicGraph_2006 and @jakumeit_GrGenNETUser_2023.)
 The choice to use GrGen.NET instead of other common graph rewrite systems in the software domain (e.g., AGG, PROGRES, FUJABA) is its execution performance with respect to matching and rewriting (refer to the benchmark described in @geiss_ImprovementsVarroBenchmark_2007, which was first introduced in @varro_BenchmarkingGraphTransformation_2005.)
 Specifically, GrGen.NET's pattern matching engine employs some techniques that increase the practical execution performance of subgraph matching, which is an NP-complete problem but is at least one order of magnitude faster than comparable candidates [@jakumeit_GrGenNETUser_2023].
 
