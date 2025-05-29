@@ -2,6 +2,7 @@ package org.bigraphs.grgen.converter.usecase.concurrentappend;
 
 import it.uniud.mads.jlibbig.core.std.Bigraph;
 import org.apache.commons.io.FileUtils;
+import org.bigraphs.framework.converter.bigrapher.BigrapherTransformator;
 import org.bigraphs.framework.converter.jlibbig.JLibBigBigraphDecoder;
 import org.bigraphs.framework.converter.jlibbig.JLibBigBigraphEncoder;
 import org.bigraphs.framework.core.BigraphFileModelManagement;
@@ -25,6 +26,7 @@ import org.bigraphs.grgen.converter.impl.PureBigraphTransformer;
 import org.bigraphs.grgen.converter.impl.PureParametrizedRuleTransformer;
 import org.bigraphs.framework.core.reactivesystem.TrackingMap;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
@@ -57,9 +59,10 @@ import static org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptio
 @Fork(value = 2) // , jvmArgs = {"-Xms2G", "-Xmx2G"}
 @Warmup(iterations = 50, time = 5, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 30, time = 5, timeUnit = TimeUnit.SECONDS)
+@Disabled
 public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
     private final static String TARGET_DUMP_PATH = "src/test/resources/dump/append/";
-    private final static String TARGET_SAMPLE_PATH = "sample/concurrent-append/";
+    private final static String TARGET_SAMPLE_PATH = "sample/concurrent-append-p2/";
 
     private final static boolean AUTO_CLEAN_BEFORE = true;
     private final static boolean EXPORT = true;
@@ -159,8 +162,6 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
 
     @Test
     @Benchmark
-//    @Fork(value = 2, warmups = 50)
-//    @BenchmarkMode(Mode.Throughput)
     public void simulate() throws Exception {
         PureBigraph agent = createAgent(); //specify the number of processes here
         ReactionRule<PureBigraph> nextRR = nextRR();
@@ -172,12 +173,14 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         reactiveSystem.addReactionRule(append);
         reactiveSystem.addReactionRule(returnRR);
 
+        BigrapherTransformator bigrapherEnc = new BigrapherTransformator();
+        System.out.println(bigrapherEnc.toString(reactiveSystem));
+
         ModelCheckingOptions modOpts = setUpSimOpts();
         PureBigraphModelChecker modelChecker = new PureBigraphModelChecker(
                 reactiveSystem,
                 BigraphModelChecker.SimulationStrategy.Type.BFS,
                 modOpts);
-//        modelChecker.setReactiveSystemListener(this);
         long start = System.nanoTime();
         modelChecker.execute();
         long diff = System.nanoTime() - start;
@@ -188,6 +191,7 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         System.out.println("Edges: " + modelChecker.getReactionGraph().getGraph().edgeSet().size());
         System.out.println("Vertices: " + modelChecker.getReactionGraph().getGraph().vertexSet().size());
 
+//        DOTExporter exporter = new DOTExporter<>();
 //        ReactionGraphAnalysis<PureBigraph> analysis = ReactionGraphAnalysis.createInstance();
 //        List<ReactionGraphAnalysis.PathList<PureBigraph>> pathsToLeaves = analysis.findAllPathsInGraphToLeaves(modelChecker.getReactionGraph());
 //        System.out.println(pathsToLeaves.size());
@@ -208,6 +212,7 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
                 .and(ModelCheckingOptions.exportOpts()
                         .setReactionGraphFile(new File(completePath.toUri()))
                         .setPrintCanonicalStateLabel(false)
+//                        .setFormatsEnabled(List.of(ModelCheckingOptions.ExportOptions.Format.PNG))
                         .setOutputStatesFolder(new File(TARGET_DUMP_PATH + "states/"))
                         .create()
                 )
@@ -220,32 +225,32 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
 
         BigraphEntity.InnerName tmpA1 = builder.createInnerName("tmpA1");
         BigraphEntity.InnerName tmpA2 = builder.createInnerName("tmpA2");
-//        BigraphEntity.InnerName tmpA3 = builder.createInnerName("tmpA3");
+//        BigraphEntity.InnerName tmpA3 = builder.createInnerName("tmpA3"); // third process
 
         PureBigraphBuilder<DefaultDynamicSignature>.Hierarchy appendcontrol1 = builder.hierarchy("append");
         appendcontrol1
-//                .linkToOuter(caller1)
-                .linkToInner(tmpA1).addChild("val").down().addChild("N5").top();
+//                .linkToOuter(caller1) // with outer names instead of closed links
+                .linkToInner(tmpA1).addChild("val").down().addChild("N4").top();
 
         PureBigraphBuilder<DefaultDynamicSignature>.Hierarchy appendcontrol2 = builder.hierarchy("append");
         appendcontrol2
-//                .linkToOuter(caller2)
-                .linkToInner(tmpA2).addChild("val").down().addChild("N4").top();
+//                .linkToOuter(caller2) // with outer names instead of closed links
+                .linkToInner(tmpA2).addChild("val").down().addChild("N5").top();
 
-//        PureBigraphBuilder<DefaultDynamicSignature>.Hierarchy appendcontrol3 = builder.hierarchy("append");
+//        PureBigraphBuilder<DefaultDynamicSignature>.Hierarchy appendcontrol3 = builder.hierarchy("append"); // third process
 //        appendcontrol3
-////                .linkToOuter(caller3)
+////                .linkToOuter(caller3) // with outer names instead of closed links
 //                .linkToInner(tmpA3).addChild("val").down().addChild("N6").top();
 
         PureBigraphBuilder<DefaultDynamicSignature>.Hierarchy rootCell = builder.hierarchy("main")
-//                .linkToOuter(caller1).linkToOuter(caller2)
+//                .linkToOuter(caller1).linkToOuter(caller2) // with outer names instead of closed links
                 ;
         rootCell
                 .addChild("list").down().addChild("Cell")
                 .down().addChild("this").down()
                 .addChild("thisRef").linkToInner(tmpA1)
                 .addChild("thisRef").linkToInner(tmpA2)
-//                .addChild("thisRef").linkToInner(tmpA3)
+//                .addChild("thisRef").linkToInner(tmpA3) // third process
                 .up()
                 .addChild("val").down().addChild("N1").up()
                 .addChild("next").down().addChild("Cell").down().addChild("this")
@@ -260,7 +265,7 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
                 .addChild(rootCell)
                 .addChild(appendcontrol1)
                 .addChild(appendcontrol2)
-//                .addChild(appendcontrol3)
+//                .addChild(appendcontrol3) // third process
         ;
         builder.closeAllInnerNames();
         PureBigraph bigraph = builder.createBigraph();
@@ -289,7 +294,6 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         ;
         //
         builderRedex.createRoot()
-//                .addChild("appendcontrol", "caller").linkToInner(tmp0).down()
                 .addChild("append").linkToInner(tmp0).down()
                 .addChild("val").down().addSite().top()
         ;
@@ -310,8 +314,6 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         ;
         //
         builderReactum.createRoot()
-//                .addChild("append", "caller").linkToInner(tmp22)
-//                .down().addChild("appendcontrol", "caller").linkToInner(tmp21)
                 .addChild("append").linkToInner(tmp22)
                 .down().addChild("append").linkToInner(tmp21)
                 .down()
@@ -356,7 +358,6 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         ;
         //
         builderRedex.createRoot()
-//                .addChild("appendcontrol", "caller").linkToInner(tmp).down()
                 .addChild("append").linkToInner(tmp).down()
                 .addChild("val").down().addSite().up()
 

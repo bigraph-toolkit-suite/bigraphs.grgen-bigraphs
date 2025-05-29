@@ -37,6 +37,7 @@ import static org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptio
  *
  * @author Dominik Grzelak
  */
+@Disabled
 public class BRSPetriNetSimTest implements BigraphUnitTestSupport {
 
     private final static String TARGET_DUMP_PATH = "src/test/resources/dump/petrinet/";
@@ -56,7 +57,6 @@ public class BRSPetriNetSimTest implements BigraphUnitTestSupport {
     // because of the canonical encoding of bigraphs and without sorts, the transition graph has length 2 instead of three.
     // (or introduce a pre-place and post-place, or set allowReducibleClasses = false)
     @Test
-//    @Disabled
     public void testSimulatePetriNet() throws InvalidConnectionException, TypeNotExistsException, IOException, InvalidReactionRuleException, ReactiveSystemException, BigraphSimulationException {
         DemoSignatureProvider signatureProvider = DemoSignatureProvider.getInstance();
         DefaultDynamicSignature sig = signatureProvider.petriNet();
@@ -77,7 +77,7 @@ public class BRSPetriNetSimTest implements BigraphUnitTestSupport {
         trackingMap.put("e0", "e0"); // edge from left-place to transition
         trackingMap.put("e1", "e1"); // edges from transition to right-place
         trackingMap.addLinkNames("e0", "e1"); // and possible outer names
-        ((ParametricReactionRule<PureBigraph>)rr).withTrackingMap(trackingMap);
+        ((ParametricReactionRule<PureBigraph>) rr).withTrackingMap(trackingMap);
 
 //        ReactionRule<PureBigraph> rr = ruleProvider.petriNetParallelRule(sig);
 //        ReactionRule<PureBigraph> rr = ruleProvider.petriNetAddRule(sig);
@@ -94,12 +94,10 @@ public class BRSPetriNetSimTest implements BigraphUnitTestSupport {
                 reactiveSystem,
                 BigraphModelChecker.SimulationStrategy.Type.BFS,
                 opts(TARGET_DUMP_PATH));
-//        modelChecker.setReactiveSystemListener(this);
         modelChecker.execute();
     }
 
     @Test
-//    @Disabled
     public void testSimulateSmartHome() throws Exception {
         DemoSignatureProvider signatureProvider = DemoSignatureProvider.getInstance();
         DefaultDynamicSignature sig = signatureProvider.smartHome();

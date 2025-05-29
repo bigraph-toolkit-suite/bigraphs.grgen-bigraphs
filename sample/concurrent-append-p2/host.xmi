@@ -36,13 +36,13 @@
     </bChild>
     <bChild xsi:type="bigraphBaseModel:append" name="v0">
       <bChild xsi:type="bigraphBaseModel:val" name="v1">
-        <bChild xsi:type="bigraphBaseModel:N5" name="v2"/>
+        <bChild xsi:type="bigraphBaseModel:N4" name="v2"/>
       </bChild>
       <bPorts bLink="//@bEdges.0"/>
     </bChild>
     <bChild xsi:type="bigraphBaseModel:append" name="v3">
       <bChild xsi:type="bigraphBaseModel:val" name="v4">
-        <bChild xsi:type="bigraphBaseModel:N4" name="v5"/>
+        <bChild xsi:type="bigraphBaseModel:N5" name="v5"/>
       </bChild>
       <bPorts bLink="//@bEdges.1"/>
     </bChild>

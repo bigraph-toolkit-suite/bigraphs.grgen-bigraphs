@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bigraphBaseModel:BBigraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bigraphBaseModel="http://org.bigraphs.model" xsi:schemaLocation="http://org.bigraphs.model bigraphMetaModel.ecore">
+  <bRoots>
+    <bChild xsi:type="bigraphBaseModel:this" name="v0">
+      <bChild xsi:type="bigraphBaseModel:BSite"/>
+    </bChild>
+  </bRoots>
+  <bRoots index="1">
+    <bChild xsi:type="bigraphBaseModel:Void" name="v1"/>
+  </bRoots>
+</bigraphBaseModel:BBigraph>

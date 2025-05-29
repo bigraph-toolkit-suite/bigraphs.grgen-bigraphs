@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bigraphBaseModel:BBigraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bigraphBaseModel="http://org.bigraphs.model" xsi:schemaLocation="http://org.bigraphs.model bigraphMetaModel.ecore">
+  <bRoots>
+    <bChild xsi:type="bigraphBaseModel:main" name="v9">
+      <bChild xsi:type="bigraphBaseModel:list" name="v10">
+        <bChild xsi:type="bigraphBaseModel:Cell" name="v11">
+          <bChild xsi:type="bigraphBaseModel:this" name="v12">
+            <bChild xsi:type="bigraphBaseModel:thisRef" name="v13">
+              <bPorts bLink="//@bEdges.0"/>
+            </bChild>
+            <bChild xsi:type="bigraphBaseModel:thisRef" name="v14">
+              <bPorts bLink="//@bEdges.1"/>
+            </bChild>
+            <bChild xsi:type="bigraphBaseModel:thisRef" name="v15">
+              <bPorts bLink="//@bEdges.2"/>
+            </bChild>
+          </bChild>
+          <bChild xsi:type="bigraphBaseModel:val" name="v16">
+            <bChild xsi:type="bigraphBaseModel:N1" name="v17"/>
+          </bChild>
+          <bChild xsi:type="bigraphBaseModel:next" name="v18">
+            <bChild xsi:type="bigraphBaseModel:Cell" name="v19">
+              <bChild xsi:type="bigraphBaseModel:this" name="v20"/>
+              <bChild xsi:type="bigraphBaseModel:val" name="v21">
+                <bChild xsi:type="bigraphBaseModel:N2" name="v22"/>
+              </bChild>
+              <bChild xsi:type="bigraphBaseModel:next" name="v23">
+                <bChild xsi:type="bigraphBaseModel:Cell" name="v24">
+                  <bChild xsi:type="bigraphBaseModel:this" name="v25"/>
+                  <bChild xsi:type="bigraphBaseModel:val" name="v26">
+                    <bChild xsi:type="bigraphBaseModel:N3" name="v27"/>
+                  </bChild>
+                </bChild>
+              </bChild>
+            </bChild>
+          </bChild>
+        </bChild>
+      </bChild>
+    </bChild>
+    <bChild xsi:type="bigraphBaseModel:append" name="v0">
+      <bChild xsi:type="bigraphBaseModel:val" name="v1">
+        <bChild xsi:type="bigraphBaseModel:N4" name="v2"/>
+      </bChild>
+      <bPorts bLink="//@bEdges.0"/>
+    </bChild>
+    <bChild xsi:type="bigraphBaseModel:append" name="v3">
+      <bChild xsi:type="bigraphBaseModel:val" name="v4">
+        <bChild xsi:type="bigraphBaseModel:N5" name="v5"/>
+      </bChild>
+      <bPorts bLink="//@bEdges.1"/>
+    </bChild>
+    <bChild xsi:type="bigraphBaseModel:append" name="v6">
+      <bChild xsi:type="bigraphBaseModel:val" name="v7">
+        <bChild xsi:type="bigraphBaseModel:N6" name="v8"/>
+      </bChild>
+      <bPorts bLink="//@bEdges.2"/>
+    </bChild>
+  </bRoots>
+  <bEdges name="e0" bPoints="//@bRoots.0/@bChild.1/@bPorts.0 //@bRoots.0/@bChild.0/@bChild.0/@bChild.0/@bChild.0/@bChild.0/@bPorts.0"/>
+  <bEdges name="e1" bPoints="//@bRoots.0/@bChild.2/@bPorts.0 //@bRoots.0/@bChild.0/@bChild.0/@bChild.0/@bChild.0/@bChild.1/@bPorts.0"/>
+  <bEdges name="e2" bPoints="//@bRoots.0/@bChild.3/@bPorts.0 //@bRoots.0/@bChild.0/@bChild.0/@bChild.0/@bChild.0/@bChild.2/@bPorts.0"/>
+</bigraphBaseModel:BBigraph>

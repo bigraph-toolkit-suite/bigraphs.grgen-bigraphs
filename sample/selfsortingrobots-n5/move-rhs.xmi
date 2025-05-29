@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bigraphBaseModel:BBigraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bigraphBaseModel="http://org.bigraphs.model" xsi:schemaLocation="http://org.bigraphs.model bigraphMetaModel.ecore">
+  <bRoots>
+    <bChild xsi:type="bigraphBaseModel:Locale" name="v0">
+      <bChild xsi:type="bigraphBaseModel:BSite"/>
+      <bChild xsi:type="bigraphBaseModel:OccupiedBy" name="v1"/>
+      <bPorts bLink="//@bOuterNames.2"/>
+    </bChild>
+    <bChild xsi:type="bigraphBaseModel:Locale" name="v2">
+      <bChild xsi:type="bigraphBaseModel:OccupiedBy" name="v3">
+        <bChild xsi:type="bigraphBaseModel:Robot" name="v4">
+          <bChild xsi:type="bigraphBaseModel:SLck" name="v5">
+            <bChild xsi:type="bigraphBaseModel:SLckRef" name="v6">
+              <bPorts bLink="//@bOuterNames.1"/>
+            </bChild>
+          </bChild>
+          <bChild xsi:type="bigraphBaseModel:Mvmt" name="v7">
+            <bChild xsi:type="bigraphBaseModel:BSite" index="1"/>
+          </bChild>
+          <bChild xsi:type="bigraphBaseModel:BSite" index="2"/>
+          <bPorts bLink="//@bOuterNames.3"/>
+        </bChild>
+      </bChild>
+      <bChild xsi:type="bigraphBaseModel:BSite" index="3"/>
+      <bPorts bLink="//@bOuterNames.0"/>
+    </bChild>
+  </bRoots>
+  <bOuterNames name="tgt" bPoints="//@bRoots.0/@bChild.1/@bPorts.0"/>
+  <bOuterNames name="ref" bPoints="//@bRoots.0/@bChild.1/@bChild.0/@bChild.0/@bChild.0/@bChild.0/@bPorts.0"/>
+  <bOuterNames name="src" bPoints="//@bRoots.0/@bChild.0/@bPorts.0"/>
+  <bOuterNames name="n_id" bPoints="//@bRoots.0/@bChild.1/@bChild.0/@bChild.0/@bPorts.0"/>
+</bigraphBaseModel:BBigraph>

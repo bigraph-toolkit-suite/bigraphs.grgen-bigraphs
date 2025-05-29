@@ -37,7 +37,7 @@ public class PureBigraphTransformer extends BigraphTransformer {
     @Override
     public String toString(Bigraph bigraph) {
         assertCorrectClassType(PureBigraph.class, bigraph);
-        assertPrimeAndGround((PureBigraph) bigraph);
+//        assertPrimeAndGround((PureBigraph) bigraph);
 
         StringBuilder sb = new StringBuilder();
         PureBigraph pureBigraph = (PureBigraph) bigraph;

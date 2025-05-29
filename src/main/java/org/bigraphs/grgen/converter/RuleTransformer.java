@@ -63,8 +63,9 @@ public abstract class RuleTransformer extends TransformerSupport implements Base
                 return trackingSubstitutionMap.get(nodeId);
             }
             return trackingMap.get(nodeId);
+        } else {
+            throw new RuntimeException("Key not found in tracking map: " + nodeId + ". Maybe a node or link name was not specified?");
         }
-        throw new RuntimeException("Error");
     }
 
 

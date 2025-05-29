@@ -68,7 +68,7 @@ Before using the tool or library, you have to build the project (refer to [Devel
     - View the manual: https://grgen.de/GrGenNET-Manual.pdf
 
 **BiGGer**
-- Java 17 and Maven >=3.8.3 
+- Java >= 17 and Maven >=3.8.3 
   - For development, building and execution of BiGGer
 
 
