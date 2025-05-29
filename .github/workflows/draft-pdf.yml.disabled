@@ -2,6 +2,7 @@ on: [push]
 
 jobs:
   paper:
+    if: false  # skip this job ALWAYS (remove)
     runs-on: ubuntu-latest
     name: Paper Draft
     steps:
