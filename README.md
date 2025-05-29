@@ -1,9 +1,9 @@
 # BiGGer: A Model Transformation Tool for Bigraph Rewriting with GrGen.NET
 
-**Stable Version:** 1.2.0 <a href='https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.2.0/introduction.html'><img src='https://docshoster.org/pstatic/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.2.0/badge.svg'/>
+**Latest Version:** 1.2.1 <a href='https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.2.1/introduction.html'><img src='https://docshoster.org/pstatic/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.2.1/badge.svg'/>
 </a>
 
-**Development Version (Latest):** 2.0-SNAPSHOT <a href='https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/2.0-SNAPSHOT/introduction.html'><img src='https://docshoster.org/pstatic/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/2.0-SNAPSHOT/badge.svg'/>
+**Older Version:** 1.2.0 <a href='https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.2.0/introduction.html'><img src='https://docshoster.org/pstatic/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.2.0/badge.svg'/>
 </a>
 
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.06491/status.svg)](https://doi.org/10.21105/joss.06491)
@@ -469,8 +469,13 @@ To build the Docker image and to run the interactive shell of the Docker contain
 
 ```shell
 cd docker
+# Build Once:
 docker build -t bigger-setup .
+# Execute:
 docker run -it bigger-setup /bin/bash
+# With GUI (X11 forwarding):
+xhost +local:root
+docker run --rm -it --env DISPLAY --volume /tmp/.X11-unix:/tmp/.X11-unix:rw bigger-setup /bin/bash
 ```
 
 Building can take some time, also more than 5 min.
@@ -601,12 +606,16 @@ BibTeX:
 }
 ```
 
+## Benchmarks
+
+See the repository [BiggerBenchmarkSolution](https://github.com/bigraph-toolkit-suite/BiggerBenchmarkSolution) going with this tool and the BiGGer paper.
+
 ## License
 
 **BiGGer** is Open Source software released under the Apache 2.0 license.
 
 ```text
-   Copyright 2023 Dominik Grzelak
+   Copyright 2025 Bigraph Toolkit Suite
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

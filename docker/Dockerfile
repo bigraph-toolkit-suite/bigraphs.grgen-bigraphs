@@ -41,13 +41,13 @@ RUN /bin/bash -c "source ~/.bashrc && jenv add /usr/lib/jvm/java-17-openjdk-amd6
 
 
 ## GrGen.NET Setup
-#https://grgen.de/GrGenNET-V6.7-2023-05-18.zip
-COPY GrGenNET-V6.7-2023-05-18.zip /workspace/
+RUN mkdir -p /workspace
+RUN wget -O /workspace/GrGenNET-V7.2.1-2025-04-22.zip https://grgen.de/GrGenNET-V7.2.1-2025-04-22.zip
 RUN mkdir /opt/grgen \
-    && cd /workspace/ && unzip GrGenNET-V6.7-2023-05-18.zip \
-    && mv GrGenNET-V6.7-2023-05-18/* /opt/grgen/ \
-    && rmdir GrGenNET-V6.7-2023-05-18 \
-    && rm -f GrGenNET-V6.7-2023-05-18.zip \
+    && cd /workspace/ && unzip GrGenNET-V7.2.1-2025-04-22.zip \
+    && mv GrGenNET-V7.2.1-2025-04-22/* /opt/grgen/ \
+    && rmdir GrGenNET-V7.2.1-2025-04-22 \
+    && rm -f GrGenNET-V7.2.1-2025-04-22.zip \
     && cd /opt/grgen/bin \
     && /bin/bash -c "source ~/.bashrc && jenv local 11"
 ENV PATH="/opt/grgen/bin:$PATH"
@@ -65,7 +65,7 @@ RUN apt update && apt install -y ca-certificates gnupg \
 # Clone repository, check out latest version tag, and build the tool
 RUN git clone https://github.com/bigraph-toolkit-suite/bigraphs.grgen-bigraphs.git \
     && cd bigraphs.grgen-bigraphs \
-    && git checkout tags/v1.2.0 \
+    && git checkout tags/v1.2.1 \
     && /bin/bash -c "source ~/.bashrc && jenv local 17" \
     && /bin/bash -c "source ~/.bashrc && mvn clean package -PfatJar -DskipTests" \
 RUN /bin/bash -c "source ~/.bashrc && echo 'chmod +x /bigraphs.grgen-bigraphs/bin/bigger.jar' >> ~/.bashrc"
