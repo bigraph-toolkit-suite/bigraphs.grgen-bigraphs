@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bigraphBaseModel:BBigraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bigraphBaseModel="http://org.bigraphs.model" xsi:schemaLocation="http://org.bigraphs.model ./mm.ecore">
+<bigraphBaseModel:BBigraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bigraphBaseModel="http://org.bigraphs.model" xsi:schemaLocation="http://org.bigraphs.model jar:file:/home/dominik/.m2/repository/org/bigraphs/model/bigraph-ecore-model/2.0.1/bigraph-ecore-model-2.0.1.jar!/model/bigraphBaseModel.ecore">
   <bRoots>
     <bChild xsi:type="bigraphBaseModel:Locale" name="v0">
       <bChild xsi:type="bigraphBaseModel:BSite"/>

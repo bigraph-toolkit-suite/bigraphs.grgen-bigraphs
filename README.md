@@ -1,14 +1,22 @@
 # BiGGer: A Model Transformation Tool for Bigraph Rewriting with GrGen.NET
 
+---
+
 **Latest Version:** 1.2.1 <a href='https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/latest/introduction.html'><img src='https://docshoster.org/pstatic/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/latest/badge.svg'/>
 </a>
 
 **Older Version:** 1.2.0 <a href='https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.2.0/introduction.html'><img src='https://docshoster.org/pstatic/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.2.0/badge.svg'/>
 </a>
 
-[![DOI](https://joss.theoj.org/papers/10.21105/joss.06491/status.svg)](https://doi.org/10.21105/joss.06491)
+---
 
-----
+Cite BiGGer: [![DOI](https://joss.theoj.org/papers/10.21105/joss.06491/status.svg)](https://doi.org/10.21105/joss.06491)
+
+---
+
+> 📌 **Benchmarks:** Refer to the companion repository [BiggerBenchmarkSolution](https://github.com/bigraph-toolkit-suite/BiggerBenchmarkSolution), which accompanies this tool.
+
+---
 
 This project provides a model transformation tool called **BiGGer** that translates bigraphs and bigraphical reactive systems (BRS) to several [GrGen.NET](https://grgen.de/)-compatible model files that can be executed.
 Effectively, this transformation enables bigraph rewriting in GrGen.NET.
@@ -40,22 +48,13 @@ The tool implements a unidirectional transformation from bigraphs to GrGen.NET m
 - Instantiation map of a reaction rule
 - User-defined attributes on bigraph nodes/edges
 
-**Additional Features**
-
-- The GrGen.NET approach for bigraphs allows for tracking rules in bigraphs (enables model synchronization and causal reasoning)
-- Outer names of an agent in a BRS can be renamed now (not possible in standard bigraph rewriting)
-
-**Future Work**
-
-- Attribute evaluation (not possible in standard bigraph rewriting)
-
 ## Getting Started
 
 Before using the tool or library, you have to build the project (refer to [Development](#Development)), or use the shipped JAR, which is available via [GitHub Releases](https://github.com/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/releases).
 
 ### Requirements
 
-**GrGen.NET**
+**For GrGen.NET**
 - Mono for execution of GrGen.NET
   - See the following link on how to install Mono on macOS, Linux or Windows: https://www.mono-project.com/download/stable/#download-lin
 - Java 11
@@ -67,20 +66,9 @@ Before using the tool or library, you have to build the project (refer to [Devel
     - View the project website: https://grgen.de/
     - View the manual: https://grgen.de/GrGenNET-Manual.pdf
 
-**BiGGer**
+**For BiGGer**
 - Java >= 17 and Maven >=3.8.3 
   - For development, building and execution of BiGGer
-
-
-
-### Dependencies
-- [Maven](https://maven.apache.org/) is used as build and package management tool
-- All external dependencies are automatically fetched via Maven from the Central Repository
-- Central dependencies:
-  - 'Bigraph Framework' and 'Bigraph Ecore Metamodel (BEM)' (for creating bigraph models that BiGGer understands)
-  - See [Bigraph Ecore Metamodel](https://github.com/bigraph-toolkit-suite/bigraphs.bigraph-ecore-metamodel) or [Bigraph Framework](https://bigraphs.org/products/bigraph-framework/) on how to create bigraphs practically
-  - See [here](https://zenodo.org/doi/10.5281/zenodo.10043062) for the bare _Bigraph Ecore Specification_ on Zenodo
-  - See [[KeTG16]](https://doi.org/10.4204/EPTCS.231.2) for theoretical details of the abstract syntax tree of bigraphs
 
 ### Basic Usage via the Command-line:
 
@@ -307,6 +295,46 @@ Visit [www.bigraphs.org](www.bigraphs.org) to learn more about how to model bigr
 
 All approaches allow exporting bigraphs and rules as `*.ecore` and `*.xmi` files.
 
+### Docker Container Setup
+
+This project is shipped also with a Dockerfile.
+The container comes with Mono, GrGen.NET, and BiGGer already installed.
+To build the Docker image and to run the interactive shell of the Docker container, execute the following commands:
+
+```shell
+cd docker
+# Build Once:
+docker build -t bigger-setup .
+# Execute:
+docker run -it bigger-setup /bin/bash
+# With GUI (X11 forwarding):
+xhost +local:root
+docker run --rm -it --env DISPLAY --volume /tmp/.X11-unix:/tmp/.X11-unix:rw bigger-setup /bin/bash
+```
+
+Building can take some time, also more than 5 min.
+
+To run a demo, issue the following commands inside the running Docker container:
+```shell
+# Change directory if you are not in /bigraphs.grgen-bigraphs/bin/
+cd /bigraphs.grgen-bigraphs/bin/
+
+# Execute BiGGer for the example use case 'concurrent-append'
+java -jar bigger.jar --verbose --basepath=../sample/concurrent-append/ --host=host.xmi --output=foo --sig=sig.xmi --sigM=signatureMetaModel.ecore --metamodel=bigraphMetaModel.ecore --rule=nextRule:nextRule-lhs.xmi,nextRule-rhs.xmi --rule=appendRule:appendRule-lhs.xmi,appendRule-rhs.xmi --rule=returnRule:returnRule-lhs.xmi,returnRule-rhs.xmi --tracking=map.json
+
+# Observe the resulting files
+cd ../sample/concurrent-append/foo
+GrShell script.grs
+```
+
+Note that you will not see GrGen.NET's graph visualization window (via yComp). You will probably see an exception.
+However, the transformation of BiGGer and the execution of GrGen.NET rewriting can still be tested.
+
+To remove the Docker image:
+```shell
+docker rmi -f $(docker images --filter=reference="bigger-setup" -q)
+```
+
 ## Examples
 
 The folder `./sample/` contains several demo scenarios.
@@ -461,45 +489,27 @@ A dedicated profile `docs` is available that can be combined with other profiles
 The generated API documentation can be found at `target/apidocs/` from the root of this project.
 The respective javadoc `*.jar` is located in the `target/` folder.
 
-## Docker Container Setup
+## Misc
 
-This project is shipped also with a Dockerfile.
-The container comes with Mono, GrGen.NET, and BiGGer already installed.
-To build the Docker image and to run the interactive shell of the Docker container, execute the following commands:
+### Additional Features
 
-```shell
-cd docker
-# Build Once:
-docker build -t bigger-setup .
-# Execute:
-docker run -it bigger-setup /bin/bash
-# With GUI (X11 forwarding):
-xhost +local:root
-docker run --rm -it --env DISPLAY --volume /tmp/.X11-unix:/tmp/.X11-unix:rw bigger-setup /bin/bash
-```
+- The GrGen.NET approach for bigraphs allows for tracking rules in bigraphs (enables model synchronization and causal reasoning)
+- Outer names of an agent in a BRS can be renamed now (not possible in standard bigraph rewriting)
 
-Building can take some time, also more than 5 min.
+### Future Work
 
-To run a demo, issue the following commands inside the running Docker container:
-```shell
-# Change directory if you are not in /bigraphs.grgen-bigraphs/bin/
-cd /bigraphs.grgen-bigraphs/bin/
+- Attribute evaluation (not possible in original bigraph rewriting)
 
-# Execute BiGGer for the example use case 'concurrent-append'
-java -jar bigger.jar --verbose --basepath=../sample/concurrent-append/ --host=host.xmi --output=foo --sig=sig.xmi --sigM=signatureMetaModel.ecore --metamodel=bigraphMetaModel.ecore --rule=nextRule:nextRule-lhs.xmi,nextRule-rhs.xmi --rule=appendRule:appendRule-lhs.xmi,appendRule-rhs.xmi --rule=returnRule:returnRule-lhs.xmi,returnRule-rhs.xmi --tracking=map.json
+### Dependencies
 
-# Observe the resulting files
-cd ../sample/concurrent-append/foo
-GrShell script.grs
-```
+- [Maven](https://maven.apache.org/) is used as build and package management tool
+- All external dependencies are automatically fetched via Maven from the Central Repository
+- Central dependencies:
+  - 'Bigraph Framework' and 'Bigraph Ecore Metamodel (BEM)' (for creating bigraph models that BiGGer understands)
+  - See [Bigraph Ecore Metamodel](https://github.com/bigraph-toolkit-suite/bigraphs.bigraph-ecore-metamodel) or [Bigraph Framework](https://bigraphs.org/products/bigraph-framework/) on how to create bigraphs practically
+  - See [here](https://zenodo.org/doi/10.5281/zenodo.10043062) for the bare _Bigraph Ecore Specification_ on Zenodo
+  - See [[KeTG16]](https://doi.org/10.4204/EPTCS.231.2) for theoretical details of the abstract syntax tree of bigraphs
 
-Note that you will not see GrGen.NET's graph visualization window (via yComp). You will probably see an exception.
-However, the transformation of BiGGer and the execution of GrGen.NET rewriting can still be tested.
-
-To remove the Docker image:
-```shell
-docker rmi -f $(docker images --filter=reference="bigger-setup" -q)
-```
 
 ## Troubleshooting
 
@@ -606,16 +616,12 @@ BibTeX:
 }
 ```
 
-## Benchmarks
-
-See the repository [BiggerBenchmarkSolution](https://github.com/bigraph-toolkit-suite/BiggerBenchmarkSolution) going with this tool and the BiGGer paper.
-
 ## License
 
 **BiGGer** is Open Source software released under the Apache 2.0 license.
 
 ```text
-   Copyright 2025 Bigraph Toolkit Suite
+   Copyright 2025 Bigraph Toolkit Suite Developers
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

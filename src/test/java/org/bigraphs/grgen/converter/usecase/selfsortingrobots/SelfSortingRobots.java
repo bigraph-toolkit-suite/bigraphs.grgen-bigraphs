@@ -17,17 +17,17 @@ import org.bigraphs.framework.core.impl.pure.PureBigraphBuilder;
 import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
 import org.bigraphs.framework.core.impl.signature.DynamicSignatureBuilder;
 import org.bigraphs.framework.core.reactivesystem.*;
-import org.bigraphs.framework.core.reactivesystem.analysis.ReactionGraphAnalysis;
 import org.bigraphs.framework.core.utils.BigraphUtil;
 import org.bigraphs.framework.simulation.matching.pure.PureReactiveSystem;
 import org.bigraphs.framework.simulation.modelchecking.BigraphModelChecker;
 import org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptions;
 import org.bigraphs.framework.simulation.modelchecking.PureBigraphModelChecker;
 import org.bigraphs.framework.visualization.ReactionGraphExporter;
+import org.bigraphs.framework.visualization.SwingGraphStreamer;
 import org.bigraphs.grgen.converter.BigraphUnitTestSupport;
-import org.bigraphs.grgen.converter.impl.DynamicSignatureTransformer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.graphstream.ui.view.Viewer;
 import org.jgrapht.Graph;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -81,7 +81,9 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
     private final static boolean AUTO_CLEAN_BEFORE = true;
     private final static boolean EXPORT = true;
 
-    private final int roboCountTotal = 3;
+    private final int roboCountTotal = 5;
+    private final String bigridPatternModelFile = "2x" + roboCountTotal + "_antisym";
+//    private final String initMvmtPatternGrid = "2x" + roboCountTotal; // other variant
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
@@ -109,7 +111,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         DefaultDynamicSignature sig = getCombinedSystemSignature();
         BigraphFileModelManagement.Store.exportAsInstanceModel(sig, new FileOutputStream(TARGET_SAMPLE_PATH + "sig.xmi"), "signatureMetaModel.ecore");
         BigraphFileModelManagement.Store.exportAsMetaModel(sig, new FileOutputStream(TARGET_SAMPLE_PATH + "signatureMetaModel.ecore"));
-        PureBigraph agent = createAgent(roboCountTotal); //specify the number of processes here
+        PureBigraph agent = createAgent(roboCountTotal, bigridPatternModelFile); //specify the number of processes here
         BigraphFileModelManagement.Store.exportAsInstanceModel(agent, new FileOutputStream(TARGET_SAMPLE_PATH + "host.xmi"), "bigraphMetaModel.ecore");
         BigraphFileModelManagement.Store.exportAsMetaModel(agent, new FileOutputStream(TARGET_SAMPLE_PATH + "bigraphMetaModel.ecore"));
 
@@ -129,7 +131,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         }
 
 
-        ReactionRule<PureBigraph> initMovePatRule = initMovePattern("2x2_antisym");
+        ReactionRule<PureBigraph> initMovePatRule = initMovePattern();
         collectedRules.add(initMovePatRule);
         BigraphFileModelManagement.Store.exportAsInstanceModel(initMovePatRule.getRedex(), new FileOutputStream(TARGET_SAMPLE_PATH + initMovePatRule.getLabel() + "-lhs.xmi"), "bigraphMetaModel.ecore");
         BigraphFileModelManagement.Store.exportAsInstanceModel(initMovePatRule.getReactum(), new FileOutputStream(TARGET_SAMPLE_PATH + initMovePatRule.getLabel() + "-rhs.xmi"), "bigraphMetaModel.ecore");
@@ -161,12 +163,19 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
     //a_1262
     public void simulate() throws Exception {
         PureReactiveSystem reactiveSystem = new PureReactiveSystem();
-        PureBigraph agent = createAgent(roboCountTotal);
+        PureBigraph agent = createAgent(roboCountTotal, bigridPatternModelFile);
         if (EXPORT) {
             eb(agent, "agent", TARGET_DUMP_PATH);
         }
         reactiveSystem.setAgent(agent);
-
+//        SwingGraphStreamer graphStreamer = new SwingGraphStreamer(agent)
+//                .renderSites(false)
+//                .renderRoots(false);
+//        graphStreamer.prepareSystemEnvironment();
+//        Viewer graphViewer = graphStreamer.getGraphViewer();
+//        while (graphViewer != null) {
+//            Thread.sleep(100);
+//        }
         // Create all sync rules for robots satisfying i > j
         for (int i = 0; i < roboCountTotal; i++) {
             for (int j = 0; j < i; j++) {
@@ -176,7 +185,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
             }
         }
 
-        ReactionRule<PureBigraph> initMovePatRule = initMovePattern("2x2_antisym");
+        ReactionRule<PureBigraph> initMovePatRule = initMovePattern();
         reactiveSystem.addReactionRule(initMovePatRule);
 
         ReactionRule<PureBigraph> moveRobot = moveRobotWaypoint();
@@ -223,23 +232,23 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
             }
         }
 
-        ReactionGraphAnalysis<PureBigraph> analysis = ReactionGraphAnalysis.createInstance();
-        List<ReactionGraphAnalysis.StateTrace<PureBigraph>> pathsToLeaves = analysis.findAllPathsInGraphToLeaves(modelChecker.getReactionGraph());
-        System.out.println(pathsToLeaves.size());
-        pathsToLeaves.get(0).getStateLabels().size();
-        int minSize = Integer.MAX_VALUE; // Start with a large value
-        ReactionGraphAnalysis.StateTrace<PureBigraph> smallestTrace = null;
-        for (ReactionGraphAnalysis.StateTrace<PureBigraph> trace : pathsToLeaves) {
-            int currentSize = trace.getStateLabels().size();
-            if (currentSize < minSize) {
-                minSize = currentSize;
-                smallestTrace = trace;
-                System.out.println("Smallest entry: " + smallestTrace.getStateLabels());
-            }
-        }
-        // After the loop, smallestTrace holds the entry with the smallest size in getStateLabels()
-        System.out.println("Smallest entry has size: " + minSize);
-        System.out.println("Smallest entry: " + smallestTrace.getStateLabels());
+//        ReactionGraphAnalysis<PureBigraph> analysis = ReactionGraphAnalysis.createInstance();
+//        List<ReactionGraphAnalysis.StateTrace<PureBigraph>> pathsToLeaves = analysis.findAllPathsInGraphToLeaves(modelChecker.getReactionGraph());
+//        System.out.println(pathsToLeaves.size());
+//        pathsToLeaves.get(0).getStateLabels().size();
+//        int minSize = Integer.MAX_VALUE; // Start with a large value
+//        ReactionGraphAnalysis.StateTrace<PureBigraph> smallestTrace = null;
+//        for (ReactionGraphAnalysis.StateTrace<PureBigraph> trace : pathsToLeaves) {
+//            int currentSize = trace.getStateLabels().size();
+//            if (currentSize < minSize) {
+//                minSize = currentSize;
+//                smallestTrace = trace;
+//                System.out.println("Smallest entry: " + smallestTrace.getStateLabels());
+//            }
+//        }
+//        // After the loop, smallestTrace holds the entry with the smallest size in getStateLabels()
+//        System.out.println("Smallest entry has size: " + minSize);
+//        System.out.println("Smallest entry: " + smallestTrace.getStateLabels());
 
     }
 
@@ -269,7 +278,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         return opts;
     }
 
-    public PureBigraph createAgent(int roboCountTotal) throws Exception {
+    public PureBigraph createAgent(int roboCountTotal, String gridFile) throws Exception {
         //bigrid antisym = unidirectional_forward
         // * -> * -> ...
         // |    |
@@ -289,14 +298,16 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
 
 //        int roboCountTotal = 4;
 ////        PureBigraph bigrid = createBigrid("2x4");
-        PureBigraph bigrid = createBigrid("2x4_antisym");
-        PureBigraph initRobot = initRobots(bigrid.getSites().size(), roboCountTotal, 7);
+//        PureBigraph bigrid = createBigrid("2x4_antisym");
+//        PureBigraph initRobot = initRobots(bigrid.getSites().size(), roboCountTotal, 7);
 
 //        int roboCountTotal = 5;
 ////        PureBigraph bigrid = createBigrid("2x5");
 //        PureBigraph bigrid = createBigrid("2x5_antisym");
 //        PureBigraph initRobot = initRobots(bigrid.getSites().size(), roboCountTotal, 9);
 
+        PureBigraph bigrid = createBigrid(gridFile);
+        PureBigraph initRobot = initRobots(bigrid.getSites().size(), roboCountTotal, 2*roboCountTotal-1);
         PureBigraph agent = ops(bigrid).nesting(initRobot).getOuterBigraph();
         return agent;
     }
@@ -583,7 +594,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         return rr;
     }
 
-    public ReactionRule<PureBigraph> initMovePattern(String gridSize) throws Exception {
+    public ReactionRule<PureBigraph> initMovePattern() throws Exception {
         DefaultDynamicSignature sig = getCombinedSystemSignature();
         Placings<DefaultDynamicSignature> placings = purePlacings(sig);
         Linkings<DefaultDynamicSignature> linkings = pureLinkings(sig);
@@ -591,7 +602,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         PureBigraphBuilder<DefaultDynamicSignature> builderReactum = pureBuilder(sig);
 
 
-        PureBigraph bigrid = createBigrid(gridSize);
+        PureBigraph bigrid = createBigrid("2x2_antisym");
         List<Bigraph> collect = IntStream.range(0, 4)
                 .mapToObj(ix ->
                         pureBuilder(sig).createRoot()

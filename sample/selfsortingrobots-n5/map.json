@@ -1810,12 +1810,12 @@
     },
     "initMvmt": {
         "links": [
-            "n_right",
-            "y0",
-            "n_left",
             "y1",
             "y2",
+            "n_left",
+            "n_right",
             "y3",
+            "y0",
             "e0"
         ],
         "map": [
