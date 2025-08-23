@@ -87,12 +87,12 @@ import static org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptio
 public class SelfSortingRobots implements BigraphUnitTestSupport {
     private final static String SOURCE_MODEL_PATH = "src/test/resources/models/selfsortingrobots/";
     private final static String TARGET_DUMP_PATH = "src/test/resources/dump/selfsortingrobots/";
-    private final static String TARGET_SAMPLE_PATH_FORMAT = "sample/selfsortingrobots-n%s/";
+    private final static String TARGET_SAMPLE_PATH_FORMAT = "sample/tmp/selfsortingrobots-n%s/";
 
     private final static boolean AUTO_CLEAN_BEFORE = true;
     private final static boolean EXPORT = true;
 
-    private final int roboCountTotal = 3;
+    private final int roboCountTotal = 6;
     private final String bigridPatternModelFile = "2x" + roboCountTotal + "_unidirectional";
 //    private final String initMvmtPatternGrid = "2x" + roboCountTotal; // other variant
 
