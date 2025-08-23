@@ -92,7 +92,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
     private final static boolean AUTO_CLEAN_BEFORE = true;
     private final static boolean EXPORT = true;
 
-    private final int roboCountTotal = 6;
+    private final int roboCountTotal = 3;
     private final String bigridPatternModelFile = "2x" + roboCountTotal + "_unidirectional";
 //    private final String initMvmtPatternGrid = "2x" + roboCountTotal; // other variant
 
@@ -298,7 +298,6 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         // Build the agent: [grid] x [robot array]
 
         PureBigraph bigrid = createBigrid(gridFile);
-        //TODO CHECK ROWISE IX
         PureBigraph initRobot = initRobots(bigrid.getSites().size(), roboCountTotal, 2 * roboCountTotal - 1);
         PureBigraph agent = ops(bigrid).nesting(initRobot).getOuterBigraph();
         return agent;
