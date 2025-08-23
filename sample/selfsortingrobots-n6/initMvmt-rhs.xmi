@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bigraphBaseModel:BBigraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bigraphBaseModel="http://org.bigraphs.model" xsi:schemaLocation="http://org.bigraphs.model bigraphMetaModel.ecore">
+  <bRoots>
+    <bChild xsi:type="bigraphBaseModel:Locale" name="v0">
+      <bChild xsi:type="bigraphBaseModel:Route" name="v1">
+        <bPorts bLink="//@bOuterNames.1"/>
+      </bChild>
+      <bChild xsi:type="bigraphBaseModel:Route" name="v2">
+        <bPorts bLink="//@bOuterNames.2"/>
+      </bChild>
+      <bChild xsi:type="bigraphBaseModel:OccupiedBy" name="v5"/>
+      <bChild xsi:type="bigraphBaseModel:WayPoint" name="v3">
+        <bChild xsi:type="bigraphBaseModel:SLckRef" name="v4">
+          <bPorts bLink="//@bOuterNames.5"/>
+        </bChild>
+        <bPorts bLink="//@bOuterNames.2"/>
+      </bChild>
+      <bPorts bLink="//@bOuterNames.0"/>
+    </bChild>
+    <bChild xsi:type="bigraphBaseModel:Locale" name="v6">
+      <bChild xsi:type="bigraphBaseModel:Route" name="v7">
+        <bPorts bLink="//@bOuterNames.3"/>
+      </bChild>
+      <bChild xsi:type="bigraphBaseModel:OccupiedBy" name="v10"/>
+      <bChild xsi:type="bigraphBaseModel:BSite"/>
+      <bChild xsi:type="bigraphBaseModel:WayPoint" name="v8">
+        <bChild xsi:type="bigraphBaseModel:SLckRef" name="v9">
+          <bPorts bLink="//@bOuterNames.5"/>
+        </bChild>
+        <bPorts bLink="//@bOuterNames.0"/>
+      </bChild>
+      <bPorts bLink="//@bOuterNames.1"/>
+    </bChild>
+    <bChild xsi:type="bigraphBaseModel:Locale" name="v11">
+      <bChild xsi:type="bigraphBaseModel:Route" name="v12">
+        <bPorts bLink="//@bOuterNames.3"/>
+      </bChild>
+      <bChild xsi:type="bigraphBaseModel:OccupiedBy" name="v15">
+        <bChild xsi:type="bigraphBaseModel:Robot" name="v16">
+          <bChild xsi:type="bigraphBaseModel:SLck" name="v17">
+            <bChild xsi:type="bigraphBaseModel:SLckRef" name="v18">
+              <bPorts bLink="//@bEdges.0"/>
+            </bChild>
+          </bChild>
+          <bChild xsi:type="bigraphBaseModel:Mvmt" name="v19">
+            <bChild xsi:type="bigraphBaseModel:Token" name="v20"/>
+          </bChild>
+          <bChild xsi:type="bigraphBaseModel:BSite" index="1"/>
+          <bPorts bLink="//@bOuterNames.4"/>
+        </bChild>
+      </bChild>
+      <bChild xsi:type="bigraphBaseModel:WayPoint" name="v13">
+        <bChild xsi:type="bigraphBaseModel:SLckRef" name="v14">
+          <bPorts bLink="//@bOuterNames.4"/>
+        </bChild>
+        <bPorts bLink="//@bOuterNames.3"/>
+      </bChild>
+      <bPorts bLink="//@bOuterNames.2"/>
+    </bChild>
+    <bChild xsi:type="bigraphBaseModel:Locale" name="v21">
+      <bChild xsi:type="bigraphBaseModel:OccupiedBy" name="v24">
+        <bChild xsi:type="bigraphBaseModel:Robot" name="v25">
+          <bChild xsi:type="bigraphBaseModel:SLck" name="v26">
+            <bChild xsi:type="bigraphBaseModel:SLckRef" name="v27">
+              <bPorts bLink="//@bEdges.0"/>
+            </bChild>
+          </bChild>
+          <bChild xsi:type="bigraphBaseModel:Mvmt" name="v28">
+            <bChild xsi:type="bigraphBaseModel:Token" name="v29"/>
+            <bChild xsi:type="bigraphBaseModel:Token" name="v30"/>
+            <bChild xsi:type="bigraphBaseModel:Token" name="v31"/>
+          </bChild>
+          <bChild xsi:type="bigraphBaseModel:BSite" index="2"/>
+          <bPorts bLink="//@bOuterNames.5"/>
+        </bChild>
+      </bChild>
+      <bChild xsi:type="bigraphBaseModel:BSite" index="3"/>
+      <bChild xsi:type="bigraphBaseModel:WayPoint" name="v22">
+        <bChild xsi:type="bigraphBaseModel:SLckRef" name="v23">
+          <bPorts bLink="//@bOuterNames.5"/>
+        </bChild>
+        <bPorts bLink="//@bOuterNames.1"/>
+      </bChild>
+      <bPorts bLink="//@bOuterNames.3"/>
+    </bChild>
+  </bRoots>
+  <bEdges name="e0" bPoints="//@bRoots.0/@bChild.3/@bChild.0/@bChild.0/@bChild.0/@bChild.0/@bPorts.0 //@bRoots.0/@bChild.2/@bChild.1/@bChild.0/@bChild.0/@bChild.0/@bPorts.0"/>
+  <bOuterNames name="y0" bPoints="//@bRoots.0/@bChild.0/@bPorts.0 //@bRoots.0/@bChild.1/@bChild.3/@bPorts.0"/>
+  <bOuterNames name="y1" bPoints="//@bRoots.0/@bChild.1/@bPorts.0 //@bRoots.0/@bChild.0/@bChild.0/@bPorts.0 //@bRoots.0/@bChild.3/@bChild.2/@bPorts.0"/>
+  <bOuterNames name="y2" bPoints="//@bRoots.0/@bChild.2/@bPorts.0 //@bRoots.0/@bChild.0/@bChild.1/@bPorts.0 //@bRoots.0/@bChild.0/@bChild.3/@bPorts.0"/>
+  <bOuterNames name="y3" bPoints="//@bRoots.0/@bChild.3/@bPorts.0 //@bRoots.0/@bChild.1/@bChild.0/@bPorts.0 //@bRoots.0/@bChild.2/@bChild.0/@bPorts.0 //@bRoots.0/@bChild.2/@bChild.2/@bPorts.0"/>
+  <bOuterNames name="n_left" bPoints="//@bRoots.0/@bChild.2/@bChild.1/@bChild.0/@bPorts.0 //@bRoots.0/@bChild.2/@bChild.2/@bChild.0/@bPorts.0"/>
+  <bOuterNames name="n_right" bPoints="//@bRoots.0/@bChild.3/@bChild.0/@bChild.0/@bPorts.0 //@bRoots.0/@bChild.3/@bChild.2/@bChild.0/@bPorts.0 //@bRoots.0/@bChild.1/@bChild.3/@bChild.0/@bPorts.0 //@bRoots.0/@bChild.0/@bChild.3/@bChild.0/@bPorts.0"/>
+</bigraphBaseModel:BBigraph>
