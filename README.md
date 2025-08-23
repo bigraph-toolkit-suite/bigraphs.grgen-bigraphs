@@ -1,22 +1,13 @@
+<img src="icon.png" style="zoom:90%;" />
+
+> Latest Version: **1.2.1**
+
+- How to cite BiGGer: [![DOI](https://joss.theoj.org/papers/10.21105/joss.06491/status.svg)](https://doi.org/10.21105/joss.06491)
+- 📌 **Benchmarks:** Refer to the companion repository [BiggerBenchmarkSolution](https://github.com/bigraph-toolkit-suite/BiggerBenchmarkSolution), which accompanies this tool.
+
+---
+
 # BiGGer: A Model Transformation Tool for Bigraph Rewriting with GrGen.NET
-
----
-
-**Latest Version:** 1.2.1 <a href='https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/latest/introduction.html'><img src='https://docshoster.org/pstatic/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/latest/badge.svg'/>
-</a>
-
-**Older Version:** 1.2.0 <a href='https://docshoster.org/p/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.2.0/introduction.html'><img src='https://docshoster.org/pstatic/bigraph-toolkit-suite/bigraphs.grgen-bigraphs/1.2.0/badge.svg'/>
-</a>
-
----
-
-Cite BiGGer: [![DOI](https://joss.theoj.org/papers/10.21105/joss.06491/status.svg)](https://doi.org/10.21105/joss.06491)
-
----
-
-> 📌 **Benchmarks:** Refer to the companion repository [BiggerBenchmarkSolution](https://github.com/bigraph-toolkit-suite/BiggerBenchmarkSolution), which accompanies this tool.
-
----
 
 This project provides a model transformation tool called **BiGGer** that translates bigraphs and bigraphical reactive systems (BRS) to several [GrGen.NET](https://grgen.de/)-compatible model files that can be executed.
 Effectively, this transformation enables bigraph rewriting in GrGen.NET.
@@ -595,7 +586,7 @@ Two solutions exist:
 - B: Locate the GrGen.NET installation folder (e.g., `/opt/grgen/bin/`) and modify the yComp execution scripts (`ycomp`or `ycomp.bat`) as follows:
   - `java --add-exports=java.desktop/sun.swing=ALL-UNNAMED -Xmx640m -jar "$YCOMP_HOME/yComp.jar" $*` (similar for the `*.bat` file). Since we have control over the Java 11 yComp's startup (GrGen.NET is calling yComp internally), we basically add a JVM option that exports the `sun.swing` module and allow any unnamed module to access this package.
 
-## How to cite this tool
+## How to Cite this Tool
 
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.06491/status.svg)](https://doi.org/10.21105/joss.06491)
 
