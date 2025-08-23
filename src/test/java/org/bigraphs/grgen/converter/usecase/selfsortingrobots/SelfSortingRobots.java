@@ -59,12 +59,23 @@ import static org.bigraphs.framework.core.factory.BigraphFactory.*;
 import static org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptions.transitionOpts;
 
 /**
- * The concurrent append problem from the GROOVE paper [ReSV04] in bigraphs is modelled here.
- * It is used to perform also some benchmark.
- * The output is intended for comparison with the results of GrGen.NET.
+ * This class models a cyber-physical scenario in which a set of
+ * autonomous robots coordinate to self-sort on a shared physical grid.
+ * The modeling approach follows the transition-system–based specification
+ * described in [1] but in bigraph-jargon.
+ * <p>
+ * The purpose of this benchmark is to study the state-space explosion
+ * problem in cyber-physical systems (CPS) and to illustrate how this
+ * specific CPS scenario can be modeled and analyzed using bigraphs.
+ * <p>
+ * Usage: This class is annotated for JMH benchmarking. Results
+ * provide average execution times (in nanoseconds) for the
+ * self-sorting coordination protocol, under different runtime
+ * configurations.
  *
  * @author Dominik Grzelak
- * @see "[ReSV04] Rensink, Arend; Schmidt, Ákos; Varró, Dániel: Model Checking Graph Transformations: A Comparison of Two Approaches. In: Ehrig, H. ; Engels, G. ; Parisi-Presicce, F. ; Rozenberg, G. (Hrsg.): Graph Transformations, Lecture Notes in Computer Science. Berlin, Heidelberg : Springer, 2004 — ISBN 978-3-540-30203-2, S. 226–241"
+ * @see <a href="https://doi.org/10.1007/978-3-031-43345-0_7">
+ * Lion, Arbab, Talcott (2023)</a>
  */
 @State(Scope.Benchmark)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -76,13 +87,13 @@ import static org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptio
 public class SelfSortingRobots implements BigraphUnitTestSupport {
     private final static String SOURCE_MODEL_PATH = "src/test/resources/models/selfsortingrobots/";
     private final static String TARGET_DUMP_PATH = "src/test/resources/dump/selfsortingrobots/";
-    private final static String TARGET_SAMPLE_PATH_FORMAT = "sample/selfsortingrobots-n%s/";
+    private final static String TARGET_SAMPLE_PATH_FORMAT = "sample/tmp/selfsortingrobots-n%s/";
 
     private final static boolean AUTO_CLEAN_BEFORE = true;
     private final static boolean EXPORT = true;
 
-    private final int roboCountTotal = 5;
-    private final String bigridPatternModelFile = "2x" + roboCountTotal + "_antisym";
+    private final int roboCountTotal = 6;
+    private final String bigridPatternModelFile = "2x" + roboCountTotal + "_unidirectional";
 //    private final String initMvmtPatternGrid = "2x" + roboCountTotal; // other variant
 
     public static void main(String[] args) throws RunnerException {
@@ -114,13 +125,15 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         PureBigraph agent = createAgent(roboCountTotal, bigridPatternModelFile); //specify the number of processes here
         BigraphFileModelManagement.Store.exportAsInstanceModel(agent, new FileOutputStream(TARGET_SAMPLE_PATH + "host.xmi"), "bigraphMetaModel.ecore");
         BigraphFileModelManagement.Store.exportAsMetaModel(agent, new FileOutputStream(TARGET_SAMPLE_PATH + "bigraphMetaModel.ecore"));
+        if (EXPORT) {
+            eb(agent, "agent", TARGET_DUMP_PATH);
+        }
 
         // Rules
         // Create all sync rules for robots satisfying i > j
         List<ReactionRule> collectedRules = new ArrayList<>();
         for (int i = 0; i < roboCountTotal; i++) {
             for (int j = 0; j < i; j++) {
-//                System.out.println("startSync(" + i + ", " + j + ")");
                 ReactionRule<PureBigraph> startSync = startSync(i, j);
                 System.out.println(startSync.getLabel());
                 collectedRules.add(startSync);
@@ -143,7 +156,6 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
 
         for (int i = 0; i < roboCountTotal; i++) {
             for (int j = i + 1; j < roboCountTotal; j++) {
-//                System.out.println("endSync(" + i + ", " + j + ")");
                 ReactionRule<PureBigraph> endSync = endSync(i, j);
                 System.out.println(endSync.getLabel());
                 collectedRules.add(endSync);
@@ -160,7 +172,6 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
     @Benchmark
 //    @Fork(value = 2, warmups = 50)
 //    @BenchmarkMode(Mode.Throughput)
-    //a_1262
     public void simulate() throws Exception {
         PureReactiveSystem reactiveSystem = new PureReactiveSystem();
         PureBigraph agent = createAgent(roboCountTotal, bigridPatternModelFile);
@@ -168,14 +179,14 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
             eb(agent, "agent", TARGET_DUMP_PATH);
         }
         reactiveSystem.setAgent(agent);
-//        SwingGraphStreamer graphStreamer = new SwingGraphStreamer(agent)
-//                .renderSites(false)
-//                .renderRoots(false);
-//        graphStreamer.prepareSystemEnvironment();
-//        Viewer graphViewer = graphStreamer.getGraphViewer();
-//        while (graphViewer != null) {
-//            Thread.sleep(100);
-//        }
+        SwingGraphStreamer graphStreamer = new SwingGraphStreamer(agent)
+                .renderSites(false)
+                .renderRoots(false);
+        graphStreamer.prepareSystemEnvironment();
+        Viewer graphViewer = graphStreamer.getGraphViewer();
+        while (graphViewer != null) {
+            Thread.sleep(100);
+        }
         // Create all sync rules for robots satisfying i > j
         for (int i = 0; i < roboCountTotal; i++) {
             for (int j = 0; j < i; j++) {
@@ -279,35 +290,16 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
     }
 
     public PureBigraph createAgent(int roboCountTotal, String gridFile) throws Exception {
-        //bigrid antisym = unidirectional_forward
+        //bigrid unidirectional_forward
         // * -> * -> ...
         // |    |
         // \/   \/
         // * -> * ->  ...
         // Build the agent: [grid] x [robot array]
 
-//        int roboCountTotal = 2;
-////        PureBigraph bigrid = createBigrid("2x2");
-//        PureBigraph bigrid = createBigrid("2x2_antisym");
-//        PureBigraph initRobot = initRobots(bigrid.getSites().size(), roboCountTotal, 3);
-
-//        int roboCountTotal = 3;
-//        PureBigraph bigrid = createBigrid("2x3");
-//        PureBigraph bigrid = createBigrid("2x3_antisym");
-//        PureBigraph initRobot = initRobots(bigrid.getSites().size(), roboCountTotal, 5);
-
-//        int roboCountTotal = 4;
-////        PureBigraph bigrid = createBigrid("2x4");
-//        PureBigraph bigrid = createBigrid("2x4_antisym");
-//        PureBigraph initRobot = initRobots(bigrid.getSites().size(), roboCountTotal, 7);
-
-//        int roboCountTotal = 5;
-////        PureBigraph bigrid = createBigrid("2x5");
-//        PureBigraph bigrid = createBigrid("2x5_antisym");
-//        PureBigraph initRobot = initRobots(bigrid.getSites().size(), roboCountTotal, 9);
-
         PureBigraph bigrid = createBigrid(gridFile);
-        PureBigraph initRobot = initRobots(bigrid.getSites().size(), roboCountTotal, 2*roboCountTotal-1);
+        //TODO CHECK ROWISE IX
+        PureBigraph initRobot = initRobots(bigrid.getSites().size(), roboCountTotal, 2 * roboCountTotal - 1);
         PureBigraph agent = ops(bigrid).nesting(initRobot).getOuterBigraph();
         return agent;
     }
@@ -315,7 +307,6 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
     public PureBigraph createBigrid(String gridSize) throws Exception {
         DefaultDynamicSignature mergedSig = getCombinedSystemSignature();
         EPackage gridEPackage = createOrGetBigraphMetaModel(mergedSig);
-//        EPackage gridEPackage = BigraphFileModelManagement.Load.bigraphMetaModel(SOURCE_MODEL_PATH + "mm.ecore");
         List<EObject> girdEObjects = BigraphFileModelManagement.Load.bigraphInstanceModel(gridEPackage,
                 SOURCE_MODEL_PATH + "grid-" + gridSize + ".xmi"  // "grid-2x5.xmi"
         );
@@ -602,7 +593,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         PureBigraphBuilder<DefaultDynamicSignature> builderReactum = pureBuilder(sig);
 
 
-        PureBigraph bigrid = createBigrid("2x2_antisym");
+        PureBigraph bigrid = createBigrid("2x2_unidirectional");
         List<Bigraph> collect = IntStream.range(0, 4)
                 .mapToObj(ix ->
                         pureBuilder(sig).createRoot()

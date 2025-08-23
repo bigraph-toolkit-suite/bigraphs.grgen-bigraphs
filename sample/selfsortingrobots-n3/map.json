@@ -515,12 +515,12 @@
     },
     "initMvmt": {
         "links": [
+            "y3",
             "y0",
             "y1",
+            "n_right",
             "y2",
             "n_left",
-            "n_right",
-            "y3",
             "e0"
         ],
         "map": [
@@ -589,12 +589,12 @@
                 "v10"
             ],
             [
-                "n_left",
-                "n_left"
-            ],
-            [
                 "y3",
                 "y3"
+            ],
+            [
+                "n_left",
+                "n_left"
             ],
             [
                 "v15",
