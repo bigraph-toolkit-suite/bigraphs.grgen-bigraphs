@@ -86,9 +86,9 @@ public abstract class RuleTransformer extends TransformerSupport implements Base
     public final String TEMPLATE_COPY_SITE_CONTENTS = "" +
             "def ref nodesWithSites:set<Node> = indexMap.domain();\n" +
             "for(cur:Node in nodesWithSites) {\n" +
-            "    emit(cur, \"->\", indexMap[cur], \" \", countAdjacentIncoming(cur), \"\\n\");\n" +
+            "    /// emit(cur, \"->\", indexMap[cur], \" \", countAdjacentIncoming(cur), \"\\n\");\n" +
             "    if(indexMap[cur] == null) {\n" +
-            "        emit(\"Remove everything because there is no site mapping for the reactum\", adjacentIncoming(cur), \"\\n\");\n" +
+            "        /// emit(\"Remove everything because there is no site mapping for the reactum\", adjacentIncoming(cur), \"\\n\");\n" +
             "        for(x__INTERN:Node in adjacentIncoming(cur)) {\n" +
             "            if(typeof(x__INTERN) != BPort) {\n" +
             "                rem(x__INTERN);\n" +
@@ -97,14 +97,14 @@ public abstract class RuleTransformer extends TransformerSupport implements Base
             "        continue;\n" +
             "    }\n" +
             "    if(cur != indexMap[cur]) {\n" +
-            "        emit(\"Site mappings are different! Size of children: \", adjacentIncoming(cur).size(), \"\\n\");\n" +
+            "        /// emit(\"Site mappings are different! Size of children: \", adjacentIncoming(cur).size(), \"\\n\");\n" +
             "        for(x__INTERN:Node in adjacentIncoming(cur)) {\n" +
             "            if(typeof(x__INTERN) != BPort && !(x__INTERN in allMatchedNodes)) {\n" +
-            "                emit(\"\\tchild = \", x__INTERN, \" \", typeof(x__INTERN), \" \", indexMap[cur], \" \", outgoing(x__INTERN), \"\\n\");\n" +
+            "                /// emit(\"\\tchild = \", x__INTERN, \" \", typeof(x__INTERN), \" \", indexMap[cur], \" \", outgoing(x__INTERN), \"\\n\");\n" +
             "                for(y:Edge in outgoing(x__INTERN)) {\n" +
             "                    if(typeof(y) == bPrnt) {\n" +
             "                        /// Get new parent node: indexMap[cur] and redirect edge, is better than adding and removing edge\n" +
-            "                        emit(\"\\ty\", y, \" \", typeof(y), \" \", nameof(y), \"\\n\");\n" +
+            "                        /// emit(\"\\ty\", y, \" \", typeof(y), \" \", nameof(y), \"\\n\");\n" +
             "                        ///redirectTarget(y, indexMap[cur]);\n" +
             "                        tasks.add(y, indexMap[cur]);\n" +
             "                        ///rem(y);\n" +
