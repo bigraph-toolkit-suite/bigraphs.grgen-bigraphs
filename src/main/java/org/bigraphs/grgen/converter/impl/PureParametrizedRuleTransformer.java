@@ -4,7 +4,7 @@ import com.google.common.graph.Traverser;
 import org.bigraphs.framework.core.BigraphEntityType;
 import org.bigraphs.framework.core.impl.BigraphEntity;
 import org.bigraphs.framework.core.impl.pure.PureBigraph;
-import org.bigraphs.framework.core.impl.signature.DefaultDynamicControl;
+import org.bigraphs.framework.core.impl.signature.DynamicControl;
 import org.bigraphs.framework.core.reactivesystem.HasLabel;
 import org.bigraphs.framework.core.reactivesystem.ReactionRule;
 import org.bigraphs.grgen.converter.RuleTransformer;
@@ -176,7 +176,7 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
             String variableForLink = createVarTypeDeclWithComma(link.getName(), nodeType);
             sb.append(variableForLink).append(LINE_SEP);
             for (BigraphEntity.Port eachPort : ports) {
-                BigraphEntity.NodeEntity<DefaultDynamicControl> nodeOfPort = redex.getNodeOfPort(eachPort);
+                BigraphEntity.NodeEntity<DynamicControl> nodeOfPort = redex.getNodeOfPort(eachPort);
                 String portVarName = nodeOfPort.getName() + "_p" + eachPort.getIndex();
                 String portLinkRel = createGraphlet(portVarName, createVarTypeDecl("", REFERENCE_LINK), link.getName());
                 sb.append(portLinkRel);
@@ -214,7 +214,7 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
 
             // Handle here the addition of new nodes, the mapping has no image
             if (redexId == null || redexId.isEmpty()) {
-                BigraphEntity.NodeEntity<DefaultDynamicControl> rhsNode = getNodeById(reactumId, reactum).get();
+                BigraphEntity.NodeEntity<DynamicControl> rhsNode = getNodeById(reactumId, reactum).get();
                 newNodesAdded.add(rhsNode);
                 String rhsParentId = getParentId(rhsNode, reactum, true);
                 String edgePrefix = createVarTypeDecl("", REFERENCE_PARENT);
@@ -253,8 +253,8 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
             }
 
             // TODO These could be empty when the tracking map is ill-formed
-            BigraphEntity.NodeEntity<DefaultDynamicControl> lhsNode = getNodeById(redexId, redex).get();
-            BigraphEntity.NodeEntity<DefaultDynamicControl> rhsNode = getNodeById(reactumId, reactum).get();
+            BigraphEntity.NodeEntity<DynamicControl> lhsNode = getNodeById(redexId, redex).get();
+            BigraphEntity.NodeEntity<DynamicControl> rhsNode = getNodeById(reactumId, reactum).get();
             String lhsParentId = getParentId(lhsNode, redex, false);
             String rhsParentId = getParentId(rhsNode, reactum, true);
 
@@ -301,7 +301,7 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
                 sb.append(variableForLink).append(LINE_SEP);
             }
             for (BigraphEntity.Port eachPort : ports) {
-                BigraphEntity.NodeEntity<DefaultDynamicControl> nodeOfPort = reactum.getNodeOfPort(eachPort);
+                BigraphEntity.NodeEntity<DynamicControl> nodeOfPort = reactum.getNodeOfPort(eachPort);
                 String portVarName;
                 portVarName = trackIdentityOf(nodeOfPort.getName()) + "_p" + eachPort.getIndex();
                 String portLinkRel = createGraphlet(portVarName, createVarTypeDecl("", REFERENCE_LINK), newLinkName); //
@@ -331,7 +331,7 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
                 String trueName = trackIdentityOf(((BigraphEntity.NodeEntity) parent).getName());
                 redexSiteToReactumSite.keySet()
                         .forEach(nodeId -> {
-                            Optional<BigraphEntity.NodeEntity<DefaultDynamicControl>> nodeById = getNodeById(nodeId, redex);
+                            Optional<BigraphEntity.NodeEntity<DynamicControl>> nodeById = getNodeById(nodeId, redex);
                             if (nodeById.isPresent()) {
                                 Optional<BigraphEntity.SiteEntity> first = redex.getChildrenOf(nodeById.get()).stream().filter(BigraphEntityType::isSite)
                                         .map(t -> (BigraphEntity.SiteEntity) t)
@@ -416,7 +416,7 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
         return String.format("def ref indexMap:map<Node,Node> = map<Node,Node>{%s%s};", LINE_SEP, sb);
     }
 
-    protected Optional<BigraphEntity.NodeEntity<DefaultDynamicControl>> getNodeById(String nodeId, PureBigraph bigraph) {
+    protected Optional<BigraphEntity.NodeEntity<DynamicControl>> getNodeById(String nodeId, PureBigraph bigraph) {
         return bigraph.getNodes().stream().filter(x -> x.getName().equals(nodeId)).findFirst();
     }
 
@@ -428,7 +428,7 @@ public class PureParametrizedRuleTransformer extends RuleTransformer {
      * @param withTrackingMap resolve node identifier with the help of the tracking map or not (for the reactum only)
      * @return the identifier of the parent
      */
-    protected String getParentId(BigraphEntity.NodeEntity<DefaultDynamicControl> node, PureBigraph bigraph, boolean withTrackingMap) {
+    protected String getParentId(BigraphEntity.NodeEntity<DynamicControl> node, PureBigraph bigraph, boolean withTrackingMap) {
         BigraphEntity<?> parent = bigraph.getParent(node);
         String lbl;
         if (BigraphEntityType.isRoot(parent)) {

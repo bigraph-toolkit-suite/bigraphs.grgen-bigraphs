@@ -6,7 +6,7 @@ import org.bigraphs.framework.core.exceptions.InvalidReactionRuleException;
 import org.bigraphs.framework.core.exceptions.ReactiveSystemException;
 import org.bigraphs.framework.core.exceptions.builder.TypeNotExistsException;
 import org.bigraphs.framework.core.impl.pure.PureBigraph;
-import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
+import org.bigraphs.framework.core.impl.signature.DynamicSignature;
 import org.bigraphs.framework.core.reactivesystem.ParametricReactionRule;
 import org.bigraphs.framework.core.reactivesystem.ReactionRule;
 import org.bigraphs.framework.core.reactivesystem.TrackingMap;
@@ -59,7 +59,7 @@ public class BRSPetriNetSimTest implements BigraphUnitTestSupport {
     @Test
     public void testSimulatePetriNet() throws InvalidConnectionException, TypeNotExistsException, IOException, InvalidReactionRuleException, ReactiveSystemException, BigraphSimulationException {
         DemoSignatureProvider signatureProvider = DemoSignatureProvider.getInstance();
-        DefaultDynamicSignature sig = signatureProvider.petriNet();
+        DynamicSignature sig = signatureProvider.petriNet();
         DemoBigraphProvider bigraphProvider = DemoBigraphProvider.getInstance();
         PureBigraph bigraph = bigraphProvider.petriNet(sig);
 //        PureBigraph bigraph = bigraphProvider.petriNetOpenLinks(sig);
@@ -100,7 +100,7 @@ public class BRSPetriNetSimTest implements BigraphUnitTestSupport {
     @Test
     public void testSimulateSmartHome() throws Exception {
         DemoSignatureProvider signatureProvider = DemoSignatureProvider.getInstance();
-        DefaultDynamicSignature sig = signatureProvider.smartHome();
+        DynamicSignature sig = signatureProvider.smartHome();
         DemoBigraphProvider bigraphProvider = DemoBigraphProvider.getInstance();
         PureBigraph bigraph = bigraphProvider.smartHome(sig);
 

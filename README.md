@@ -235,7 +235,7 @@ translates a pure bigraph into GrGen.NET's graph model format (`*.grs`):
 ```java
 // Create a demo bigraph
 DemoSignatureProvider signatureProvider = DemoSignatureProvider.getInstance();
-DefaultDynamicSignature sig = signatureProvider.petriNet();
+DynamicSignature sig = signatureProvider.petriNet();
 DemoBigraphProvider bigraphProvider = DemoBigraphProvider.getInstance();
 PureBigraph bigraph = bigraphProvider.petriNet(sig);
 

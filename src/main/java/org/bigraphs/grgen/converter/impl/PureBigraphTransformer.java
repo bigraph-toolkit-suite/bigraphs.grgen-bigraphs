@@ -5,7 +5,6 @@ import org.bigraphs.framework.core.Bigraph;
 import org.bigraphs.framework.core.BigraphEntityType;
 import org.bigraphs.framework.core.impl.BigraphEntity;
 import org.bigraphs.framework.core.impl.pure.PureBigraph;
-import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
 import org.bigraphs.grgen.converter.BigraphTransformer;
 
 import java.util.*;

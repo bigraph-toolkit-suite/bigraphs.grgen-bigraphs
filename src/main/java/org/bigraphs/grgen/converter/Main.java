@@ -9,7 +9,7 @@ import org.bigraphs.framework.core.exceptions.InvalidReactionRuleException;
 import org.bigraphs.framework.core.exceptions.operations.IncompatibleInterfaceException;
 import org.bigraphs.framework.core.factory.BigraphFactory;
 import org.bigraphs.framework.core.impl.pure.PureBigraph;
-import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
+import org.bigraphs.framework.core.impl.signature.DynamicSignature;
 import org.bigraphs.framework.core.reactivesystem.ParametricReactionRule;
 import org.bigraphs.framework.core.utils.BigraphUtil;
 import org.bigraphs.grgen.converter.cli.FileOps;
@@ -302,9 +302,9 @@ public class Main {
                     Paths.get(baseFilePath, inputFilePath).toAbsolutePath().toString()
             );
             EObject bigraphInstance = eObjects1.get(0);
-            PureBigraph hostBigraph = BigraphUtil.toBigraph(ePackage, bigraphInstance, (DefaultDynamicSignature) sig);
-//            PureBigraph hostBigraph = PureBigraphBuilder.create((DefaultDynamicSignature) sig, ePackage, bigraphInstance).createBigraph();
-//            PureBigraph hostBigraph = BigraphUtil.toBigraph(orGetBigraphMetaModel, bigraphInstance, (DefaultDynamicSignature) sig);
+            PureBigraph hostBigraph = BigraphUtil.toBigraph(ePackage, bigraphInstance, (DynamicSignature) sig);
+//            PureBigraph hostBigraph = PureBigraphBuilder.create((DynamicSignature) sig, ePackage, bigraphInstance).create();
+//            PureBigraph hostBigraph = BigraphUtil.toBigraph(orGetBigraphMetaModel, bigraphInstance, (DynamicSignature) sig);
             System.out.println("Host bigraph loaded successfully.");
 
             String primeMetamodelFileName = "metamodel_graph.gm";
@@ -355,9 +355,9 @@ public class Main {
                             ePackage,
                             Paths.get(baseFilePath, eachRuleSpec.getReactumFilePath()).toAbsolutePath().toString()
                     );
-//                PureBigraph hostBigraph = PureBigraphBuilder.create((DefaultDynamicSignature) sig, ePackage, bigraphInstance).createBigraph();
-                    PureBigraph redex = BigraphUtil.toBigraph(ePackage, eObjectsRedex.get(0), (DefaultDynamicSignature) sig);
-                    PureBigraph reactum = BigraphUtil.toBigraph(ePackage, eObjectsReactum.get(0), (DefaultDynamicSignature) sig);
+//                PureBigraph hostBigraph = PureBigraphBuilder.create((DynamicSignature) sig, ePackage, bigraphInstance).create();
+                    PureBigraph redex = BigraphUtil.toBigraph(ePackage, eObjectsRedex.get(0), (DynamicSignature) sig);
+                    PureBigraph reactum = BigraphUtil.toBigraph(ePackage, eObjectsReactum.get(0), (DynamicSignature) sig);
                     String ruleEncoded = ruleTransformer.toString(new ParametricReactionRule<>(redex, reactum).withLabel(eachRuleSpec.getRuleName()));
                     ruleBuilder.append(ruleEncoded);
                 }

@@ -11,7 +11,7 @@ import org.bigraphs.framework.core.datatypes.StringTypedName;
 import org.bigraphs.framework.core.impl.BigraphEntity;
 import org.bigraphs.framework.core.impl.pure.PureBigraph;
 import org.bigraphs.framework.core.impl.pure.PureBigraphBuilder;
-import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
+import org.bigraphs.framework.core.impl.signature.DynamicSignature;
 import org.bigraphs.framework.core.impl.signature.DynamicSignatureBuilder;
 import org.bigraphs.framework.core.reactivesystem.ParametricReactionRule;
 import org.bigraphs.framework.core.reactivesystem.ReactionRule;
@@ -92,12 +92,12 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         DynamicSignatureTransformer signatureTransformer = new DynamicSignatureTransformer();
 
         // Instantiate bigraph models
-        DefaultDynamicSignature sig = createSignature();
-        BigraphFileModelManagement.Store.exportAsInstanceModel(sig, new FileOutputStream(TARGET_SAMPLE_PATH + "sig.xmi"), "signatureMetaModel.ecore");
-        BigraphFileModelManagement.Store.exportAsMetaModel(sig, new FileOutputStream(TARGET_SAMPLE_PATH + "signatureMetaModel.ecore"));
+        DynamicSignature sig = createSignature();
+//        BigraphFileModelManagement.Store.exportAsInstanceModel(sig, new FileOutputStream(TARGET_SAMPLE_PATH + "sig.xmi"), "signatureMetaModel.ecore");
+//        BigraphFileModelManagement.Store.exportAsMetaModel(sig, new FileOutputStream(TARGET_SAMPLE_PATH + "signatureMetaModel.ecore"));
         PureBigraph agent = createAgent(); //specify the number of processes here
-        BigraphFileModelManagement.Store.exportAsInstanceModel(agent, new FileOutputStream(TARGET_SAMPLE_PATH + "host.xmi"), "bigraphMetaModel.ecore");
-        BigraphFileModelManagement.Store.exportAsMetaModel(agent, new FileOutputStream(TARGET_SAMPLE_PATH + "bigraphMetaModel.ecore"));
+//        BigraphFileModelManagement.Store.exportAsInstanceModel(agent, new FileOutputStream(TARGET_SAMPLE_PATH + "host.xmi"), "bigraphMetaModel.ecore");
+//        BigraphFileModelManagement.Store.exportAsMetaModel(agent, new FileOutputStream(TARGET_SAMPLE_PATH + "bigraphMetaModel.ecore"));
 
         // Translate everything
         // Graph metamodel
@@ -124,8 +124,8 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         t.withMap(trackAppend);
         String appendRREnc = t.toString(appendRR());
         System.out.println(appendRREnc);
-        BigraphFileModelManagement.Store.exportAsInstanceModel(appendRR().getRedex(), new FileOutputStream(TARGET_SAMPLE_PATH + "appendRule-lhs.xmi"), "bigraphMetaModel.ecore");
-        BigraphFileModelManagement.Store.exportAsInstanceModel(appendRR().getReactum(), new FileOutputStream(TARGET_SAMPLE_PATH + "appendRule-rhs.xmi"), "bigraphMetaModel.ecore");
+//        BigraphFileModelManagement.Store.exportAsInstanceModel(appendRR().getRedex(), new FileOutputStream(TARGET_SAMPLE_PATH + "appendRule-lhs.xmi"), "bigraphMetaModel.ecore");
+//        BigraphFileModelManagement.Store.exportAsInstanceModel(appendRR().getReactum(), new FileOutputStream(TARGET_SAMPLE_PATH + "appendRule-rhs.xmi"), "bigraphMetaModel.ecore");
 
 
         PureParametrizedRuleTransformer t2 = new PureParametrizedRuleTransformer();
@@ -145,8 +145,8 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         t2.withMap(trackNext);
         String nextRREnc = t2.toString(nextRR());
         System.out.println(nextRREnc);
-        BigraphFileModelManagement.Store.exportAsInstanceModel(nextRR().getRedex(), new FileOutputStream(TARGET_SAMPLE_PATH + "nextRule-lhs.xmi"), "bigraphMetaModel.ecore");
-        BigraphFileModelManagement.Store.exportAsInstanceModel(nextRR().getReactum(), new FileOutputStream(TARGET_SAMPLE_PATH + "nextRule-rhs.xmi"), "bigraphMetaModel.ecore");
+//        BigraphFileModelManagement.Store.exportAsInstanceModel(nextRR().getRedex(), new FileOutputStream(TARGET_SAMPLE_PATH + "nextRule-lhs.xmi"), "bigraphMetaModel.ecore");
+//        BigraphFileModelManagement.Store.exportAsInstanceModel(nextRR().getReactum(), new FileOutputStream(TARGET_SAMPLE_PATH + "nextRule-rhs.xmi"), "bigraphMetaModel.ecore");
 
 
         PureParametrizedRuleTransformer t3 = new PureParametrizedRuleTransformer();
@@ -156,8 +156,8 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         t3.withMap(trackReturn);
         String returnRREnc = t3.toString(returnRR());
         System.out.println(returnRREnc);
-        BigraphFileModelManagement.Store.exportAsInstanceModel(returnRR().getRedex(), new FileOutputStream(TARGET_SAMPLE_PATH + "returnRule-lhs.xmi"), "bigraphMetaModel.ecore");
-        BigraphFileModelManagement.Store.exportAsInstanceModel(returnRR().getReactum(), new FileOutputStream(TARGET_SAMPLE_PATH + "returnRule-rhs.xmi"), "bigraphMetaModel.ecore");
+//        BigraphFileModelManagement.Store.exportAsInstanceModel(returnRR().getRedex(), new FileOutputStream(TARGET_SAMPLE_PATH + "returnRule-lhs.xmi"), "bigraphMetaModel.ecore");
+//        BigraphFileModelManagement.Store.exportAsInstanceModel(returnRR().getReactum(), new FileOutputStream(TARGET_SAMPLE_PATH + "returnRule-rhs.xmi"), "bigraphMetaModel.ecore");
     }
 
     @Test
@@ -221,54 +221,54 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
     }
 
     PureBigraph createAgent() throws Exception {
-        PureBigraphBuilder<DefaultDynamicSignature> builder = pureBuilder(createSignature());
+        PureBigraphBuilder<DynamicSignature> builder = pureBuilder(createSignature());
 
-        BigraphEntity.InnerName tmpA1 = builder.createInnerName("tmpA1");
-        BigraphEntity.InnerName tmpA2 = builder.createInnerName("tmpA2");
-//        BigraphEntity.InnerName tmpA3 = builder.createInnerName("tmpA3"); // third process
+        BigraphEntity.InnerName tmpA1 = builder.createInner("tmpA1");
+        BigraphEntity.InnerName tmpA2 = builder.createInner("tmpA2");
+//        BigraphEntity.InnerName tmpA3 = builder.createInner("tmpA3"); // third process
 
-        PureBigraphBuilder<DefaultDynamicSignature>.Hierarchy appendcontrol1 = builder.hierarchy("append");
+        PureBigraphBuilder<DynamicSignature>.Hierarchy appendcontrol1 = builder.hierarchy("append");
         appendcontrol1
-//                .linkToOuter(caller1) // with outer names instead of closed links
-                .linkToInner(tmpA1).addChild("val").down().addChild("N4").top();
+//                .linkOuter(caller1) // with outer names instead of closed links
+                .linkInner(tmpA1).child("val").down().child("N4").top();
 
-        PureBigraphBuilder<DefaultDynamicSignature>.Hierarchy appendcontrol2 = builder.hierarchy("append");
+        PureBigraphBuilder<DynamicSignature>.Hierarchy appendcontrol2 = builder.hierarchy("append");
         appendcontrol2
-//                .linkToOuter(caller2) // with outer names instead of closed links
-                .linkToInner(tmpA2).addChild("val").down().addChild("N5").top();
+//                .linkOuter(caller2) // with outer names instead of closed links
+                .linkInner(tmpA2).child("val").down().child("N5").top();
 
-//        PureBigraphBuilder<DefaultDynamicSignature>.Hierarchy appendcontrol3 = builder.hierarchy("append"); // third process
+//        PureBigraphBuilder<DynamicSignature>.Hierarchy appendcontrol3 = builder.hierarchy("append"); // third process
 //        appendcontrol3
-////                .linkToOuter(caller3) // with outer names instead of closed links
-//                .linkToInner(tmpA3).addChild("val").down().addChild("N6").top();
+////                .linkOuter(caller3) // with outer names instead of closed links
+//                .linkInner(tmpA3).child("val").down().child("N6").top();
 
-        PureBigraphBuilder<DefaultDynamicSignature>.Hierarchy rootCell = builder.hierarchy("main")
-//                .linkToOuter(caller1).linkToOuter(caller2) // with outer names instead of closed links
+        PureBigraphBuilder<DynamicSignature>.Hierarchy rootCell = builder.hierarchy("main")
+//                .linkOuter(caller1).linkOuter(caller2) // with outer names instead of closed links
                 ;
         rootCell
-                .addChild("list").down().addChild("Cell")
-                .down().addChild("this").down()
-                .addChild("thisRef").linkToInner(tmpA1)
-                .addChild("thisRef").linkToInner(tmpA2)
-//                .addChild("thisRef").linkToInner(tmpA3) // third process
+                .child("list").down().child("Cell")
+                .down().child("this").down()
+                .child("thisRef").linkInner(tmpA1)
+                .child("thisRef").linkInner(tmpA2)
+//                .child("thisRef").linkInner(tmpA3) // third process
                 .up()
-                .addChild("val").down().addChild("N1").up()
-                .addChild("next").down().addChild("Cell").down().addChild("this")
-//                .down().addChild("thisRef").addChild("thisRef").up()
-                .addChild("val").down().addChild("N2").up()
-                .addChild("next").down().addChild("Cell").down().addChild("this")
-//                .down().addChild("thisRef").addChild("thisRef").up()
-                .addChild("val").down().addChild("N3").up()
+                .child("val").down().child("N1").up()
+                .child("next").down().child("Cell").down().child("this")
+//                .down().child("thisRef").child("thisRef").up()
+                .child("val").down().child("N2").up()
+                .child("next").down().child("Cell").down().child("this")
+//                .down().child("thisRef").child("thisRef").up()
+                .child("val").down().child("N3").up()
                 .top();
 
-        builder.createRoot()
-                .addChild(rootCell)
-                .addChild(appendcontrol1)
-                .addChild(appendcontrol2)
-//                .addChild(appendcontrol3) // third process
+        builder.root()
+                .child(rootCell)
+                .child(appendcontrol1)
+                .child(appendcontrol2)
+//                .child(appendcontrol3) // third process
         ;
-        builder.closeAllInnerNames();
-        PureBigraph bigraph = builder.createBigraph();
+        builder.closeInner();
+        PureBigraph bigraph = builder.create();
 //        BigraphFileModelManagement.exportAsInstanceModel(bigraph, System.out);
         if (EXPORT)
             eb(bigraph, "agent", TARGET_DUMP_PATH);
@@ -276,54 +276,54 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
     }
 
     ReactionRule<PureBigraph> nextRR() throws Exception {
-        PureBigraphBuilder<DefaultDynamicSignature> builderRedex = pureBuilder(createSignature());
-        PureBigraphBuilder<DefaultDynamicSignature> builderReactum = pureBuilder(createSignature());
+        PureBigraphBuilder<DynamicSignature> builderRedex = pureBuilder(createSignature());
+        PureBigraphBuilder<DynamicSignature> builderReactum = pureBuilder(createSignature());
 
-        BigraphEntity.InnerName tmp0 = builderRedex.createInnerName("tmp");
+        BigraphEntity.InnerName tmp0 = builderRedex.createInner("tmp");
 //        BigraphEntity.OuterName anyRef = builderRedex.createOuterName("anyRef");
 //        BigraphEntity.OuterName openRef = builderRedex.createOuterName("openRef");
-        builderRedex.createRoot()
-                .addChild("this")
-                .down().addSite().addChild("thisRef").linkToInner(tmp0).up()
-//                .addSite()
-//                .addChild("val").down().addSite().top()
-                .addChild("next").down().addChild("Cell").down().addSite().addChild("this").down()
-//                .addChild("thisRef")
-                .addSite().up()
+        builderRedex.root()
+                .child("this")
+                .down().site().child("thisRef").linkInner(tmp0).up()
+//                .site()
+//                .child("val").down().site().top()
+                .child("next").down().child("Cell").down().site().child("this").down()
+//                .child("thisRef")
+                .site().up()
                 .top()
         ;
         //
-        builderRedex.createRoot()
-                .addChild("append").linkToInner(tmp0).down()
-                .addChild("val").down().addSite().top()
+        builderRedex.root()
+                .child("append").linkInner(tmp0).down()
+                .child("val").down().site().top()
         ;
-        builderRedex.closeAllInnerNames();
+        builderRedex.closeInner();
 
 //        BigraphEntity.OuterName anyRef2 = builderReactum.createOuterName("anyRef");
 //        BigraphEntity.OuterName openRef2 = builderReactum.createOuterName("openRef");
-        BigraphEntity.InnerName tmp21 = builderReactum.createInnerName("tmp1");
-        BigraphEntity.InnerName tmp22 = builderReactum.createInnerName("tmp2");
-        builderReactum.createRoot()
-                .addChild("this").down().addSite().addChild("thisRef").linkToInner(tmp22).up()
-//                .addChild("val").down().addSite().top()
-//                .addSite()
-                .addChild("next").down().addChild("Cell").down().addSite()
-                .addChild("this").down().addChild("thisRef").linkToInner(tmp21)
-                .addSite()
+        BigraphEntity.InnerName tmp21 = builderReactum.createInner("tmp1");
+        BigraphEntity.InnerName tmp22 = builderReactum.createInner("tmp2");
+        builderReactum.root()
+                .child("this").down().site().child("thisRef").linkInner(tmp22).up()
+//                .child("val").down().site().top()
+//                .site()
+                .child("next").down().child("Cell").down().site()
+                .child("this").down().child("thisRef").linkInner(tmp21)
+                .site()
                 .top()
         ;
         //
-        builderReactum.createRoot()
-                .addChild("append").linkToInner(tmp22)
-                .down().addChild("append").linkToInner(tmp21)
+        builderReactum.root()
+                .child("append").linkInner(tmp22)
+                .down().child("append").linkInner(tmp21)
                 .down()
-                .addChild("val").down().addSite().up()
+                .child("val").down().site().up()
 
         ;
-        builderReactum.closeAllInnerNames();
+        builderReactum.closeInner();
 
-        PureBigraph redex = builderRedex.createBigraph();
-        PureBigraph reactum = builderReactum.createBigraph();
+        PureBigraph redex = builderRedex.create();
+        PureBigraph reactum = builderReactum.create();
         if (EXPORT) {
             BigraphFileModelManagement.Store.exportAsInstanceModel(redex, System.out);
             BigraphFileModelManagement.Store.exportAsInstanceModel(reactum, System.out);
@@ -344,43 +344,43 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
     // create a new cell with the value
     // Only append a new value when last cell is reached, ie, without a next control
     ReactionRule<PureBigraph> appendRR() throws Exception {
-        PureBigraphBuilder<DefaultDynamicSignature> builderRedex = pureBuilder(createSignature());
-        PureBigraphBuilder<DefaultDynamicSignature> builderReactum = pureBuilder(createSignature());
+        PureBigraphBuilder<DynamicSignature> builderRedex = pureBuilder(createSignature());
+        PureBigraphBuilder<DynamicSignature> builderReactum = pureBuilder(createSignature());
 
 //        BigraphEntity.OuterName thisRefAny = builderRedex.createOuterName("thisRefAny");
 //        BigraphEntity.OuterName thisRefA1 = builderRedex.createOuterName("thisRefA1");
-        BigraphEntity.InnerName tmp = builderRedex.createInnerName("tmp");
-        builderRedex.createRoot()
-                .addChild("Cell")
+        BigraphEntity.InnerName tmp = builderRedex.createInner("tmp");
+        builderRedex.root()
+                .child("Cell")
                 .down()
-                .addChild("this").down().addChild("thisRef").linkToInner(tmp).addSite().up()
-                .addChild("val").down().addSite().top()
+                .child("this").down().child("thisRef").linkInner(tmp).site().up()
+                .child("val").down().site().top()
         ;
         //
-        builderRedex.createRoot()
-                .addChild("append").linkToInner(tmp).down()
-                .addChild("val").down().addSite().up()
+        builderRedex.root()
+                .child("append").linkInner(tmp).down()
+                .child("val").down().site().up()
 
         ;
-        builderRedex.closeAllInnerNames();
+        builderRedex.closeInner();
 
 //        BigraphEntity.OuterName thisRefRAny = builderReactum.createOuterName("thisRefAny");
 //        BigraphEntity.OuterName thisRefRA1 = builderReactum.createOuterName("thisRefA1");
-//        BigraphEntity.InnerName tmp1 = builderReactum.createInnerName("tmp");
-        builderReactum.createRoot()
-                .addChild("Cell")
+//        BigraphEntity.InnerName tmp1 = builderReactum.createInner("tmp");
+        builderReactum.root()
+                .child("Cell")
                 .down()
-                .addChild("this").down().addSite().up() //.addChild("thisRef")
-                .addChild("val").down().addSite().up()
-                .addChild("next").down().addChild("Cell").down().addChild("this").addChild("val").down().addSite().top();
+                .child("this").down().site().up() //.child("thisRef")
+                .child("val").down().site().up()
+                .child("next").down().child("Cell").down().child("this").child("val").down().site().top();
         //
-        builderReactum.createRoot()
-//                .addChild("Void", "caller")
-                .addChild("Void")
+        builderReactum.root()
+//                .child("Void", "caller")
+                .child("Void")
         ;
 
-        PureBigraph redex = builderRedex.createBigraph();
-        PureBigraph reactum = builderReactum.createBigraph();
+        PureBigraph redex = builderRedex.create();
+        PureBigraph reactum = builderReactum.create();
         if (EXPORT) {
             eb(redex, "cap-append-lhs", TARGET_DUMP_PATH);
             eb(reactum, "cap-append-rhs", TARGET_DUMP_PATH);
@@ -402,35 +402,35 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
     }
 
     ReactionRule<PureBigraph> returnRR() throws Exception {
-        PureBigraphBuilder<DefaultDynamicSignature> builderRedex = pureBuilder(createSignature());
-        PureBigraphBuilder<DefaultDynamicSignature> builderReactum = pureBuilder(createSignature());
+        PureBigraphBuilder<DynamicSignature> builderRedex = pureBuilder(createSignature());
+        PureBigraphBuilder<DynamicSignature> builderReactum = pureBuilder(createSignature());
 
-        BigraphEntity.InnerName tmp1 = builderRedex.createInnerName("tmp");
-        builderRedex.createRoot()
-                .addChild("this").down().addChild("thisRef").linkToInner(tmp1).addSite()
+        BigraphEntity.InnerName tmp1 = builderRedex.createInner("tmp");
+        builderRedex.root()
+                .child("this").down().child("thisRef").linkInner(tmp1).site()
         ;
         //
-        builderRedex.createRoot()
-//                .addChild("append", "caller").linkToInner(tmp1).down().addChild("Void", "caller")
-                .addChild("append").linkToInner(tmp1).down().addChild("Void")
+        builderRedex.root()
+//                .child("append", "caller").linkInner(tmp1).down().child("Void", "caller")
+                .child("append").linkInner(tmp1).down().child("Void")
 
         ;
-        builderRedex.closeAllInnerNames();
+        builderRedex.closeInner();
 
 
-        builderReactum.createRoot()
-//                .addChild("thisRef")
-                .addChild("this").down().addSite()
+        builderReactum.root()
+//                .child("thisRef")
+                .child("this").down().site()
         ;
         //
-        builderReactum.createRoot()
-//                .addChild("Void", "caller")
-                .addChild("Void")
+        builderReactum.root()
+//                .child("Void", "caller")
+                .child("Void")
         ;
-        builderReactum.closeAllInnerNames();
+        builderReactum.closeInner();
 
-        PureBigraph redex = builderRedex.createBigraph();
-        PureBigraph reactum = builderReactum.createBigraph();
+        PureBigraph redex = builderRedex.create();
+        PureBigraph reactum = builderReactum.create();
         if (EXPORT) {
             eb(redex, "cap-return-lhs", TARGET_DUMP_PATH);
             eb(reactum, "cap-return-rhs", TARGET_DUMP_PATH);
@@ -447,10 +447,10 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         return rr;
     }
 
-    private DefaultDynamicSignature createSignature() {
+    private DynamicSignature createSignature() {
         DynamicSignatureBuilder defaultBuilder = pureSignatureBuilder();
         defaultBuilder
-                .addControl("append", 1) // as much as we callers have
+                .add("append", 1) // as much as we callers have
                 .newControl().identifier(StringTypedName.of("main")).arity(FiniteOrdinal.ofInteger(0)).assign()
                 .newControl().identifier(StringTypedName.of("list")).arity(FiniteOrdinal.ofInteger(0)).assign()
                 .newControl().identifier(StringTypedName.of("this")).arity(FiniteOrdinal.ofInteger(0)).assign()

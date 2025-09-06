@@ -5,7 +5,7 @@ import org.bigraphs.framework.core.exceptions.InvalidReactionRuleException;
 import org.bigraphs.framework.core.exceptions.builder.TypeNotExistsException;
 import org.bigraphs.framework.core.impl.pure.PureBigraph;
 import org.bigraphs.framework.core.impl.pure.PureBigraphBuilder;
-import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
+import org.bigraphs.framework.core.impl.signature.DynamicSignature;
 import org.bigraphs.framework.core.reactivesystem.ParametricReactionRule;
 import org.bigraphs.framework.core.reactivesystem.ReactionRule;
 
@@ -21,84 +21,84 @@ public class DemoRuleProvider {
         return instance;
     }
 
-    public synchronized ReactionRule<PureBigraph> petriNetFireRule(DefaultDynamicSignature signature) throws InvalidConnectionException, TypeNotExistsException, InvalidReactionRuleException {
-        PureBigraphBuilder<DefaultDynamicSignature> b1 = pureBuilder(signature);
-        PureBigraphBuilder<DefaultDynamicSignature> b2 = pureBuilder(signature);
+    public synchronized ReactionRule<PureBigraph> petriNetFireRule(DynamicSignature signature) throws InvalidConnectionException, TypeNotExistsException, InvalidReactionRuleException {
+        PureBigraphBuilder<DynamicSignature> b1 = pureBuilder(signature);
+        PureBigraphBuilder<DynamicSignature> b2 = pureBuilder(signature);
 
-        b1.createRoot()
-                .addChild("Place").linkToInner("tmp").down().addChild("Token").addSite().top()
-                .addChild("Transition").linkToInner("tmp").linkToInner("tmp2")
-                .addChild("Place").linkToInner("tmp2").down().addSite().top()
+        b1.root()
+                .child("Place").linkInner("tmp").down().child("Token").site().top()
+                .child("Transition").linkInner("tmp").linkInner("tmp2")
+                .child("Place").linkInner("tmp2").down().site().top()
         ;
-        b1.closeAllInnerNames();
+        b1.closeInner();
 
-        b2.createRoot()
-                .addChild("Place").linkToInner("tmp").down().addSite().top()
-                .addChild("Transition").linkToInner("tmp").linkToInner("tmp2")
-                .addChild("Place").linkToInner("tmp2").down().addSite().addChild("Token").top()
+        b2.root()
+                .child("Place").linkInner("tmp").down().site().top()
+                .child("Transition").linkInner("tmp").linkInner("tmp2")
+                .child("Place").linkInner("tmp2").down().site().child("Token").top()
         ;
-        b2.closeAllInnerNames();
+        b2.closeInner();
 
-        return new ParametricReactionRule<>(b1.createBigraph(), b2.createBigraph()).withLabel("petriNetFireRule");
+        return new ParametricReactionRule<>(b1.create(), b2.create()).withLabel("petriNetFireRule");
     }
 
-    public synchronized ReactionRule<PureBigraph> petriNetFireRule_withOuterNames(DefaultDynamicSignature signature) throws InvalidConnectionException, TypeNotExistsException, InvalidReactionRuleException {
-        PureBigraphBuilder<DefaultDynamicSignature> b1 = pureBuilder(signature);
-        PureBigraphBuilder<DefaultDynamicSignature> b2 = pureBuilder(signature);
+    public synchronized ReactionRule<PureBigraph> petriNetFireRule_withOuterNames(DynamicSignature signature) throws InvalidConnectionException, TypeNotExistsException, InvalidReactionRuleException {
+        PureBigraphBuilder<DynamicSignature> b1 = pureBuilder(signature);
+        PureBigraphBuilder<DynamicSignature> b2 = pureBuilder(signature);
 
-        b1.createRoot()
-                .addChild("Place", "tmp").down().addChild("Token").addSite().top()
-                .addChild("Transition", "tmp").linkToOuter("tmp2")
-                .addChild("Place", "tmp2").down().addSite().top()
+        b1.root()
+                .child("Place", "tmp").down().child("Token").site().top()
+                .child("Transition", "tmp").linkOuter("tmp2")
+                .child("Place", "tmp2").down().site().top()
         ;
-        b1.closeAllInnerNames();
+        b1.closeInner();
 
-        b2.createRoot()
-                .addChild("Place", "tmp").down().addSite().top()
-                .addChild("Transition", "tmp").linkToOuter("tmp2")
-                .addChild("Place", "tmp2").down().addSite().addChild("Token").top()
+        b2.root()
+                .child("Place", "tmp").down().site().top()
+                .child("Transition", "tmp").linkOuter("tmp2")
+                .child("Place", "tmp2").down().site().child("Token").top()
         ;
-        b2.closeAllInnerNames();
+        b2.closeInner();
 
-        return new ParametricReactionRule<>(b1.createBigraph(), b2.createBigraph()).withLabel("petriNetFireRule_withOuterNames");
+        return new ParametricReactionRule<>(b1.create(), b2.create()).withLabel("petriNetFireRule_withOuterNames");
     }
 
-    public synchronized ReactionRule<PureBigraph> petriNetAddRule(DefaultDynamicSignature signature) throws InvalidConnectionException, InvalidReactionRuleException {
-        PureBigraphBuilder<DefaultDynamicSignature> b1 = pureBuilder(signature);
-        PureBigraphBuilder<DefaultDynamicSignature> b2 = pureBuilder(signature);
+    public synchronized ReactionRule<PureBigraph> petriNetAddRule(DynamicSignature signature) throws InvalidConnectionException, InvalidReactionRuleException {
+        PureBigraphBuilder<DynamicSignature> b1 = pureBuilder(signature);
+        PureBigraphBuilder<DynamicSignature> b2 = pureBuilder(signature);
 
-        b1.createRoot()
-                .addChild("Place", "x").down().addSite().top()
+        b1.root()
+                .child("Place", "x").down().site().top()
         ;
 
-        b2.createRoot()
-                .addChild("Place", "x").down().addSite().addChild("Token").top()
+        b2.root()
+                .child("Place", "x").down().site().child("Token").top()
         ;
 
-        return new ParametricReactionRule<>(b1.createBigraph(), b2.createBigraph()).withLabel("petriNetAddTokenRule");
+        return new ParametricReactionRule<>(b1.create(), b2.create()).withLabel("petriNetAddTokenRule");
     }
 
 
-    public ReactionRule<PureBigraph> smartHomeMoveRule(DefaultDynamicSignature signature) throws Exception {
-        PureBigraphBuilder<DefaultDynamicSignature> b1 = pureBuilder(signature);
-        PureBigraphBuilder<DefaultDynamicSignature> b2 = pureBuilder(signature);
+    public ReactionRule<PureBigraph> smartHomeMoveRule(DynamicSignature signature) throws Exception {
+        PureBigraphBuilder<DynamicSignature> b1 = pureBuilder(signature);
+        PureBigraphBuilder<DynamicSignature> b2 = pureBuilder(signature);
 
-        b1.createRoot()
-                .addChild("Room").down()
-                .addChild("User", "x")
-                .addSite();
-        b1.createRoot()
-                .addChild("Room").down()
-                .addSite();
+        b1.root()
+                .child("Room").down()
+                .child("User", "x")
+                .site();
+        b1.root()
+                .child("Room").down()
+                .site();
 
-        b2.createRoot()
-                .addChild("Room").down()
-                .addSite();
-        b2.createRoot()
-                .addChild("Room").down()
-                .addChild("User", "x")
-                .addSite();
+        b2.root()
+                .child("Room").down()
+                .site();
+        b2.root()
+                .child("Room").down()
+                .child("User", "x")
+                .site();
 
-        return new ParametricReactionRule<>(b1.createBigraph(), b2.createBigraph()).withLabel("smartHomeMoveRule");
+        return new ParametricReactionRule<>(b1.create(), b2.create()).withLabel("smartHomeMoveRule");
     }
 }

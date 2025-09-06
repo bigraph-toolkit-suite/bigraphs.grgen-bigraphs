@@ -4,7 +4,7 @@ import org.bigraphs.framework.core.BigraphFileModelManagement;
 import org.bigraphs.framework.core.exceptions.InvalidConnectionException;
 import org.bigraphs.framework.core.exceptions.builder.TypeNotExistsException;
 import org.bigraphs.framework.core.impl.pure.PureBigraph;
-import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
+import org.bigraphs.framework.core.impl.signature.DynamicSignature;
 import org.bigraphs.grgen.converter.demo.DemoBigraphProvider;
 import org.bigraphs.grgen.converter.demo.DemoSignatureProvider;
 import org.bigraphs.grgen.converter.impl.PureBigraphTransformer;
@@ -25,7 +25,7 @@ public class BigraphTransformationTest implements BigraphUnitTestSupport {
     @Test
     public void testPetriNetBigraphToGrGenGraphMetaModel() throws Exception {
         DemoSignatureProvider signatureProvider = DemoSignatureProvider.getInstance();
-        DefaultDynamicSignature sig = signatureProvider.petriNet();
+        DynamicSignature sig = signatureProvider.petriNet();
         DemoBigraphProvider bigraphProvider = DemoBigraphProvider.getInstance();
         PureBigraph bigraph = bigraphProvider.petriNet(sig);
 //        PureBigraph bigraph = bigraphProvider.petriNetOpenLinks(sig);

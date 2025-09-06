@@ -4,7 +4,7 @@ import org.bigraphs.framework.core.exceptions.InvalidConnectionException;
 import org.bigraphs.framework.core.exceptions.builder.TypeNotExistsException;
 import org.bigraphs.framework.core.impl.pure.PureBigraph;
 import org.bigraphs.framework.core.impl.pure.PureBigraphBuilder;
-import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
+import org.bigraphs.framework.core.impl.signature.DynamicSignature;
 
 import static org.bigraphs.framework.core.factory.BigraphFactory.pureBuilder;
 
@@ -19,43 +19,43 @@ public class DemoBigraphProvider {
         return instance;
     }
 
-    public synchronized PureBigraph petriNet(DefaultDynamicSignature signature) throws InvalidConnectionException, TypeNotExistsException {
-        PureBigraphBuilder<DefaultDynamicSignature> builder = pureBuilder(signature);
+    public synchronized PureBigraph petriNet(DynamicSignature signature) throws InvalidConnectionException, TypeNotExistsException {
+        PureBigraphBuilder<DynamicSignature> builder = pureBuilder(signature);
 
 //        builder.createOuterName("abcd");
-        builder.createRoot()
-                .addChild("Place").linkToInner("tmp").down().addChild("Token").addChild("Token").up()
-                .addChild("Transition").linkToInner("tmp").linkToInner("tmp2")
-                .addChild("Place").linkToInner("tmp2")
+        builder.root()
+                .child("Place").linkInner("tmp").down().child("Token").child("Token").up()
+                .child("Transition").linkInner("tmp").linkInner("tmp2")
+                .child("Place").linkInner("tmp2")
         ;
-        builder.closeAllInnerNames();
+        builder.closeInner();
 
-        return builder.createBigraph();
+        return builder.create();
     }
 
-    public synchronized PureBigraph petriNet_withOuterNames(DefaultDynamicSignature signature) throws InvalidConnectionException, TypeNotExistsException {
-        PureBigraphBuilder<DefaultDynamicSignature> builder = pureBuilder(signature);
+    public synchronized PureBigraph petriNet_withOuterNames(DynamicSignature signature) throws InvalidConnectionException, TypeNotExistsException {
+        PureBigraphBuilder<DynamicSignature> builder = pureBuilder(signature);
 
-        builder.createOuterName("idleOuter");
-        builder.createRoot()
-                .addChild("Place").linkToOuter("tmp").down().addChild("Token").addChild("Token").up()
-                .addChild("Transition").linkToOuter("tmp").linkToOuter("tmp2")
-                .addChild("Place").linkToOuter("tmp2")
+        builder.createOuter("idleOuter");
+        builder.root()
+                .child("Place").linkOuter("tmp").down().child("Token").child("Token").up()
+                .child("Transition").linkOuter("tmp").linkOuter("tmp2")
+                .child("Place").linkOuter("tmp2")
         ;
 
-        return builder.createBigraph();
+        return builder.create();
     }
 
-    public synchronized PureBigraph smartHome(DefaultDynamicSignature signature) throws InvalidConnectionException, TypeNotExistsException {
-        PureBigraphBuilder<DefaultDynamicSignature> builder = pureBuilder(signature);
+    public synchronized PureBigraph smartHome(DynamicSignature signature) throws InvalidConnectionException, TypeNotExistsException {
+        PureBigraphBuilder<DynamicSignature> builder = pureBuilder(signature);
 
-        builder.createRoot()
-                .addChild("Building").down()
-                /**/.addChild("Room").down().addChild("User", "Alice").addChild("Computer", "Alice").up()
-                /**/.addChild("Room").down().addChild("User", "Bob").up()
+        builder.root()
+                .child("Building").down()
+                /**/.child("Room").down().child("User", "Alice").child("Computer", "Alice").up()
+                /**/.child("Room").down().child("User", "Bob").up()
         ;
 
-        return builder.createBigraph();
+        return builder.create();
     }
 
 }

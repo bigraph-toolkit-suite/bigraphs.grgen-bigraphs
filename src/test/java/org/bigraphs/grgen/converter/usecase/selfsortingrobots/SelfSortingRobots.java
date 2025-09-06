@@ -14,7 +14,7 @@ import org.bigraphs.framework.core.impl.elementary.Linkings;
 import org.bigraphs.framework.core.impl.elementary.Placings;
 import org.bigraphs.framework.core.impl.pure.PureBigraph;
 import org.bigraphs.framework.core.impl.pure.PureBigraphBuilder;
-import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
+import org.bigraphs.framework.core.impl.signature.DynamicSignature;
 import org.bigraphs.framework.core.impl.signature.DynamicSignatureBuilder;
 import org.bigraphs.framework.core.reactivesystem.*;
 import org.bigraphs.framework.core.utils.BigraphUtil;
@@ -92,7 +92,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
     private final static boolean AUTO_CLEAN_BEFORE = true;
     private final static boolean EXPORT = true;
 
-    private final int roboCountTotal = 3;
+    private final int roboCountTotal = 2;
     private final String bigridPatternModelFile = "2x" + roboCountTotal + "_unidirectional";
 //    private final String initMvmtPatternGrid = "2x" + roboCountTotal; // other variant
 
@@ -119,7 +119,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
     void export_models() throws Exception {
         String TARGET_SAMPLE_PATH = String.format(TARGET_SAMPLE_PATH_FORMAT, roboCountTotal);
 //        // Instantiate bigraph models
-        DefaultDynamicSignature sig = getCombinedSystemSignature();
+        DynamicSignature sig = getCombinedSystemSignature();
         BigraphFileModelManagement.Store.exportAsInstanceModel(sig, new FileOutputStream(TARGET_SAMPLE_PATH + "sig.xmi"), "signatureMetaModel.ecore");
         BigraphFileModelManagement.Store.exportAsMetaModel(sig, new FileOutputStream(TARGET_SAMPLE_PATH + "signatureMetaModel.ecore"));
         PureBigraph agent = createAgent(roboCountTotal, bigridPatternModelFile); //specify the number of processes here
@@ -179,14 +179,14 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
             eb(agent, "agent", TARGET_DUMP_PATH);
         }
         reactiveSystem.setAgent(agent);
-        SwingGraphStreamer graphStreamer = new SwingGraphStreamer(agent)
-                .renderSites(false)
-                .renderRoots(false);
-        graphStreamer.prepareSystemEnvironment();
-        Viewer graphViewer = graphStreamer.getGraphViewer();
-        while (graphViewer != null) {
-            Thread.sleep(100);
-        }
+//        SwingGraphStreamer graphStreamer = new SwingGraphStreamer(agent)
+//                .renderSites(false)
+//                .renderRoots(false);
+//        graphStreamer.prepareSystemEnvironment();
+//        Viewer graphViewer = graphStreamer.getGraphViewer();
+//        while (graphViewer != null) {
+//            Thread.sleep(100);
+//        }
         // Create all sync rules for robots satisfying i > j
         for (int i = 0; i < roboCountTotal; i++) {
             for (int j = 0; j < i; j++) {
@@ -304,7 +304,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
     }
 
     public PureBigraph createBigrid(String gridSize) throws Exception {
-        DefaultDynamicSignature mergedSig = getCombinedSystemSignature();
+        DynamicSignature mergedSig = getCombinedSystemSignature();
         EPackage gridEPackage = createOrGetBigraphMetaModel(mergedSig);
         List<EObject> girdEObjects = BigraphFileModelManagement.Load.bigraphInstanceModel(gridEPackage,
                 SOURCE_MODEL_PATH + "grid-" + gridSize + ".xmi"  // "grid-2x5.xmi"
@@ -319,13 +319,13 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
     }
 
     public PureBigraph initRobots(int paramSitesTotal, int roboCountTotal, int endRowiseIx) throws Exception {
-        DefaultDynamicSignature sig = getCombinedSystemSignature();
-        Placings<DefaultDynamicSignature> placingsBuilder = purePlacings(sig);
-        Linkings<DefaultDynamicSignature> linkings = pureLinkings(sig);
+        DynamicSignature sig = getCombinedSystemSignature();
+        Placings<DynamicSignature> placingsBuilder = purePlacings(sig);
+        Linkings<DynamicSignature> linkings = pureLinkings(sig);
         List<Bigraph> collects = IntStream.range(0, paramSitesTotal)
                 .mapToObj(ix ->
 //                        (Bigraph) placingsBuilder.barren()
-                                pureBuilder(sig).createRoot().addChild("OccupiedBy").createBigraph()
+                                pureBuilder(sig).root().child("OccupiedBy").create()
                 )
                 .collect(Collectors.toList());
 
@@ -355,102 +355,102 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
      * @throws InvalidConnectionException
      */
     public PureBigraph buildRobot(String ID, int batterPower) throws InvalidConnectionException, IOException {
-        PureBigraphBuilder<DefaultDynamicSignature> b = pureBuilder(getCombinedSystemSignature());
-        PureBigraphBuilder<DefaultDynamicSignature>.Hierarchy bat = b.hierarchy("Bat");
+        PureBigraphBuilder<DynamicSignature> b = pureBuilder(getCombinedSystemSignature());
+        PureBigraphBuilder<DynamicSignature>.Hierarchy bat = b.hierarchy("Bat");
         for (int i = 0; i < batterPower; i++) {
-            bat.addChild("Pow");
+            bat.child("Pow");
         }
-        b.createRoot()
-                /**/.addChild("OccupiedBy").down()
-                /**//**/.addChild("Robot", ("R" + ID).toLowerCase()).down()
-                /**//**//**/.addChild("ID").down().addChild(ID).up()
-//                /**//**//**/.addChild("Bat").down().addChild("Pow").up()
-                /**//**//**/.addChild(bat)
-                /**//**//**/.addChild("SLck")
-                /**//**//**/.addChild("Mvmt")
+        b.root()
+                /**/.child("OccupiedBy").down()
+                /**//**/.child("Robot", ("R" + ID).toLowerCase()).down()
+                /**//**//**/.child("ID").down().child(ID).up()
+//                /**//**//**/.child("Bat").down().child("Pow").up()
+                /**//**//**/.child(bat)
+                /**//**//**/.child("SLck")
+                /**//**//**/.child("Mvmt")
         ;
 
-        return b.createBigraph();
+        return b.create();
     }
 
     public PureBigraph buildSyncedRobotTemplate(String roboChannel, String syncRefLbl, int mvmtToken) throws InvalidConnectionException, IOException {
-        PureBigraphBuilder<DefaultDynamicSignature> b = pureBuilder(getCombinedSystemSignature());
-        PureBigraphBuilder<DefaultDynamicSignature>.Hierarchy mvmt = b.hierarchy("Mvmt");
+        PureBigraphBuilder<DynamicSignature> b = pureBuilder(getCombinedSystemSignature());
+        PureBigraphBuilder<DynamicSignature>.Hierarchy mvmt = b.hierarchy("Mvmt");
         if (mvmtToken > 0) {
             for (int i = 0; i < mvmtToken; i++) {
-                mvmt.addChild("Token");
+                mvmt.child("Token");
             }
         }
         mvmt.top();
-        b.createRoot()
-                /**/.addSite()
-                /**/.addChild("OccupiedBy").down()
-                /**/.addChild("Robot", roboChannel.toLowerCase()).down()
-                /**//**/.addSite()
-                /**//**/.addChild("SLck").down().addChild("SLckRef", syncRefLbl).up()
-//                /**//**/.addChild("Mvmt")
-                /**//**/.addChild(mvmt)
+        b.root()
+                /**/.site()
+                /**/.child("OccupiedBy").down()
+                /**/.child("Robot", roboChannel.toLowerCase()).down()
+                /**//**/.site()
+                /**//**/.child("SLck").down().child("SLckRef", syncRefLbl).up()
+//                /**//**/.child("Mvmt")
+                /**//**/.child(mvmt)
         ;
 
-        return b.createBigraph();
+        return b.create();
     }
 
     public ReactionRule<PureBigraph> startSync(int roboID_left, int roboID_right) throws Exception {
         if (roboID_right >= roboID_left) {
             throw new Exception("Rule violates condition i > j. The left robot must have a greater ID than the right robot.");
         }
-        PureBigraphBuilder<DefaultDynamicSignature> bLHS = pureBuilder(getCombinedSystemSignature());
-        PureBigraphBuilder<DefaultDynamicSignature> bRHS = pureBuilder(getCombinedSystemSignature());
+        PureBigraphBuilder<DynamicSignature> bLHS = pureBuilder(getCombinedSystemSignature());
+        PureBigraphBuilder<DynamicSignature> bRHS = pureBuilder(getCombinedSystemSignature());
 
         // LHS
-        bLHS.createRoot()
-                /**/.addChild("Locale", "left").down()
-                /**/.addSite()
-                /**/.addChild("Route", "right")
-                /**/.addChild("OccupiedBy").down()
-                /**//**/.addChild("Robot", ("RN" + roboID_left).toLowerCase()).down()
-                /**//**//**/.addChild("ID").down().addChild("N" + roboID_left).up()
-                /**//**//**/.addChild("SLck")
-                /**//**//**/.addChild("Mvmt")
-                /**//**//**/.addSite().top()
+        bLHS.root()
+                /**/.child("Locale", "left").down()
+                /**/.site()
+                /**/.child("Route", "right")
+                /**/.child("OccupiedBy").down()
+                /**//**/.child("Robot", ("RN" + roboID_left).toLowerCase()).down()
+                /**//**//**/.child("ID").down().child("N" + roboID_left).up()
+                /**//**//**/.child("SLck")
+                /**//**//**/.child("Mvmt")
+                /**//**//**/.site().top()
                 /**/
-                /**/.addChild("Locale", "right").down()
-                /**/.addSite()
-//                /**/.addChild("Route", "left")
-                /**/.addChild("OccupiedBy").down()
-                /**//**/.addChild("Robot", ("RN" + roboID_right).toLowerCase()).down()
-                /**//**//**/.addChild("ID").down().addChild("N" + roboID_right).up()
-                /**//**//**/.addChild("SLck")
-                /**//**//**/.addChild("Mvmt")
-                /**//**//**/.addSite().top()
+                /**/.child("Locale", "right").down()
+                /**/.site()
+//                /**/.child("Route", "left")
+                /**/.child("OccupiedBy").down()
+                /**//**/.child("Robot", ("RN" + roboID_right).toLowerCase()).down()
+                /**//**//**/.child("ID").down().child("N" + roboID_right).up()
+                /**//**//**/.child("SLck")
+                /**//**//**/.child("Mvmt")
+                /**//**//**/.site().top()
         ;
 
         // RHS
-        bRHS.createRoot()
-                /**/.addChild("Locale", "left").down()
-                /**/.addSite()
-                /**/.addChild("Route", "right")
-                /**/.addChild("OccupiedBy").down()
-                /**//**/.addChild("Robot", ("RN" + roboID_left).toLowerCase()).down()
-                /**//**//**/.addChild("ID").down().addChild("N" + roboID_left).up()
-                /**//**//**/.addChild("SLck").down().addChild("SLckRef").linkToInner("x").up()
-                /**//**//**/.addChild("Mvmt")
-                /**//**//**/.addSite().top()
+        bRHS.root()
+                /**/.child("Locale", "left").down()
+                /**/.site()
+                /**/.child("Route", "right")
+                /**/.child("OccupiedBy").down()
+                /**//**/.child("Robot", ("RN" + roboID_left).toLowerCase()).down()
+                /**//**//**/.child("ID").down().child("N" + roboID_left).up()
+                /**//**//**/.child("SLck").down().child("SLckRef").linkInner("x").up()
+                /**//**//**/.child("Mvmt")
+                /**//**//**/.site().top()
                 /**/
-                /**/.addChild("Locale", "right").down()
-                /**/.addSite()
-//                /**/.addChild("Route", "left")
-                /**/.addChild("OccupiedBy").down()
-                /**//**/.addChild("Robot", ("RN" + roboID_right).toLowerCase()).down()
-                /**//**//**/.addChild("ID").down().addChild("N" + roboID_right).up()
-                /**//**//**/.addChild("SLck").down().addChild("SLckRef").linkToInner("x").up()
-                /**//**//**/.addChild("Mvmt")
-                /**//**//**/.addSite().top()
+                /**/.child("Locale", "right").down()
+                /**/.site()
+//                /**/.child("Route", "left")
+                /**/.child("OccupiedBy").down()
+                /**//**/.child("Robot", ("RN" + roboID_right).toLowerCase()).down()
+                /**//**//**/.child("ID").down().child("N" + roboID_right).up()
+                /**//**//**/.child("SLck").down().child("SLckRef").linkInner("x").up()
+                /**//**//**/.child("Mvmt")
+                /**//**//**/.site().top()
         ;
-        bRHS.closeInnerName(bRHS.createInnerName("x"));
+        bRHS.closeInner(bRHS.createInner("x"));
 
-        PureBigraph redex = bLHS.createBigraph();
-        PureBigraph reactum = bRHS.createBigraph();
+        PureBigraph redex = bLHS.create();
+        PureBigraph reactum = bRHS.create();
         if (EXPORT) {
             eb(redex, "startSync-lhs_" + roboID_left + "_" + roboID_right, TARGET_DUMP_PATH);
             eb(reactum, "startSync-rhs_" + roboID_left + "_" + roboID_right, TARGET_DUMP_PATH);
@@ -499,56 +499,56 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         if (roboID_left > roboID_right) {
             throw new Exception("Rule violates condition i > j. The left robot must have a lower ID than the right robot.");
         }
-        PureBigraphBuilder<DefaultDynamicSignature> bLHS = pureBuilder(getCombinedSystemSignature());
-        PureBigraphBuilder<DefaultDynamicSignature> bRHS = pureBuilder(getCombinedSystemSignature());
+        PureBigraphBuilder<DynamicSignature> bLHS = pureBuilder(getCombinedSystemSignature());
+        PureBigraphBuilder<DynamicSignature> bRHS = pureBuilder(getCombinedSystemSignature());
 
         // LHS
-        bLHS.createRoot()
-                /**/.addChild("Locale", "left").down()
-                /**/.addSite()
-                /**/.addChild("Route", "right")
-                /**/.addChild("OccupiedBy").down()
-                /**//**/.addChild("Robot", ("RN" + roboID_left).toLowerCase()).down()
-                /**//**//**/.addChild("ID").down().addChild("N" + roboID_left).up()
-                /**//**//**/.addChild("SLck").down().addChild("SLckRef").linkToInner("x").up()
-                /**//**//**/.addChild("Mvmt")
-                /**//**//**/.addSite().top()
+        bLHS.root()
+                /**/.child("Locale", "left").down()
+                /**/.site()
+                /**/.child("Route", "right")
+                /**/.child("OccupiedBy").down()
+                /**//**/.child("Robot", ("RN" + roboID_left).toLowerCase()).down()
+                /**//**//**/.child("ID").down().child("N" + roboID_left).up()
+                /**//**//**/.child("SLck").down().child("SLckRef").linkInner("x").up()
+                /**//**//**/.child("Mvmt")
+                /**//**//**/.site().top()
                 /**/
-                /**/.addChild("Locale", "right").down()
-                /**/.addSite()
-//                /**/.addChild("Route", "left")
-                /**/.addChild("OccupiedBy").down()
-                /**//**/.addChild("Robot", ("RN" + roboID_right).toLowerCase()).down()
-                /**//**//**/.addChild("ID").down().addChild("N" + roboID_right).up()
-                /**//**//**/.addChild("SLck").down().addChild("SLckRef").linkToInner("x").up()
-                /**//**//**/.addChild("Mvmt")
-                /**//**//**/.addSite().top()
+                /**/.child("Locale", "right").down()
+                /**/.site()
+//                /**/.child("Route", "left")
+                /**/.child("OccupiedBy").down()
+                /**//**/.child("Robot", ("RN" + roboID_right).toLowerCase()).down()
+                /**//**//**/.child("ID").down().child("N" + roboID_right).up()
+                /**//**//**/.child("SLck").down().child("SLckRef").linkInner("x").up()
+                /**//**//**/.child("Mvmt")
+                /**//**//**/.site().top()
         ;
-        bLHS.closeInnerName(bLHS.createInnerName("x"));
+        bLHS.closeInner(bLHS.createInner("x"));
         // RHS
-        bRHS.createRoot()
-                /**/.addChild("Locale", "left").down()
-                /**/.addSite()
-                /**/.addChild("Route", "right")
-                /**/.addChild("OccupiedBy").down()
-                /**//**/.addChild("Robot", ("RN" + roboID_left).toLowerCase()).down()
-                /**//**//**/.addChild("ID").down().addChild("N" + roboID_left).up()
-                /**//**//**/.addChild("SLck")
-                /**//**//**/.addChild("Mvmt")
-                /**//**//**/.addSite().top()
+        bRHS.root()
+                /**/.child("Locale", "left").down()
+                /**/.site()
+                /**/.child("Route", "right")
+                /**/.child("OccupiedBy").down()
+                /**//**/.child("Robot", ("RN" + roboID_left).toLowerCase()).down()
+                /**//**//**/.child("ID").down().child("N" + roboID_left).up()
+                /**//**//**/.child("SLck")
+                /**//**//**/.child("Mvmt")
+                /**//**//**/.site().top()
                 /**/
-                /**/.addChild("Locale", "right").down()
-                /**/.addSite()
-                /**/.addChild("OccupiedBy").down()
-                /**//**/.addChild("Robot", ("RN" + roboID_right).toLowerCase()).down()
-                /**//**//**/.addChild("ID").down().addChild("N" + roboID_right).up()
-                /**//**//**/.addChild("SLck")
-                /**//**//**/.addChild("Mvmt")
-                /**//**//**/.addSite().top()
+                /**/.child("Locale", "right").down()
+                /**/.site()
+                /**/.child("OccupiedBy").down()
+                /**//**/.child("Robot", ("RN" + roboID_right).toLowerCase()).down()
+                /**//**//**/.child("ID").down().child("N" + roboID_right).up()
+                /**//**//**/.child("SLck")
+                /**//**//**/.child("Mvmt")
+                /**//**//**/.site().top()
         ;
 
-        PureBigraph redex = bLHS.createBigraph();
-        PureBigraph reactum = bRHS.createBigraph();
+        PureBigraph redex = bLHS.create();
+        PureBigraph reactum = bRHS.create();
         if (EXPORT) {
             eb(redex, "endSync-lhs_" + roboID_left + "_" + roboID_right, TARGET_DUMP_PATH);
             eb(reactum, "endSync-rhs_" + roboID_left + "_" + roboID_right, TARGET_DUMP_PATH);
@@ -585,46 +585,46 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
     }
 
     public ReactionRule<PureBigraph> initMovePattern() throws Exception {
-        DefaultDynamicSignature sig = getCombinedSystemSignature();
-        Placings<DefaultDynamicSignature> placings = purePlacings(sig);
-        Linkings<DefaultDynamicSignature> linkings = pureLinkings(sig);
-        PureBigraphBuilder<DefaultDynamicSignature> closeSitesRedex = pureBuilder(sig);
-        PureBigraphBuilder<DefaultDynamicSignature> builderReactum = pureBuilder(sig);
+        DynamicSignature sig = getCombinedSystemSignature();
+        Placings<DynamicSignature> placings = purePlacings(sig);
+        Linkings<DynamicSignature> linkings = pureLinkings(sig);
+        PureBigraphBuilder<DynamicSignature> closeSitesRedex = pureBuilder(sig);
+        PureBigraphBuilder<DynamicSignature> builderReactum = pureBuilder(sig);
 
 
         PureBigraph bigrid = createBigrid("2x2_unidirectional");
         List<Bigraph> collect = IntStream.range(0, 4)
                 .mapToObj(ix ->
-                        pureBuilder(sig).createRoot()
-                                .addSite()
-                                .addChild("OccupiedBy").createBigraph()
+                        pureBuilder(sig).root()
+                                .site()
+                                .child("OccupiedBy").create()
                 )
                 .collect(Collectors.toList());
         collect.set(2, buildSyncedRobotTemplate("N_left", "x", -1));
         collect.set(3, buildSyncedRobotTemplate("N_right", "x", -1));
-        Linkings<DefaultDynamicSignature>.Closure cx = linkings.closure("x");
+        Linkings<DynamicSignature>.Closure cx = linkings.closure("x");
         Bigraph roboPlacements = collect.stream().reduce(linkings.identity_e(), accumulator::apply);
-        Linkings<DefaultDynamicSignature>.Identity idOuter = linkings.identity("N_left".toLowerCase(), "N_right".toLowerCase());
-        Bigraph<DefaultDynamicSignature> elemGlueBigraph = ops(cx).juxtapose(idOuter).juxtapose(placings.permutation(4)).getOuterBigraph();
+        Linkings<DynamicSignature>.Identity idOuter = linkings.identity("N_left".toLowerCase(), "N_right".toLowerCase());
+        Bigraph<DynamicSignature> elemGlueBigraph = ops(cx).juxtapose(idOuter).juxtapose(placings.permutation(4)).getOuterBigraph();
         roboPlacements = ops(elemGlueBigraph).compose(roboPlacements).getOuterBigraph();
 
         // LHS
         //close sites 0,1,3,5
-        closeSitesRedex.createRoot();
-        closeSitesRedex.createRoot().addSite(); // HERE
-        closeSitesRedex.createRoot().addSite(); // 2 robot
-        closeSitesRedex.createRoot();
-        closeSitesRedex.createRoot().addSite(); // 4 robot
-        closeSitesRedex.createRoot().addSite(); // HERE
+        closeSitesRedex.root();
+        closeSitesRedex.root().site(); // HERE
+        closeSitesRedex.root().site(); // 2 robot
+        closeSitesRedex.root();
+        closeSitesRedex.root().site(); // 4 robot
+        closeSitesRedex.root().site(); // HERE
         BigraphComposite baseRedex = ops(ops(bigrid).nesting(roboPlacements).getOuterBigraph());
-        PureBigraph redex = (PureBigraph) baseRedex.compose(closeSitesRedex.createBigraph()).getOuterBigraph();
+        PureBigraph redex = (PureBigraph) baseRedex.compose(closeSitesRedex.create()).getOuterBigraph();
 
         // RHS
         collect = IntStream.range(0, 4)
                 .mapToObj(ix ->
-                        pureBuilder(sig).createRoot()
-                                .addSite()
-                                .addChild("OccupiedBy").createBigraph()
+                        pureBuilder(sig).root()
+                                .site()
+                                .child("OccupiedBy").create()
                 )
                 .collect(Collectors.toList());
         collect.set(2, buildSyncedRobotTemplate("N_left", "x", 1));
@@ -636,24 +636,24 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         roboPlacements = ops(elemGlueBigraph).compose(roboPlacements).getOuterBigraph();
 
 
-        builderReactum.createRoot().addChild("WayPoint", "y2")
-                .down().addChild("SLckRef", "N_right".toLowerCase());
-        builderReactum.createRoot().addChild("WayPoint", "y0")
-                .down().addChild("SLckRef", "N_right".toLowerCase()).up()
-                .addSite();
-        builderReactum.createRoot()
-                .addSite();
-        builderReactum.createRoot().addChild("WayPoint", "y3")
-                .down().addChild("SLckRef", "N_left".toLowerCase());
-        builderReactum.createRoot()
-                .addSite();
-        builderReactum.createRoot().addChild("WayPoint", "y1")
-                .down().addChild("SLckRef", "N_right".toLowerCase()).up()
-                .addSite()
+        builderReactum.root().child("WayPoint", "y2")
+                .down().child("SLckRef", "N_right".toLowerCase());
+        builderReactum.root().child("WayPoint", "y0")
+                .down().child("SLckRef", "N_right".toLowerCase()).up()
+                .site();
+        builderReactum.root()
+                .site();
+        builderReactum.root().child("WayPoint", "y3")
+                .down().child("SLckRef", "N_left".toLowerCase());
+        builderReactum.root()
+                .site();
+        builderReactum.root().child("WayPoint", "y1")
+                .down().child("SLckRef", "N_right".toLowerCase()).up()
+                .site()
         ;
 
         BigraphComposite baseReactum = ops(ops(bigrid).nesting(roboPlacements).getOuterBigraph());
-        PureBigraph reactum = (PureBigraph) baseReactum.nesting(builderReactum.createBigraph()).getOuterBigraph();
+        PureBigraph reactum = (PureBigraph) baseReactum.nesting(builderReactum.create()).getOuterBigraph();
 
         if (EXPORT) {
             eb(redex, "initMovePat-lhs", TARGET_DUMP_PATH);
@@ -718,42 +718,42 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
 
 
     public ReactionRule<PureBigraph> moveRobotWaypoint() throws Exception {
-        DefaultDynamicSignature sig = getCombinedSystemSignature();
-        PureBigraphBuilder<DefaultDynamicSignature> bLHS = pureBuilder(sig);
-        PureBigraphBuilder<DefaultDynamicSignature> bRHS = pureBuilder(sig);
+        DynamicSignature sig = getCombinedSystemSignature();
+        PureBigraphBuilder<DynamicSignature> bLHS = pureBuilder(sig);
+        PureBigraphBuilder<DynamicSignature> bRHS = pureBuilder(sig);
 
         //LHS
-        bLHS.createRoot()
-                /**/.addChild("Locale", "src").down()
-                /**/.addSite()
-                /**/.addChild("WayPoint", "tgt").down().addChild("SLckRef", "n_id").up()
-                /**/.addChild("OccupiedBy").down()
-                /**//**/.addChild("Robot", "n_id").down()
-                /**//**//**/.addChild("SLck").down().addChild("SLckRef", "ref").up()
-                /**//**//**/.addChild("Mvmt").down().addChild("Token").addSite().up()
-                /**//**//**/.addSite().top()
+        bLHS.root()
+                /**/.child("Locale", "src").down()
+                /**/.site()
+                /**/.child("WayPoint", "tgt").down().child("SLckRef", "n_id").up()
+                /**/.child("OccupiedBy").down()
+                /**//**/.child("Robot", "n_id").down()
+                /**//**//**/.child("SLck").down().child("SLckRef", "ref").up()
+                /**//**//**/.child("Mvmt").down().child("Token").site().up()
+                /**//**//**/.site().top()
                 /**/
-                /**/.addChild("Locale", "tgt").down()
-                /**/.addSite()
-                /**/.addChild("OccupiedBy")
+                /**/.child("Locale", "tgt").down()
+                /**/.site()
+                /**/.child("OccupiedBy")
         ;
-        PureBigraph redex = bLHS.createBigraph();
+        PureBigraph redex = bLHS.create();
 
         //RHS
-        bRHS.createRoot()
-                /**/.addChild("Locale", "src").down()
-                /**/.addSite()
-                /**/.addChild("OccupiedBy").top()
+        bRHS.root()
+                /**/.child("Locale", "src").down()
+                /**/.site()
+                /**/.child("OccupiedBy").top()
                 /**/
-                /**/.addChild("Locale", "tgt").down()
-                /**/.addChild("OccupiedBy").down()
-                /**//**/.addChild("Robot", "n_id").down()
-                /**//**//**/.addChild("SLck").down().addChild("SLckRef", "ref").up()
-                /**//**//**/.addChild("Mvmt").down().addSite().up()
-                /**//**//**/.addSite().up().up()
-                /**/.addSite()
+                /**/.child("Locale", "tgt").down()
+                /**/.child("OccupiedBy").down()
+                /**//**/.child("Robot", "n_id").down()
+                /**//**//**/.child("SLck").down().child("SLckRef", "ref").up()
+                /**//**//**/.child("Mvmt").down().site().up()
+                /**//**//**/.site().up().up()
+                /**/.site()
         ;
-        PureBigraph reactum = bRHS.createBigraph();
+        PureBigraph reactum = bRHS.create();
         if (EXPORT) {
             eb(redex, "moveRobot-lhs", TARGET_DUMP_PATH);
             eb(reactum, "moveRobot-rhs", TARGET_DUMP_PATH);
@@ -782,43 +782,43 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         return rr;
     }
 
-    public DefaultDynamicSignature getCombinedSystemSignature() throws IOException {
+    public DynamicSignature getCombinedSystemSignature() throws IOException {
         // EPackage sigEPackage = BigraphFileModelManagement.Load.signatureMetaModel(SOURCE_MODEL_PATH + "mm_sig_loc.ecore");
         List<EObject> sigEObjects = BigraphFileModelManagement.Load.signatureInstanceModel(SOURCE_MODEL_PATH + "mm_sig_loc.ecore", SOURCE_MODEL_PATH + "sig_loc.xmi");
         AbstractEcoreSignature<?> sig = createOrGetSignature(sigEObjects.get(0));
-        DefaultDynamicSignature mergedSig = BigraphUtil.mergeSignatures((DefaultDynamicSignature) sig, createRobotSignature());
+        DynamicSignature mergedSig = BigraphUtil.mergeSignatures((DynamicSignature) sig, createRobotSignature());
         return mergedSig;
     }
 
-    public DefaultDynamicSignature createRobotSignature() {
+    public DynamicSignature createRobotSignature() {
         DynamicSignatureBuilder defaultBuilder = pureSignatureBuilder();
         defaultBuilder
-                .addControl("WayPoint", 1)
-                .addControl("OccupiedBy", 0)
-                .addControl("Robot", 1)
-                .addControl("ID", 0)
-                .addControl("N0", 0)
-                .addControl("N1", 0)
-                .addControl("N2", 0)
-                .addControl("N3", 0)
-                .addControl("N4", 0)
-                .addControl("N5", 0)
-                .addControl("N6", 0)
-                .addControl("N7", 0)
-                .addControl("N8", 0)
-                .addControl("N9", 0)
-                .addControl("N10", 0)
-                .addControl("Bat", 0)
-                .addControl("Pow", 0)
-                .addControl("SLck", 0)
-                .addControl("SLckRef", 1)
-                .addControl("Mvmt", 0)
-                .addControl("Token", 0)
+                .add("WayPoint", 1)
+                .add("OccupiedBy", 0)
+                .add("Robot", 1)
+                .add("ID", 0)
+                .add("N0", 0)
+                .add("N1", 0)
+                .add("N2", 0)
+                .add("N3", 0)
+                .add("N4", 0)
+                .add("N5", 0)
+                .add("N6", 0)
+                .add("N7", 0)
+                .add("N8", 0)
+                .add("N9", 0)
+                .add("N10", 0)
+                .add("Bat", 0)
+                .add("Pow", 0)
+                .add("SLck", 0)
+                .add("SLckRef", 1)
+                .add("Mvmt", 0)
+                .add("Token", 0)
         ;
         return defaultBuilder.create();
     }
 
-    public static BinaryOperator<Bigraph<DefaultDynamicSignature>> accumulator = (partial, element) -> {
+    public static BinaryOperator<Bigraph<DynamicSignature>> accumulator = (partial, element) -> {
         try {
             return ops(partial).parallelProduct(element).getOuterBigraph();
         } catch (IncompatibleSignatureException | IncompatibleInterfaceException e) {

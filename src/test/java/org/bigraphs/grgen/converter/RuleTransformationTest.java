@@ -6,7 +6,7 @@ import org.bigraphs.framework.core.exceptions.InvalidConnectionException;
 import org.bigraphs.framework.core.exceptions.InvalidReactionRuleException;
 import org.bigraphs.framework.core.exceptions.builder.TypeNotExistsException;
 import org.bigraphs.framework.core.impl.pure.PureBigraph;
-import org.bigraphs.framework.core.impl.signature.DefaultDynamicSignature;
+import org.bigraphs.framework.core.impl.signature.DynamicSignature;
 import org.bigraphs.framework.core.reactivesystem.ReactionRule;
 import org.bigraphs.framework.core.reactivesystem.TrackingMap;
 import org.bigraphs.grgen.converter.demo.DemoRuleProvider;
@@ -43,7 +43,7 @@ public class RuleTransformationTest implements BigraphUnitTestSupport {
     @Test
     public void testPetriNetRuleToGrGenRule() throws InvalidConnectionException, TypeNotExistsException, InvalidReactionRuleException, IOException {
         DemoSignatureProvider signatureProvider = DemoSignatureProvider.getInstance();
-        DefaultDynamicSignature sig = signatureProvider.petriNet();
+        DynamicSignature sig = signatureProvider.petriNet();
 //        BigraphFileModelManagement.Store.exportAsInstanceModel(sig, System.out);
 //        BigraphFileModelManagement.Store.exportAsMetaModel(sig, System.out);
         DemoRuleProvider ruleProvider = DemoRuleProvider.getInstance();
@@ -76,7 +76,7 @@ public class RuleTransformationTest implements BigraphUnitTestSupport {
     @Test
     public void testPetriNetRuleToGrGenRule_WithOuterNames() throws InvalidConnectionException, TypeNotExistsException, InvalidReactionRuleException, IOException {
         DemoSignatureProvider signatureProvider = DemoSignatureProvider.getInstance();
-        DefaultDynamicSignature sig = signatureProvider.petriNet();
+        DynamicSignature sig = signatureProvider.petriNet();
         DemoRuleProvider ruleProvider = DemoRuleProvider.getInstance();
         ReactionRule<PureBigraph> rr = ruleProvider.petriNetFireRule_withOuterNames(sig);
         System.out.println("---------------------");
@@ -107,7 +107,7 @@ public class RuleTransformationTest implements BigraphUnitTestSupport {
     @Test
     public void test_PetriNetRule_AddToken() throws InvalidConnectionException, TypeNotExistsException, InvalidReactionRuleException, IOException {
         DemoSignatureProvider signatureProvider = DemoSignatureProvider.getInstance();
-        DefaultDynamicSignature sig = signatureProvider.petriNet();
+        DynamicSignature sig = signatureProvider.petriNet();
         DemoRuleProvider ruleProvider = DemoRuleProvider.getInstance();
         ReactionRule<PureBigraph> rr = ruleProvider.petriNetAddRule(sig);
         System.out.println("---------------------");
@@ -135,7 +135,7 @@ public class RuleTransformationTest implements BigraphUnitTestSupport {
     @Test
     public void test_smartHomeMoveRule() throws Exception {
         DemoSignatureProvider signatureProvider = DemoSignatureProvider.getInstance();
-        DefaultDynamicSignature sig = signatureProvider.smartHome();
+        DynamicSignature sig = signatureProvider.smartHome();
         DemoRuleProvider ruleProvider = DemoRuleProvider.getInstance();
         ReactionRule<PureBigraph> rr = ruleProvider.smartHomeMoveRule(sig);
         System.out.println("---------------------");
