@@ -6,9 +6,7 @@ import org.bigraphs.framework.core.AbstractEcoreSignature;
 import org.bigraphs.framework.core.Bigraph;
 import org.bigraphs.framework.core.BigraphComposite;
 import org.bigraphs.framework.core.BigraphFileModelManagement;
-import org.bigraphs.framework.core.exceptions.IncompatibleSignatureException;
 import org.bigraphs.framework.core.exceptions.InvalidConnectionException;
-import org.bigraphs.framework.core.exceptions.operations.IncompatibleInterfaceException;
 import org.bigraphs.framework.core.impl.BigraphEntity;
 import org.bigraphs.framework.core.impl.elementary.Linkings;
 import org.bigraphs.framework.core.impl.elementary.Placings;
@@ -17,17 +15,16 @@ import org.bigraphs.framework.core.impl.pure.PureBigraphBuilder;
 import org.bigraphs.framework.core.impl.signature.DynamicSignature;
 import org.bigraphs.framework.core.impl.signature.DynamicSignatureBuilder;
 import org.bigraphs.framework.core.reactivesystem.*;
+import org.bigraphs.framework.core.reactivesystem.analysis.ReactionGraphAnalysis;
 import org.bigraphs.framework.core.utils.BigraphUtil;
 import org.bigraphs.framework.simulation.matching.pure.PureReactiveSystem;
 import org.bigraphs.framework.simulation.modelchecking.BigraphModelChecker;
 import org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptions;
 import org.bigraphs.framework.simulation.modelchecking.PureBigraphModelChecker;
 import org.bigraphs.framework.visualization.ReactionGraphExporter;
-import org.bigraphs.framework.visualization.SwingGraphStreamer;
-import org.bigraphs.grgen.converter.BigraphUnitTestSupport;
+import org.bigraphs.testing.BigraphUnitTestSupport;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.graphstream.ui.view.Viewer;
 import org.jgrapht.Graph;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,7 +48,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -94,7 +90,6 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
 
     private final int roboCountTotal = 2;
     private final String bigridPatternModelFile = "2x" + roboCountTotal + "_unidirectional";
-//    private final String initMvmtPatternGrid = "2x" + roboCountTotal; // other variant
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
@@ -118,7 +113,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
     @Test
     void export_models() throws Exception {
         String TARGET_SAMPLE_PATH = String.format(TARGET_SAMPLE_PATH_FORMAT, roboCountTotal);
-//        // Instantiate bigraph models
+        // Instantiate bigraph models
         DynamicSignature sig = getCombinedSystemSignature();
         BigraphFileModelManagement.Store.exportAsInstanceModel(sig, new FileOutputStream(TARGET_SAMPLE_PATH + "sig.xmi"), "signatureMetaModel.ecore");
         BigraphFileModelManagement.Store.exportAsMetaModel(sig, new FileOutputStream(TARGET_SAMPLE_PATH + "signatureMetaModel.ecore"));
@@ -126,7 +121,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         BigraphFileModelManagement.Store.exportAsInstanceModel(agent, new FileOutputStream(TARGET_SAMPLE_PATH + "host.xmi"), "bigraphMetaModel.ecore");
         BigraphFileModelManagement.Store.exportAsMetaModel(agent, new FileOutputStream(TARGET_SAMPLE_PATH + "bigraphMetaModel.ecore"));
         if (EXPORT) {
-            eb(agent, "agent", TARGET_DUMP_PATH);
+            toPNG(agent, "agent", TARGET_DUMP_PATH);
         }
 
         // Rules
@@ -137,7 +132,6 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
                 ReactionRule<PureBigraph> startSync = startSync(i, j);
                 System.out.println(startSync.getLabel());
                 collectedRules.add(startSync);
-//                exportToJson(TARGET_SAMPLE_PATH + startSync.getLabel() + "-map.json", startSync.getLabel(), startSync.getTrackingMap());
                 BigraphFileModelManagement.Store.exportAsInstanceModel(startSync.getRedex(), new FileOutputStream(TARGET_SAMPLE_PATH + startSync.getLabel() + "-lhs.xmi"), "bigraphMetaModel.ecore");
                 BigraphFileModelManagement.Store.exportAsInstanceModel(startSync.getReactum(), new FileOutputStream(TARGET_SAMPLE_PATH + startSync.getLabel() + "-rhs.xmi"), "bigraphMetaModel.ecore");
             }
@@ -170,23 +164,16 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
 
     @Test
     @Benchmark
-//    @Fork(value = 2, warmups = 50)
-//    @BenchmarkMode(Mode.Throughput)
+    @Fork(value = 2, warmups = 50)
+    @BenchmarkMode(Mode.Throughput)
     public void simulate() throws Exception {
         PureReactiveSystem reactiveSystem = new PureReactiveSystem();
         PureBigraph agent = createAgent(roboCountTotal, bigridPatternModelFile);
         if (EXPORT) {
-            eb(agent, "agent", TARGET_DUMP_PATH);
+            toPNG(agent, "agent", TARGET_DUMP_PATH);
         }
         reactiveSystem.setAgent(agent);
-//        SwingGraphStreamer graphStreamer = new SwingGraphStreamer(agent)
-//                .renderSites(false)
-//                .renderRoots(false);
-//        graphStreamer.prepareSystemEnvironment();
-//        Viewer graphViewer = graphStreamer.getGraphViewer();
-//        while (graphViewer != null) {
-//            Thread.sleep(100);
-//        }
+
         // Create all sync rules for robots satisfying i > j
         for (int i = 0; i < roboCountTotal; i++) {
             for (int j = 0; j < i; j++) {
@@ -224,43 +211,26 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         long diff = System.nanoTime() - start;
         System.out.println(diff);
 
+        exportReactionGraph(modelChecker);
 
+        // Final State(s):
+        for (ReactionGraph.LabeledNode node : modelChecker.getReactionGraph().getGraph().vertexSet()) {
+            if (modelChecker.getReactionGraph().getGraph().outgoingEdgesOf(node).isEmpty()) {
+                System.out.println("vertexWithNoOutgoingEdges = " + node);
+            }
+        }
+
+//        analyzePath(modelChecker);
+    }
+
+    private void exportReactionGraph(PureBigraphModelChecker modelChecker) throws IOException {
         Graph<ReactionGraph.LabeledNode, ReactionGraph.LabeledEdge> graph = modelChecker.getReactionGraph().getGraph();
         ReactionGraphStats<PureBigraph> graphStats = modelChecker.getReactionGraph().getGraphStats();
         System.out.println("Edges: " + graphStats.getTransitionCount());
         System.out.println("Vertices: " + graphStats.getStateCount());
-        ReactionGraphExporter rge = new ReactionGraphExporter(reactiveSystem);
+        ReactionGraphExporter<PureBigraph> rge = new ReactionGraphExporter<>(modelChecker.getReactiveSystem());
         rge.toPNG(modelChecker.getReactionGraph(), new File(TARGET_DUMP_PATH + "reaction-graph.dot"));
         System.out.println("Output written to " + TARGET_DUMP_PATH);
-
-        ReactionGraph.LabeledNode vertexWithNoOutgoingEdges;
-        for (ReactionGraph.LabeledNode vertex : graph.vertexSet()) {
-            // Check if the vertex has no outgoing edges
-            if (graph.outgoingEdgesOf(vertex).isEmpty()) {
-                vertexWithNoOutgoingEdges = vertex;
-                System.out.println("vertexWithNoOutgoingEdges = " + vertexWithNoOutgoingEdges);
-//                break; // Exit loop once we find a vertex with no outgoing edges
-            }
-        }
-
-//        ReactionGraphAnalysis<PureBigraph> analysis = ReactionGraphAnalysis.createInstance();
-//        List<ReactionGraphAnalysis.StateTrace<PureBigraph>> pathsToLeaves = analysis.findAllPathsInGraphToLeaves(modelChecker.getReactionGraph());
-//        System.out.println(pathsToLeaves.size());
-//        pathsToLeaves.get(0).getStateLabels().size();
-//        int minSize = Integer.MAX_VALUE; // Start with a large value
-//        ReactionGraphAnalysis.StateTrace<PureBigraph> smallestTrace = null;
-//        for (ReactionGraphAnalysis.StateTrace<PureBigraph> trace : pathsToLeaves) {
-//            int currentSize = trace.getStateLabels().size();
-//            if (currentSize < minSize) {
-//                minSize = currentSize;
-//                smallestTrace = trace;
-//                System.out.println("Smallest entry: " + smallestTrace.getStateLabels());
-//            }
-//        }
-//        // After the loop, smallestTrace holds the entry with the smallest size in getStateLabels()
-//        System.out.println("Smallest entry has size: " + minSize);
-//        System.out.println("Smallest entry: " + smallestTrace.getStateLabels());
-
     }
 
     public ModelCheckingOptions setUpSimOpts() {
@@ -268,25 +238,43 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         ModelCheckingOptions opts = ModelCheckingOptions.create();
         opts
                 .and(transitionOpts()
-                                .setMaximumTransitions(1000000)
-                                .setMaximumTime(-1)
-//                        .rewriteOpenLinks(false)
-                                .allowReducibleClasses(true)
-                                .create()
+                        .setMaximumTransitions(1000000)
+                        .setMaximumTime(-1)
+                        .allowReducibleClasses(true)
+                        .create()
                 )
 //                .withParallelRuleMatching(true)
                 .doMeasureTime(false)
                 .and(ModelCheckingOptions.exportOpts()
                         .setReactionGraphFile(new File(completePath.toUri()))
                         .setPrintCanonicalStateLabel(false)
+                        .setFormatsEnabled(List.of(ModelCheckingOptions.ExportOptions.Format.XMI, ModelCheckingOptions.ExportOptions.Format.PNG))
                         // .setFormatsEnabled(List.of(ModelCheckingOptions.ExportOptions.Format.PNG))
                         // .setFormatsEnabled(List.of(ModelCheckingOptions.ExportOptions.Format.XMI))
-                        .setFormatsEnabled(List.of(ModelCheckingOptions.ExportOptions.Format.XMI, ModelCheckingOptions.ExportOptions.Format.PNG))
                         .setOutputStatesFolder(new File(TARGET_DUMP_PATH + "states/"))
                         .create()
                 )
         ;
         return opts;
+    }
+
+    public void analyzePath(PureBigraphModelChecker modelChecker) {
+        ReactionGraphAnalysis<PureBigraph> analysis = ReactionGraphAnalysis.createInstance();
+        List<ReactionGraphAnalysis.StateTrace<PureBigraph>> pathsToLeaves = analysis.findAllPathsInGraphToLeaves(modelChecker.getReactionGraph());
+        System.out.println(pathsToLeaves.size());
+        int minSize = Integer.MAX_VALUE;
+        ReactionGraphAnalysis.StateTrace<PureBigraph> smallestTrace = null;
+        for (ReactionGraphAnalysis.StateTrace<PureBigraph> trace : pathsToLeaves) {
+            int currentSize = trace.getStateLabels().size();
+            if (currentSize < minSize) {
+                minSize = currentSize;
+                smallestTrace = trace;
+                System.out.println("New smallest entry found: " + smallestTrace.getStateLabels());
+            }
+        }
+        // After the loop, smallestTrace holds the entry with the smallest size in getStateLabels()
+        System.out.println("Smallest entry has size: " + minSize);
+        System.out.println("Smallest entry: " + smallestTrace.getStateLabels());
     }
 
     public PureBigraph createAgent(int roboCountTotal, String gridFile) throws Exception {
@@ -312,7 +300,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
 
         PureBigraph gridComponent = BigraphUtil.toBigraph(gridEPackage, girdEObjects.get(0), mergedSig);
         if (EXPORT) {
-//            eb(gridComponent, "agent_gridComponent", TARGET_DUMP_PATH);
+            toPNG(gridComponent, "agent_gridComponent", TARGET_DUMP_PATH);
         }
 
         return gridComponent;
@@ -322,9 +310,8 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         DynamicSignature sig = getCombinedSystemSignature();
         Placings<DynamicSignature> placingsBuilder = purePlacings(sig);
         Linkings<DynamicSignature> linkings = pureLinkings(sig);
-        List<Bigraph> collects = IntStream.range(0, paramSitesTotal)
+        List<Bigraph<DynamicSignature>> collects = IntStream.range(0, paramSitesTotal)
                 .mapToObj(ix ->
-//                        (Bigraph) placingsBuilder.barren()
                                 pureBuilder(sig).root().child("OccupiedBy").create()
                 )
                 .collect(Collectors.toList());
@@ -338,12 +325,8 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
 //            }
         }
 
-        Bigraph roboPlacements = collects.stream()
-                .reduce(linkings.identity_e(), accumulator::apply);
-
-//        if (EXPORT) {
-//            eb(roboPlacements, "robo_complete", TARGET_DUMP_PATH);
-//        }
+        Bigraph<DynamicSignature> roboPlacements = collects.stream()
+                .reduce(linkings.identity_e(), BigraphUtil.ACCUMULATOR_PARALLEL_PRODUCT);
 
         return (PureBigraph) roboPlacements;
     }
@@ -364,7 +347,6 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
                 /**/.child("OccupiedBy").down()
                 /**//**/.child("Robot", ("R" + ID).toLowerCase()).down()
                 /**//**//**/.child("ID").down().child(ID).up()
-//                /**//**//**/.child("Bat").down().child("Pow").up()
                 /**//**//**/.child(bat)
                 /**//**//**/.child("SLck")
                 /**//**//**/.child("Mvmt")
@@ -388,7 +370,6 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
                 /**/.child("Robot", roboChannel.toLowerCase()).down()
                 /**//**/.site()
                 /**//**/.child("SLck").down().child("SLckRef", syncRefLbl).up()
-//                /**//**/.child("Mvmt")
                 /**//**/.child(mvmt)
         ;
 
@@ -452,8 +433,8 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         PureBigraph redex = bLHS.create();
         PureBigraph reactum = bRHS.create();
         if (EXPORT) {
-            eb(redex, "startSync-lhs_" + roboID_left + "_" + roboID_right, TARGET_DUMP_PATH);
-            eb(reactum, "startSync-rhs_" + roboID_left + "_" + roboID_right, TARGET_DUMP_PATH);
+            toPNG(redex, "startSync-lhs_" + roboID_left + "_" + roboID_right, TARGET_DUMP_PATH);
+            toPNG(reactum, "startSync-rhs_" + roboID_left + "_" + roboID_right, TARGET_DUMP_PATH);
         }
 
         TrackingMap trckMap = new TrackingMap();
@@ -550,8 +531,8 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         PureBigraph redex = bLHS.create();
         PureBigraph reactum = bRHS.create();
         if (EXPORT) {
-            eb(redex, "endSync-lhs_" + roboID_left + "_" + roboID_right, TARGET_DUMP_PATH);
-            eb(reactum, "endSync-rhs_" + roboID_left + "_" + roboID_right, TARGET_DUMP_PATH);
+            toPNG(redex, "endSync-lhs_" + roboID_left + "_" + roboID_right, TARGET_DUMP_PATH);
+            toPNG(reactum, "endSync-rhs_" + roboID_left + "_" + roboID_right, TARGET_DUMP_PATH);
         }
 
         TrackingMap trckMap = new TrackingMap();
@@ -593,7 +574,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
 
 
         PureBigraph bigrid = createBigrid("2x2_unidirectional");
-        List<Bigraph> collect = IntStream.range(0, 4)
+        List<Bigraph<DynamicSignature>> collect = IntStream.range(0, 4)
                 .mapToObj(ix ->
                         pureBuilder(sig).root()
                                 .site()
@@ -603,7 +584,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         collect.set(2, buildSyncedRobotTemplate("N_left", "x", -1));
         collect.set(3, buildSyncedRobotTemplate("N_right", "x", -1));
         Linkings<DynamicSignature>.Closure cx = linkings.closure("x");
-        Bigraph roboPlacements = collect.stream().reduce(linkings.identity_e(), accumulator::apply);
+        Bigraph<DynamicSignature> roboPlacements = collect.stream().reduce(linkings.identity_e(), BigraphUtil.ACCUMULATOR_PARALLEL_PRODUCT);
         Linkings<DynamicSignature>.Identity idOuter = linkings.identity("N_left".toLowerCase(), "N_right".toLowerCase());
         Bigraph<DynamicSignature> elemGlueBigraph = ops(cx).juxtapose(idOuter).juxtapose(placings.permutation(4)).getOuterBigraph();
         roboPlacements = ops(elemGlueBigraph).compose(roboPlacements).getOuterBigraph();
@@ -630,7 +611,7 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         collect.set(2, buildSyncedRobotTemplate("N_left", "x", 1));
         collect.set(3, buildSyncedRobotTemplate("N_right", "x", 3));
         cx = linkings.closure("x");
-        roboPlacements = collect.stream().reduce(linkings.identity_e(), accumulator::apply);
+        roboPlacements = collect.stream().reduce(linkings.identity_e(), BigraphUtil.ACCUMULATOR_PARALLEL_PRODUCT);
         idOuter = linkings.identity("N_left".toLowerCase(), "N_right".toLowerCase());
         elemGlueBigraph = ops(cx).juxtapose(idOuter).juxtapose(placings.permutation(4)).getOuterBigraph();
         roboPlacements = ops(elemGlueBigraph).compose(roboPlacements).getOuterBigraph();
@@ -656,8 +637,8 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         PureBigraph reactum = (PureBigraph) baseReactum.nesting(builderReactum.create()).getOuterBigraph();
 
         if (EXPORT) {
-            eb(redex, "initMovePat-lhs", TARGET_DUMP_PATH);
-            eb(reactum, "initMovePath-rhs", TARGET_DUMP_PATH);
+            toPNG(redex, "initMovePat-lhs", TARGET_DUMP_PATH);
+            toPNG(reactum, "initMovePath-rhs", TARGET_DUMP_PATH);
         }
 
         TrackingMap trckMap = new TrackingMap();
@@ -755,8 +736,8 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         ;
         PureBigraph reactum = bRHS.create();
         if (EXPORT) {
-            eb(redex, "moveRobot-lhs", TARGET_DUMP_PATH);
-            eb(reactum, "moveRobot-rhs", TARGET_DUMP_PATH);
+            toPNG(redex, "moveRobot-lhs", TARGET_DUMP_PATH);
+            toPNG(reactum, "moveRobot-rhs", TARGET_DUMP_PATH);
         }
 
         TrackingMap trckMap = new TrackingMap();
@@ -817,14 +798,6 @@ public class SelfSortingRobots implements BigraphUnitTestSupport {
         ;
         return defaultBuilder.create();
     }
-
-    public static BinaryOperator<Bigraph<DynamicSignature>> accumulator = (partial, element) -> {
-        try {
-            return ops(partial).parallelProduct(element).getOuterBigraph();
-        } catch (IncompatibleSignatureException | IncompatibleInterfaceException e) {
-            return pureLinkings(partial.getSignature()).identity_e();
-        }
-    };
 
     public static void exportToJson(String filePath, String ruleName, TrackingMap trackingMap) {
         JSONObject rootObject = new JSONObject();

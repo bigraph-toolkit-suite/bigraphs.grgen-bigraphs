@@ -8,6 +8,7 @@ import org.bigraphs.framework.core.impl.signature.DynamicSignature;
 import org.bigraphs.grgen.converter.demo.DemoBigraphProvider;
 import org.bigraphs.grgen.converter.demo.DemoSignatureProvider;
 import org.bigraphs.grgen.converter.impl.PureBigraphTransformer;
+import org.bigraphs.testing.BigraphUnitTestSupport;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class BigraphTransformationTest implements BigraphUnitTestSupport {
     @Test
     public void testSmartHome() throws InvalidConnectionException, TypeNotExistsException, IOException {
         PureBigraph pureBigraph = DemoBigraphProvider.getInstance().smartHome(DemoSignatureProvider.getInstance().smartHome());
-        eb(pureBigraph, "agent", TARGET_DUMP_PATH, true);
+        toPNG(pureBigraph, "agent", TARGET_DUMP_PATH, true);
 
         PureBigraphTransformer transformer = new PureBigraphTransformer()
                 .withOppositeEdges(false);

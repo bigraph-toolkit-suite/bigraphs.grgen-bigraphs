@@ -48,7 +48,7 @@ public class Main {
     // --verbose --host=sample/petrinet-simple/host.xmi --output=foo --sig=sample/petrinet-simple/sig.xmi --sigM=sample/petrinet-simple/signatureBaseModel.ecore --metamodel=sample/petrinet-simple/bigraphBaseModel.ecore --rule=rule1:sample/petrinet-simple/r1-lhs.xmi,sample/petrinet-simple/r1-rhs.xmi --rule=:sample/petrinet-simple/r1-lhs.xmi,sample/petrinet-simple/r1-rhs.xmi
     // --verbose --host=sample/petrinet-simple/host.xmi --output=foo --sig=sample/petrinet-simple/sig.xmi --sigM=sample/petrinet-simple/signatureBaseModel.ecore --metamodel=sample/petrinet-simple/bigraphBaseModel.ecore --rule=rule1:sample/petrinet-simple/r1-lhs.xmi,sample/petrinet-simple/r1-rhs.xmi --tracking=sample/petrinet-simple/map.json
     public static void main(String[] args) throws InvalidConnectionException, InvalidReactionRuleException, IncompatibleInterfaceException, IOException {
-        String DEFAULT_VERSION = "(DRAFT)";
+        String DEFAULT_VERSION = "1.4.0";
         String version = DEFAULT_VERSION;
         try (InputStream is = Main.class.getResourceAsStream("/META-INF/maven/org.example/grgen-bigraphs/pom.properties")) {
             Properties properties = new Properties();
