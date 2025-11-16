@@ -12,7 +12,7 @@ java --version
 
 
 java -jar bigger.jar --verbose \
---basepath=../sample/concurrent-append-p2/ --output=foo \
+--basepath=../sample/concurrent-append-p3/ --output=foo \
 --sig=sig.xmi --sigM=signatureMetaModel.ecore \
 --host=host.xmi --metamodel=bigraphMetaModel.ecore \
 --rule=nextRule:nextRule-lhs.xmi,nextRule-rhs.xmi \
@@ -22,7 +22,7 @@ java -jar bigger.jar --verbose \
 
 
 == Execute GrGen.NET:
-(from `sample/concurrent-append-p2/foo/` directory of this project)
+(from `sample/concurrent-append-p3/foo/` directory of this project)
 
 
 GrShell script.grs

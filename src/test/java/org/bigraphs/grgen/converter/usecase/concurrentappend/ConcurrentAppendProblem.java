@@ -19,12 +19,12 @@ import org.bigraphs.framework.simulation.matching.pure.PureReactiveSystem;
 import org.bigraphs.framework.simulation.modelchecking.BigraphModelChecker;
 import org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptions;
 import org.bigraphs.framework.simulation.modelchecking.PureBigraphModelChecker;
-import org.bigraphs.grgen.converter.BigraphUnitTestSupport;
 import org.bigraphs.grgen.converter.RuleTransformer;
 import org.bigraphs.grgen.converter.impl.DynamicSignatureTransformer;
 import org.bigraphs.grgen.converter.impl.PureBigraphTransformer;
 import org.bigraphs.grgen.converter.impl.PureParametrizedRuleTransformer;
 import org.bigraphs.framework.core.reactivesystem.TrackingMap;
+import org.bigraphs.testing.BigraphUnitTestSupport;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,6 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -271,7 +270,7 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         PureBigraph bigraph = builder.create();
 //        BigraphFileModelManagement.exportAsInstanceModel(bigraph, System.out);
         if (EXPORT)
-            eb(bigraph, "agent", TARGET_DUMP_PATH);
+            toPNG(bigraph, "agent", TARGET_DUMP_PATH);
         return bigraph;
     }
 
@@ -327,8 +326,8 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         if (EXPORT) {
             BigraphFileModelManagement.Store.exportAsInstanceModel(redex, System.out);
             BigraphFileModelManagement.Store.exportAsInstanceModel(reactum, System.out);
-            eb(redex, "cap-next-lhs", TARGET_DUMP_PATH);
-            eb(reactum, "cap-next-rhs", TARGET_DUMP_PATH);
+            toPNG(redex, "cap-next-lhs", TARGET_DUMP_PATH);
+            toPNG(reactum, "cap-next-rhs", TARGET_DUMP_PATH);
         }
 
 //        JLibBigBigraphEncoder encoder = new JLibBigBigraphEncoder();
@@ -382,8 +381,8 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         PureBigraph redex = builderRedex.create();
         PureBigraph reactum = builderReactum.create();
         if (EXPORT) {
-            eb(redex, "cap-append-lhs", TARGET_DUMP_PATH);
-            eb(reactum, "cap-append-rhs", TARGET_DUMP_PATH);
+            toPNG(redex, "cap-append-lhs", TARGET_DUMP_PATH);
+            toPNG(reactum, "cap-append-rhs", TARGET_DUMP_PATH);
         }
 
 //        JLibBigBigraphEncoder encoder = new JLibBigBigraphEncoder();
@@ -432,15 +431,15 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         PureBigraph redex = builderRedex.create();
         PureBigraph reactum = builderReactum.create();
         if (EXPORT) {
-            eb(redex, "cap-return-lhs", TARGET_DUMP_PATH);
-            eb(reactum, "cap-return-rhs", TARGET_DUMP_PATH);
+            toPNG(redex, "cap-return-lhs", TARGET_DUMP_PATH);
+            toPNG(reactum, "cap-return-rhs", TARGET_DUMP_PATH);
         }
         JLibBigBigraphEncoder encoder = new JLibBigBigraphEncoder();
         Bigraph encodedRedex = encoder.encode(redex);
         JLibBigBigraphDecoder decoder = new JLibBigBigraphDecoder();
         PureBigraph decode = decoder.decode(encodedRedex, redex.getSignature());
         if (EXPORT) {
-            eb(decode, "return_decoded_1", TARGET_DUMP_PATH);
+            toPNG(decode, "return_decoded_1", TARGET_DUMP_PATH);
         }
 //        RewritingRule rewritingRule = new RewritingRule(encodedRedex, encodedRedex, 0, 1, 2);
         ReactionRule<PureBigraph> rr = new ParametricReactionRule<>(redex, reactum).withLabel("returnRule");
@@ -451,20 +450,20 @@ public class ConcurrentAppendProblem implements BigraphUnitTestSupport {
         DynamicSignatureBuilder defaultBuilder = pureSignatureBuilder();
         defaultBuilder
                 .add("append", 1) // as much as we callers have
-                .newControl().identifier(StringTypedName.of("main")).arity(FiniteOrdinal.ofInteger(0)).assign()
-                .newControl().identifier(StringTypedName.of("list")).arity(FiniteOrdinal.ofInteger(0)).assign()
-                .newControl().identifier(StringTypedName.of("this")).arity(FiniteOrdinal.ofInteger(0)).assign()
-                .newControl().identifier(StringTypedName.of("thisRef")).arity(FiniteOrdinal.ofInteger(1)).assign() // as much as we have callers
-                .newControl().identifier(StringTypedName.of("Cell")).arity(FiniteOrdinal.ofInteger(0)).assign()
-                .newControl().identifier(StringTypedName.of("Void")).arity(FiniteOrdinal.ofInteger(0)).assign()
-                .newControl().identifier(StringTypedName.of("val")).arity(FiniteOrdinal.ofInteger(0)).assign()
-                .newControl().identifier(StringTypedName.of("N1")).arity(FiniteOrdinal.ofInteger(0)).assign() // parameterized control
-                .newControl().identifier(StringTypedName.of("N2")).arity(FiniteOrdinal.ofInteger(0)).assign()
-                .newControl().identifier(StringTypedName.of("N3")).arity(FiniteOrdinal.ofInteger(0)).assign()
-                .newControl().identifier(StringTypedName.of("N4")).arity(FiniteOrdinal.ofInteger(0)).assign()
-                .newControl().identifier(StringTypedName.of("N5")).arity(FiniteOrdinal.ofInteger(0)).assign()
-                .newControl().identifier(StringTypedName.of("N6")).arity(FiniteOrdinal.ofInteger(0)).assign()
-                .newControl().identifier(StringTypedName.of("next")).arity(FiniteOrdinal.ofInteger(0)).assign()
+                .add("main", 0)
+                .add("list", 0)
+                .add("this", 0)
+                .add("thisRef", 1) // as much as we have callers
+                .add("Cell", 0)
+                .add("Void", 0)
+                .add("val", 0)
+                .add("N1", 0) // parameterized control
+                .add("N2", 0)
+                .add("N3", 0)
+                .add("N4", 0)
+                .add("N5", 0)
+                .add("N6", 0)
+                .add("next", 0)
         ;
         return defaultBuilder.create();
     }

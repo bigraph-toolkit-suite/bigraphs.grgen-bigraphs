@@ -12,6 +12,7 @@ import org.bigraphs.framework.core.reactivesystem.TrackingMap;
 import org.bigraphs.grgen.converter.demo.DemoRuleProvider;
 import org.bigraphs.grgen.converter.demo.DemoSignatureProvider;
 import org.bigraphs.grgen.converter.impl.PureParametrizedRuleTransformer;
+import org.bigraphs.testing.BigraphUnitTestSupport;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -143,8 +144,8 @@ public class RuleTransformationTest implements BigraphUnitTestSupport {
         System.out.println("---------------------");
         BigraphFileModelManagement.Store.exportAsInstanceModel(rr.getReactum(), System.out);
         System.out.println("---------------------");
-        eb(rr.getRedex(), "redex", TARGET_DUMP_PATH2);
-        eb(rr.getReactum(), "reactum", TARGET_DUMP_PATH2);
+        toPNG(rr.getRedex(), "redex", TARGET_DUMP_PATH2);
+        toPNG(rr.getReactum(), "reactum", TARGET_DUMP_PATH2);
 
 
         PureParametrizedRuleTransformer t = new PureParametrizedRuleTransformer();

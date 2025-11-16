@@ -15,11 +15,11 @@ import org.bigraphs.framework.simulation.matching.pure.PureReactiveSystem;
 import org.bigraphs.framework.simulation.modelchecking.BigraphModelChecker;
 import org.bigraphs.framework.simulation.modelchecking.ModelCheckingOptions;
 import org.bigraphs.framework.simulation.modelchecking.PureBigraphModelChecker;
-import org.bigraphs.grgen.converter.BigraphUnitTestSupport;
 import org.bigraphs.grgen.converter.RuleTransformer;
 import org.bigraphs.grgen.converter.demo.DemoBigraphProvider;
 import org.bigraphs.grgen.converter.demo.DemoRuleProvider;
 import org.bigraphs.grgen.converter.demo.DemoSignatureProvider;
+import org.bigraphs.testing.BigraphUnitTestSupport;
 import org.junit.jupiter.api.Disabled;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -65,7 +65,7 @@ public class BRSPetriNetSimTest implements BigraphUnitTestSupport {
 //        PureBigraph bigraph = bigraphProvider.petriNetOpenLinks(sig);
         BigraphFileModelManagement.Store.exportAsInstanceModel(bigraph, System.out);
         BigraphFileModelManagement.Store.exportAsMetaModel(bigraph, System.out);
-        eb(bigraph, "agent", TARGET_DUMP_PATH, true);
+        toPNG(bigraph, "agent", TARGET_DUMP_PATH, true);
 
         DemoRuleProvider ruleProvider = DemoRuleProvider.getInstance();
         ReactionRule<PureBigraph> rr = ruleProvider.petriNetFireRule(sig);
@@ -83,8 +83,8 @@ public class BRSPetriNetSimTest implements BigraphUnitTestSupport {
 //        ReactionRule<PureBigraph> rr = ruleProvider.petriNetAddRule(sig);
         BigraphFileModelManagement.Store.exportAsInstanceModel(rr.getRedex(), System.out);
         BigraphFileModelManagement.Store.exportAsInstanceModel(rr.getReactum(), System.out);
-        eb(rr.getRedex(), "redex", TARGET_DUMP_PATH, true);
-        eb(rr.getReactum(), "reactum", TARGET_DUMP_PATH, true);
+        toPNG(rr.getRedex(), "redex", TARGET_DUMP_PATH, true);
+        toPNG(rr.getReactum(), "reactum", TARGET_DUMP_PATH, true);
 
         PureReactiveSystem reactiveSystem = new PureReactiveSystem();
         reactiveSystem.setAgent(bigraph);
@@ -106,15 +106,15 @@ public class BRSPetriNetSimTest implements BigraphUnitTestSupport {
 
         BigraphFileModelManagement.Store.exportAsInstanceModel(bigraph, System.out);
         BigraphFileModelManagement.Store.exportAsMetaModel(bigraph, System.out);
-        eb(bigraph, "agent", TARGET_DUMP_PATH2, true);
+        toPNG(bigraph, "agent", TARGET_DUMP_PATH2, true);
 
         DemoRuleProvider ruleProvider = DemoRuleProvider.getInstance();
         ReactionRule<PureBigraph> rr = ruleProvider.smartHomeMoveRule(sig);
 //        ReactionRule<PureBigraph> rr = ruleProvider.petriNetParallelRule(sig);
         BigraphFileModelManagement.Store.exportAsInstanceModel(rr.getRedex(), System.out);
         BigraphFileModelManagement.Store.exportAsInstanceModel(rr.getReactum(), System.out);
-        eb(rr.getRedex(), "redex", TARGET_DUMP_PATH2, true);
-        eb(rr.getReactum(), "reactum", TARGET_DUMP_PATH2, true);
+        toPNG(rr.getRedex(), "redex", TARGET_DUMP_PATH2, true);
+        toPNG(rr.getReactum(), "reactum", TARGET_DUMP_PATH2, true);
 
         PureReactiveSystem reactiveSystem = new PureReactiveSystem();
         reactiveSystem.setAgent(bigraph);
