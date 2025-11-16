@@ -1,6 +1,6 @@
 <img src="icon.png" style="zoom:90%;" />
 
-> Latest Version: **1.3.0**
+> Latest Version: **1.4.0**
 
 - How to cite BiGGer: [![DOI](https://joss.theoj.org/papers/10.21105/joss.06491/status.svg)](https://doi.org/10.21105/joss.06491)
 - 📌 **Benchmarks:** Refer to the companion repository [BiggerBenchmarkSolution](https://github.com/bigraph-toolkit-suite/BiggerBenchmarkSolution), which accompanies this tool.
